@@ -31,7 +31,7 @@ packages, data_files = [], []
 root_dir = os.path.dirname(__file__)
 if root_dir != '':
     os.chdir(root_dir)
-application_dir = 'application'
+application_dir = 'formunculous'
   
 for dirpath, dirnames, filenames in os.walk(application_dir):
     # Ignore dirnames that start with '.'
@@ -42,8 +42,8 @@ for dirpath, dirnames, filenames in os.walk(application_dir):
     elif filenames:
         data_files.append([dirpath, [os.path.join(dirpath, f) for f in filenames]])
 
-# Get the version from blog.VERSION
-version = __import__('application').get_version()
+# Get the version from formunculous.VERSION
+version = __import__('formunculous').get_version()
 
 setup(
     name = "formunculous",
