@@ -1,0 +1,70 @@
+{% extends "formunculous/base.html" %}
+
+{% load i18n %}
+
+{% block css %}
+{{ form.media }}
+<link href="{{ MEDIA_URL }}formunculous/css/formunculous.css" rel="stylesheet" type="text/css" />
+<link href="{{ MEDIA_URL }}formunculous/css/apply.css" rel="stylesheet" type="text/css" />
+{% endblock %}
+
+{% block js %}
+  <script type="text/javascript" src="{{ MEDIA_URL }}formunculous/js/urlify.js"></script>
+{% endblock %}
+{% block title %}{% if add %}{% trans "New Application Definition" %}{% else %}{% trans "Modifying" %}{{ ad.name }}{% endif %}{% endblock %}
+{% block content_title %}{% if add %}{% trans "New Application Definition" %}{% else %}{% trans "Modifying" %}{{ ad.name }}{% endif %}{% endblock %}
+
+{% block content %}
+
+<form method="post" action="{% if add %}{% url builder-add-ad %}{% else %}{% url builder-edit-ad form.instance.slug %}{% endif %}">
+  {% if form.errors %}
+	<div class="apply_field_errors">{% trans "There are errors in your form, please correct them" %}</div>
+  {% endif %}
+
+  <fieldset class="apply_fieldset">
+	{% for field in form %}
+	{% if field.is_hidden %}
+	  {{ field }}
+	{% endif %}
+	{% endfor %}
+
+	{% for field in form %}
+	{% if not field.is_hidden %}
+	{% ifnotequal field.name "parent" %}
+	<div class="apply_field_row">
+	    <div class="apply_field_errors">{{ field.errors }}</div>
+		<div class="apply_field">
+		  {{ field.label_tag }} {{ field }}
+		</div>
+		{% if field.help_text %}
+		<div style="clear:both"></div>
+		<div class="apply-info-box">
+		  {{ field.help_text }}
+		</div>
+		{% endif %}
+		<div style="clear:both;"></div>
+	</div>
+	{% endifnotequal %}
+	{% endif %}
+	{% endfor %}
+	<div class="apply_submit">
+	{% if add %}<input type="submit" name="add_another" value="{% trans "Save and Add Another" %}" />{% endif %}
+	<input type="submit"  name="form" value="{% trans "Save and Edit Form" %}" />
+	<input type="submit"  name="edit" value="{% trans "Save and Continue Editing" %}" />
+	<input type="submit" name="finish" value="{% trans "Save" %}" />
+	</div>
+  </fieldset>
+  <script type="text/javascript">document.getElementById("id_name").focus();</script>
+
+
+
+<script type="text/javascript">
+
+    document.getElementById("id_slug").onchange = function() { this._changed = true; };
+    
+    document.getElementById("id_name").onkeyup = function() {
+        var e = document.getElementById("id_slug");
+        if (!e._changed) { e.value = URLify(document.getElementById("id_name").value, 50); }
+    }
+</script>
+{% endblock %}

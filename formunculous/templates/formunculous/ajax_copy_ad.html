@@ -1,0 +1,19 @@
+{% load i18n %}
+
+<tr id="{{ ad.id }}">
+  <td>{{ ad.name }}</td>
+  <td>{{ ad.owner }}</td>
+  <td>
+	{{ ad.start_date|date:"D d M Y" }}
+	{{ ad.start_date|time:"g:i A" }}
+  </td>
+  <td>
+	{{ ad.stop_date|date:"D d M Y" }}
+	{{ ad.stop_date|time:"g:i A" }}
+  </td>
+  <td><a href="{% url builder-edit-ad ad.slug %}" class="formunculous-changelink">Change</a></td>
+  <td><a href="{% url builder-edit-fields ad.slug %}" class="formunculous-changelink">Edit Form</a></td>
+  <td><a href="#" class="formunculous-copylink" onclick="javascript:show_copy_dialog({{ad.id}},'{{ad.slug}}');">Copy</a></td>
+  <td><a href="#" class="formunculous-previewlink" onclick="javascript:show_preview_dialog({{ad.id}});">Preview</a></td>
+  <td><a href="#" class="formunculous-deletelink" onclick="javascript:show_delete_dialog({{ad.id}});">Delete</a></td>
+</tr>

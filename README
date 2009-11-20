@@ -1,0 +1,37 @@
+Quickstart:
+
+If you just want to try this out, go to the harness folder and run:
+python manage.py syncdb
+python manage.py runserver
+
+
+
+For production installation:
+
+python setup.py install
+
+After that, add the url handler to your Django url file:
+(r'^', include('formunculous.urls')), 
+
+replacing r'^' with whatever start you want to have such as r'^forms/'
+
+Additionally in your django settings file be sure to add these two constants
+APP_STORAGE_ROOT = '/path/to/put/uploaded/files'
+APP_STORAGE_URL = '/path/to/urls' 
+				  e.g. if r'^forms/' above then this would be '/forms/'
+
+The last bit is to add formunculous as an installed app in your settings file.
+
+Add:
+'formunculous',
+to your INSTALLED_APPS
+
+Additionaly also utilizes the builtin django comments application so
+you will also need to add 'django.contrib.comments',
+to your INSTALLED_APPS as well.
+
+If you intend on using the email notifications you will need to define
+the SERVER_EMAIL and EMAIL_HOST constants in your settings file.  See the
+django settings documentation for more details/options.
+
+

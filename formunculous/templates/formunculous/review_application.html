@@ -1,0 +1,187 @@
+{% extends "formunculous/base.html" %}
+{% load i18n %}
+{% block css %}
+{{ review_form.media }}
+<link href="{{ MEDIA_URL }}formunculous/css/formunculous.css" rel="stylesheet" type="text/css" />
+<link href="{{ MEDIA_URL }}formunculous/css/apply.css" rel="stylesheet" type="text/css" />
+<link href="{{ MEDIA_URL }}formunculous/css/smoothness/jquery-ui-1.7.2.custom.css" rel="stylesheet" type="text/css">
+{% endblock %}
+{% block js %}
+<script type="text/javascript" src="{{ MEDIA_URL }}formunculous/js/jquery-1.3.2.min.js"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}formunculous/js/jquery-ui-1.7.2.custom.min.js"></script>
+<script type="text/javascript">
+
+var delete_url = "{% url reviewer-delete ad.slug %}";
+var app_id = {{ app.id }}
+$(document).ready(function()
+{
+$('#del_dialog').dialog({
+       autoOpen: false,
+       modal: true,
+       width: 400,
+       buttons: {
+             "OK": function() {
+                 $.ajax( { url: delete_url,
+                           type: "POST",
+                           data: {id: app_id},
+                           datatype: "html",
+                           success: function() {
+                                     window.location = '{% url reviewer-index ad.slug %}';
+                           },
+                           error: function() {
+                                     $('#del_dialog').dialog('close');
+                                   $('#ajax_results').html("<p>Unable to delete the application</p>");
+                                   $('#ajax_results').effect('highlight',{},1500);
+                                   }
+                        });
+
+              },
+             "Cancel": function() {
+                 $(this).dialog("close");
+             }
+       },
+       show: 'drop',
+       bgiframe: true
+});
+$('.formunculous-deletelink').click(function() { $('#del_dialog').dialog('open');}); 
+});
+	
+</script>
+{% endblock %}
+{% block title %}
+{% trans "Reviewing" %} {{ ad.name }} {% trans "Application Submitted on " %}
+{{ app.submission_date|date:"D d M Y" }} {{ app.submission_date|time:"g:i A" }} 
+{% endblock %}
+
+
+
+{% block content %}
+
+<div id="del_dialog" title="{% trans "Confirm Application Delete" %}">
+  <p>
+	Deleting the selected application cannot be undone.  Are you sure
+	you want to delete this application?
+  </p>
+</div>
+
+<div id="ajax_results">
+</div>
+
+<h1>{% trans "Responses" %}</h1>
+<div class="formunculous_confirmation_info">
+  <ul class="formunculous_form_info">
+	{% if app.user %}
+	<li>
+	  <span class="formunculous_field_label">{% trans "Username" %}:</span>
+	  <span class="formunculous_field_data">{{ app.user }}</span>
+	</li>
+		
+	{% endif %}
+	{% for field in app_fields %}
+	   <li>
+	      <span class="formunculous_field_label">{{ field.label }}:</span>
+		  <span class="formunculous_field_data">
+			{% if field.data.url %}
+			<a target="_blank" href="{{ field.data.url }}">
+			{% endif %}
+			{{ field.data }}
+			{% if field.data.url %}
+			</a>
+			{% endif %}
+		  </span>
+	   </li>
+    {% endfor %}
+	   <li>
+	      <span class="formunculous_field_label">{% trans "Submission Date" %}:</span>
+		  <span class="formunculous_field_data">
+			{{ app.submission_date|date:"D d M Y" }}
+			{{ app.submission_date|time:"g:i A" }}
+		  </span>
+	   </li>
+		 
+  </dl>
+<div class="fr">
+  <span class="formunculous-deletelink" style="cursor:pointer">{% trans "Delete Application" %}</span>
+</div>
+
+</div>
+<div style="clear:both;"></div>
+
+{% if fields %}
+<hr>
+<h1>{% trans "Reviewer Fields" %}</h1>
+  <div class="apply_messages">{{ message }}</div>
+  <form method="post" action="{% url reviewer-application ad.slug app.id %}"{% if review_form.is_multipart %} enctype="multipart/form-data"{% endif %}>
+	{% if review_form.errors %}
+	<div class="apply_field_errors">{% trans "There are errors in your form, please correct them" %}</div>
+	{% endif %}
+	<fieldset class="apply_fieldset">
+	{% for field in fields %}
+  	  {% if field.field.is_hidden %}
+	    {{ field.field }}
+	  {% else %}
+	  
+	    {% ifchanged field.group %}
+	      {% if field.group %}
+	        <div class="apply_form_group">
+	      {% else %}
+	        {% if not forloop.first %}
+	          </div>
+		    {% endif %}
+	      {% endif %}
+		{% endifchanged %}
+	    <div class="apply_field_row">
+	    <div class="apply_pretext">{{ field.pre_text }}</div>
+	    <div class="apply_field_errors">{{ field.field.errors }}</div>
+	    <div class="apply_field">
+	    {% if field.field.label %}{{ field.field.label_tag }}{% endif %}
+	    {{ field.field }}
+	    </div>
+	    <div class="apply_posttext">{{ field.post_text }}</div>
+	    {% if forloop.last  and field.group %}
+          </div>
+        {% endif %}
+		</div>
+	  {% endif %}
+	{% endfor %}
+    </fieldset>
+
+    <div class="apply_submit">
+	  <input type="submit" name="save" value="Save" />
+	</div>
+  </form>
+{% endif %}
+  <hr>
+  <h1>{% trans "Comments" %}</h1>
+  {% load comments %}
+
+  {% get_comment_count for app as comment_count %}
+
+  {% get_comment_list for app as comments %}
+  <div class="formunculous_comment_container">
+  <strong>{{ comment_count }} Comments</strong>
+  {% for comment in comments %}
+    <div class="formunculous_comment_box">
+	  <div class="formunculous_comment_header">
+		{{ comment.user_name }} : {{ comment.submit_date|date:"D d M Y" }} {{ comment.submit_date|time:"g:i A" }}
+	  </div>
+	  <div class="formunculous_comment_comment">
+		{{ comment.comment }}
+	  </div>
+	</div>
+  {% endfor %}
+  </div>
+
+  {% get_comment_form for app as form %}
+	<form action="{% comment_form_target %}" method="POST">
+	  <p>
+		<label for="id_comment" style="font-weight: bold;">{{ form.comment.label}}</label><br /> {{ form.comment }}
+	  <p style="display:none;">
+		<label for="id_honeypot">{{ form.honeypot.label }}</label>: {{ form.honeypot }}
+	  </p>
+	  {{ form.content_type }}
+	  {{ form.object_pk }} {{ form.timestamp }} {{ form.security_hash }}
+	  <input type="hidden" name="next" value="{% url reviewer-application ad.slug app.id %}" />
+	  <input type="submit" value="Add comment" id="id_submit" />
+	</form>
+{% endblock %}
