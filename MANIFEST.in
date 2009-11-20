@@ -4,3 +4,5 @@ recursive-include ipam/support *
 recursive-include scripts *
 include ez_setup.py
 include setuptools-0.6c9-py2.5.egg
+include README
+include COPYING
