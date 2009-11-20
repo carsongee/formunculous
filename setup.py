@@ -51,7 +51,7 @@ setup(
     author = 'Carson Gee',
     author_email = 'x@carsongee.com',
     url = 'http://carsongee.com',
-    download_url = 'http://carsongee.com/python/django-odin-%s.tar.gz' % version,
+    download_url = 'http://formunculous.com/downloads/formunculous-%s.tar.gz' % version,
     platforms = ('Any',),
     keywords = ('forms','generic ',),
     description = 'A Django Web application that builds database backed Web forms utilizing a nice javascript user interface',

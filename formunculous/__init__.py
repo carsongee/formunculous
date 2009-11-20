@@ -14,7 +14,7 @@
 #     along with formunculous.  If not, see <http://www.gnu.org/licenses/>.
 #     Copyright 2009 Carson Gee
 
-VERSION = (0, 1, 0, 'final', )
+VERSION = (1, 0, 0, 'final', )
 
 def get_version():
     version = '%s.%s.%s %s' % (VERSION[0], VERSION[1], VERSION[2], VERSION[3]) 
