@@ -1,0 +1,47 @@
+{% extends "formunculous/base.html" %}
+
+{% load i18n %}
+{% block css %}
+<link href="{{ MEDIA_URL }}formunculous/css/formunculous.css" rel="stylesheet" type="text/css" />
+{% endblock %}
+
+{% block title %}{{ ad.name}} {% trans "Submission Confirmation" %}{% endblock %}
+{% block content_title %}{{ ad.name}} {% trans "Submission Confirmation" %}{% endblock %}
+{% block content %}
+
+<p>
+  {% blocktrans with ad.name as appname %}
+   Thank you for completing <i>{{ appname }}</i>.
+  {% endblocktrans %}
+</p>
+<p>
+   {% blocktrans with ad.owner as email %}
+      Below is the information that you have submitted.  If there any problems, or
+      some of the information is incorrect please contact 
+      <a href="mailto:{{ email }}">{{ email }}</a> to make any corrections.
+   {% endblocktrans %}
+</p>
+<div class="formunculous_confirmation_info">
+  <ul class="formunculous_form_info">
+	{% for field in fields %}
+	   <li>
+	      <span class="formunculous_field_label">{{ field.label }}:</span>
+		  <span class="formunculous_field_data">
+			{% if field.data.url %}
+			{% if not ad.email_only %}
+			<a target="_blank" href="{{ field.data.url }}">
+			{% endif %}
+			{% endif %}
+			{{ field.data }}
+			{% if field.data.url %}
+			{% if not ad.email_only %}
+			</a>
+			{% endif %}
+			{% endif %}
+		  </span>
+	   </li>
+    {% endfor %}
+  </dl>
+</div>
+
+{% endblock %}

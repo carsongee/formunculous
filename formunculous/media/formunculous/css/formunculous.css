@@ -1,0 +1,379 @@
+/* shortcuts */
+.fr {
+	float:right;
+}
+
+/* Reviewer table styles */
+table.formunculous_table thead tr
+{
+	background-color: #e1e1e1;
+	border-top: 1px #999 solid;
+	border-bottom: 1px #999 solid;
+	border-left: 1px #999 solid;
+}
+table.formunculous_table th 
+{
+	text-align: left;
+	padding-left: 10px;
+	border-right: 1px #333 solid;
+}
+table.formunculous_review_table th a
+{
+	display:block;
+	padding: 0px;
+	height: 100%;
+	color: #3333cc;
+	text-decoration: none;
+}
+table.formunculous_table
+{
+	width:100%;
+	border-collapse:collapse;
+}
+table.formunculous_table tr
+{
+	background-color:#fff;
+	border-bottom: 1px #ddd solid;
+	border-left: 1px #ddd solid;
+}
+
+table.formunculous_review_table tr:hover
+{
+	background-color:#e1e1e1;
+}
+table.formunculous_table td 
+{
+	display:table-cell;
+	border-bottom: 1px #ddd solid;
+	padding:0px;
+	border-right: 1px #ddd solid;
+	padding-left: 10px;
+}
+table.formunculous_review_table td a
+{
+	text-decoration:none;
+	display:block;
+	padding:0px;
+	color: #3333ff;
+	height:100%;
+}
+table.formunculous_table tr.odd
+{
+	background-color: #F4F4F8;
+}
+table.formunculous_review_table tr.odd:hover
+{
+	background-color: #e1e1e1;
+}
+/* Builder Index Table */
+
+
+/* Common Builder Links */
+.formunculous-previewlink {
+	padding-left: 16px;
+	background: url('../img/icon_preview.gif') no-repeat;
+}
+.formunculous-deletelink {
+	padding-left: 16px;
+	background: url('../img/icon_deletelink.gif') no-repeat;
+}
+
+.formunculous-addlink {
+	padding-left: 16px;
+	background: url('../img/icon_addlink.gif') no-repeat;
+}
+
+.formunculous-changelink {
+	padding-left: 16px;
+	background: url('../img/icon_changelink.gif') no-repeat;
+}
+
+.formunculous-copylink {
+	padding-left: 16px;
+	background: url('../img/icon_copy.png') no-repeat;
+}
+
+/* Builder Field Editor Styles */
+#formunculous-page-container {
+	width: 100%;
+}
+
+#formunculous-field-container {
+	width: 74%;
+	float: right;
+}
+
+#formunculous-field-toolbar {
+	width: 24%;
+	float:left;
+}
+
+#formunculous-previewdiv {
+	text-align: right;
+	float: right;
+}
+
+.formunculous_field_list {
+	margin: 0px;
+	padding: 0 0 20px 0;
+	width: 100%;
+	min-width: 600px;
+	min-height: 100px;
+	background-color:#F0F0F0;
+	list-style-type: none;
+}
+
+.formunculous_field_list li {
+	list-style-type: none;
+	margin-left: 0;
+}
+
+.formunculous-field-sort-icon {
+	float: left;
+	margin-right: 10px;
+}
+.formunculous_field_head {
+	position: relative;
+	margin:1px;
+	width: 100%;
+	cursor: default;
+}
+
+.ui-state-highlight { height: 1.5em; line-height: 1.2em; }
+
+.formunculous_field_collapse {
+	display: block;
+	cursor: pointer;
+	margin-top: 5px;
+	background: url('../img/arrow-down.gif') no-repeat;
+	min-width: 20px;
+	min-height: 10px;
+	float: left;
+}
+
+.formunculous_field_title {
+	float: left;
+	width: 40%;
+}
+
+.formunculous_field_actions {
+	float: right;
+	width: 58%;
+	text-align: right;
+}
+.formunculous_field_actions ul {
+	margin: 0;
+}
+
+.formunculous_field_actions ul li {
+	display: inline;
+	margin: 0 10px 0 0;
+}
+
+
+.formunculous_field_body {
+	padding: 5px 10px 15px;
+	background-color:#F4F4F8;
+}
+
+/* Field Editor Form Styles */
+.formunculous-form-row {
+	width: 100%;
+	padding: 0 5px 0 5px;
+}
+
+.formunculous-errors {
+	color: #FF3333;
+	background: url('../img/icon_error.gif') no-repeat;
+	padding-left: 30px;
+}
+
+.formunculous-errors ul {
+	margin-top: -15px;
+}
+.formunculous-info-box {
+	border: 1px solid #D1D1D7;
+	background-color: #F0F0F0;
+	color: #666666;
+	padding: 5px;
+	font-size: 10px;
+	min-height: 35px;
+	width: 80%;
+}
+
+.formunculous-form-row input[type='text']{
+	width: 150px;
+}
+
+.formunculous-form-row textarea {
+	width: 280px;
+	height: 100px;
+}
+
+.formunculous-form-row select{
+	width: 150px;
+}
+
+.formunculous-form-row label {
+	display: block;
+	margin: 5px 20px 0 0;
+	width: 8em;
+	float: left;
+}
+
+.formunculous-left-column {
+	width: 48%;
+	float: left;
+}
+.formunculous-left-column div{
+	margin-bottom: 10px;
+}
+.formunculous-right-column {
+	width: 48%;
+	float: right;
+}
+
+.formunculous-right-column div{
+	margin-bottom: 10px;
+}
+
+/* Field type draggables */
+.formunculous-field-types {
+	width: 100%;
+	background-color: #F0F0F0;
+	border: 1px solid #D1D1D7;
+	padding: 0;
+	list-style-type: none;
+	margin: 0;
+}
+.formunculous-field-types li {
+	cursor: default;
+	list-style-type: none;
+	margin: 0;
+	width: 100%;
+}
+
+.formunculous-field-delete {
+	cursor: pointer;
+	padding-left: 15px;
+	background: url('../img/icon_deletelink.gif') no-repeat;
+}
+.formunculous-field-add-above {
+	cursor: pointer;
+	padding-left: 15px;
+	background: url('../img/icon_addlink.gif') no-repeat;
+}
+.formunculous-field-add-below {
+	cursor: pointer;
+	padding-left: 15px;
+	background: url('../img/icon_addlink.gif') no-repeat;
+}
+
+.formunculous-field-dropdown {
+	cursor: pointer;
+	color: #3333FF;
+}
+
+.formunculous-edit-buttons {
+	text-align: left;
+	vertical-align: bottom;
+}
+.formunculous-edit-buttons input[type=submit] {
+	border: 1px solid #aaaaaa;
+	background-color: #FAFAF8;
+}
+
+.formunculous_comment_container {
+	float: right;
+	width: 55%;
+}
+
+.formunculous_comment_box {
+	border: 1px solid #aaa;
+	background-color: #f1f1f1;
+	padding: 5px;
+	margin-bottom: 20px;
+}
+
+.formunculous_comment_header {
+	border-bottom: 1px solid #aaa;
+	font-weight: bold;
+}
+.formunculous_comment_comment {
+	padding: 10px 5px 5px 5px;
+	background-color: #fafafa;
+}
+
+.formunculous_form_info {
+	list-style-type: none;
+}
+
+.formunculous_form_info li {
+	border: 1px solid #f1f1f1;
+	width: 100%;
+	overflow: hidden;
+	list-style-type: none;
+}
+
+.formunculous_field_label {
+	display: block;
+	width: 200px;
+	text-align: right;
+	float: left;
+	margin-bottom: 15px;
+	margin-right: 10px;
+}
+
+.formunculous_confirmation_bar {
+	text-align: right;
+}
+
+
+table.formunculous_available thead tr
+{
+	border: 1px #aaa solid;
+}
+table.formunculous_available th 
+{
+	text-align: left;
+	padding-right: 50px;
+	padding-left: 10px;
+}
+table.formunculous_available
+{
+	border-collapse:collapse;
+	width: 75%;
+}
+.formunculous_available_footer {
+	border: 1px solid #aaa;
+}
+
+.formunculous_available_status {
+	text-align: right;
+}
+
+.formunculous_available_definition {
+	padding: 15px;
+	border-left: 1px solid #aaa;
+	border-right: 1px solid #aaa;
+}
+.formunculous_available_title {
+	font-size: 1.4em;
+	font-weight: bold;
+}
+
+.formunculous-list dt {
+	font-size: 1.4em;
+	font-weight: bold;
+}
+.formunculous-list {
+	margin-left: 50px;
+}
+
+
+/* The ever present dirty css debug style. */
+/*
+div {
+	border: 1px solid red;
+}
+*/

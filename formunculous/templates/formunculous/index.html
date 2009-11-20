@@ -1,0 +1,56 @@
+{% extends "formunculous/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Available Applications" %}{% endblock %}
+{% block css %}
+<link href="{{ MEDIA_URL }}formunculous/css/formunculous.css" rel="stylesheet" type="text/css" />
+{% endblock %}
+{% block content %}
+
+{% if app_coll %}
+<h2>{% trans "Available Applications" %}</h2>
+{% for app in app_coll %}
+<table class="formunculous_available">
+  <thead>
+	<tr>
+	  <th class="formunculous_available_title">
+		<a href="{% url formunculous-apply app.app_def.slug %}">
+		  {{ app.app_def.name }}
+		</a>
+	  </th>
+	  <th>
+		<strong>{% trans "Status:" %}</strong> {{ app.status }}
+	  </th>
+	</tr>
+  </thead>
+  <tbody>
+	<tr>
+	  <td colspan="2" class="formunculous_available_definition">
+		<p>{% trans "Description:" %}</p>
+		<p>
+		  {{ app.app_def.description }}
+		</p>
+	  </td>
+	</tr>
+	<tr class="formunculous_available_footer">
+	  <td colspan="2" align="right">
+		<strong>Available until:</strong> {{ app.app_def.stop_date|date:"D d M Y" }}
+		{{ app.app_def.stop_time|time:"g:i A" }}
+	  </td>
+	</tr>
+  </tbody>
+</table>
+<br /><br />
+{% endfor %}
+{% endif %}
+<br />
+{% if review_apps %}
+<h2>{% trans "Applications for Review" %}</h2>
+<dl class="formunculous-list">
+  {% for app in review_apps %}
+  <dt><a href="{% url reviewer-index app.slug %}">{{ app.name }}</a></dt>
+  <dd>{{ app.description }}</dd>
+  {% endfor %}
+</dl>
+{% endif %}
+{% endblock %}

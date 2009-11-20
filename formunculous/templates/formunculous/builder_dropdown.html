@@ -1,0 +1,68 @@
+{% load i18n %}
+<html>
+<head>
+{% block css %}
+<link href="{{ MEDIA_URL }}formunculous/css/formunculous.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+  html {
+    font-family: Arial, Helvetica, sans-serif;
+  }
+</style>
+{% endblock %}
+</head>
+<body>
+
+
+{% if formset.errors %}
+<div class="formunculous-errors">{% trans "There are errors in your form, please correct them" %}</div>
+{% endif %}
+
+<div style="width:100%; height: 225px">
+<form method="POST" action="">
+  {{ formset.management_form }}
+  <table class="formunculous_table">
+	{% for form in formset.forms %}
+	   {% if forloop.first %}
+	   <thead>
+	      <tr>
+			{% for field in form %}
+			  {% if not field.is_hidden %}
+			    <th>{{ field.label }}</th>
+			  {% endif %}
+			{% endfor %}
+		  </tr>
+	   </thead>
+	   {% endif %}
+	   {% if form.errors %}
+	   <tr>
+		 {% for field in form %}
+		   {% if not field.is_hidden %}
+		     <td>
+			   {% if field.errors%}
+			     <div class="formunculous-errors">{{ field.errors }}</div>
+			   {% endif %}
+			 </td>
+		   {% endif %}
+		 {% endfor %}
+	   </tr>
+	   {% endif %}
+	   <tr>
+		 {% for field in form %}
+		   {% if field.is_hidden %}
+		     {{ field }}
+		   {% else %}
+		     <td>
+			   {{ field }}
+			 </td>
+		   {% endif %}
+		 {% endfor %}
+	   </tr>
+	   {% endfor %}
+  </table>
+  <div style="text-align: right;">
+	<input type="submit" name="edit" value="Save" />
+  </div>  
+</form>
+</div>
+</body>
+</html>

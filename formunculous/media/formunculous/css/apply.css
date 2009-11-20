@@ -1,0 +1,109 @@
+/* This is the stylesheet for applications */
+
+.apply_messages {
+	font-size: .8em;
+	border: 1px solid #aaaaa;
+	background-color: #66ffcc;
+}
+
+.apply_fieldset {
+	border: 0;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+}
+
+.apply_form_group {
+	border: 1px solid #aaa;
+	margin-left: 10em;
+	background-color: #F1F1F1;
+	margin-top: 2em;
+	margin-bottom: 2em;
+}
+
+.apply_field_errors {
+	color: #FF3333;
+	background: url('../img/icon_error.gif') no-repeat;
+	padding-left: 16px;
+	margin-left: 220px;
+}
+
+.apply_field_row {
+	width: 100%;
+	vertical-align: middle;
+	padding: 10px 0 10px 0;
+	border: 1px solid #f1f1f1;
+}
+
+.apply_pretext {
+	width: 100%;
+	clear:both;
+}
+.apply_posttext {
+	width: 100%;
+	clear:both;
+}
+
+.apply_fieldset label {
+	float: left;
+	text-align: right;
+	display:block;
+	width: 200px;
+	margin: 0 20px 10px 0;
+}
+
+.apply_required label {
+	font-weight: bold;
+}
+
+.apply-info-box {
+	border: 1px solid #D1D1D7;
+	background-color: #F0F0F0;
+	color: #666666;
+	padding: 5px;
+	font-size: 10px;
+	min-height: 35px;
+	margin-left: 220px;
+	width: 200px;
+}
+
+
+.apply_field {
+	float: left;
+}
+
+.apply_fieldset input[type=text] {
+	font-size: .8em;
+	width: 200px;
+}
+
+.apply_fieldset input[type=file] {
+	font-size: .8em;
+	width: 200px;
+}
+
+.apply_fieldset textarea {
+	font-size: 1em;
+	width: 200px;
+}
+
+.apply_fieldset select {
+	font-size: .8em;
+	width: 200px;
+}
+
+.apply_submit {
+	text-align: right;
+}
+
+.apply_submit input[type=submit] {
+	border: 1px solid #aaaaaa;
+	background-color: #FAFAF8;
+}
+
+.apply_file_url {
+	margin-left: 220px;
+	border: 1px solid #D1D1D7;
+	background-color: #F1F1F8;
+	margin-right: 10px;
+}

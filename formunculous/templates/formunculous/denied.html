@@ -1,0 +1,11 @@
+{% extends "formunculous/base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Permission Denied" %}{% endblock %}
+{% block content_title %}{% trans "Permission Denied" %}{% endblock %}
+{% block content %}
+{% blocktrans %}
+<p>
+  You are not authorized to view this page.
+</p>
+{% endblocktrans %}
+{% endblock %}

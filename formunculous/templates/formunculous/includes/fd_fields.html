@@ -1,0 +1,172 @@
+{% load i18n %}
+<li>
+  <div class="formunculous_field_head ui-state-default" id="field_id_fielddefinition_set-{{forloop.counter0}}-id">
+	<div class="formunculous_field_title">
+	  <div class="formunculous-field-sort-icon ui-icon ui-icon-arrowthick-2-n-s"></div>
+	  <span class="formunculous_field_collapse"></span>
+	  <span class="formunculous_field_name">
+		{% if form.initial.label %}
+		{{ form.initial.label|striptags|truncatewords:3}}
+		{% else %}
+   		{% trans "New Field" %}
+		{% endif %}
+	  </span>
+	</div>
+	<div class="formunculous_field_actions">
+	  <ul>
+		<li><span class="formunculous-field-add-above">{% trans "Add Above" %}</span></li>
+		<li><span class="formunculous-field-add-below">{% trans "Add Below" %}</span></li>
+		<li><span class="formunculous-field-delete">{% trans "Delete" %}</span></li>
+	  </ul>
+	</div>
+	<div style="clear:both"></div>
+  </div>
+  <div class="formunculous_field_body">
+	{{ form.id }}{{ form.DELETE }}{{ form.application }}{{ form.order }}
+	{% if form.errors %}
+	<div class="formunculous-errors">{% trans "Please correct the errors below" %}</div>
+	<br />
+	{% endif %}
+	<div class="formunculous-form-row">
+	  <div class="formunculous-left-column">
+		<div>
+		  {% if form.label.errors %}
+		  <span class="formunculous-errors">{{ form.label.errors }}</span>
+		  {% endif %}
+		  <strong>{{ form.label.label_tag }}</strong> {{ form.label }}
+		  {% if form.label.help_text %}
+		  <div class="formunculous-info-box">{{ form.label.help_text }}</div>
+		  {% endif %}
+		</div>
+		<div>
+		  {% if form.type.errors %}
+		  <span class="formunculous-errors">{{ form.type.errors }}</span>
+		  {% endif %}
+		  <strong>{{ form.type.label_tag }}</strong> {{ form.type }}
+		  {% if form.type.help_text %}
+		  <div class="formunculous-info-box">{{ form.type.help_text }}</div>
+		  {% endif %}
+		  
+		</div>
+		<div>
+		  {% if form.page.errors %}
+		  <span class="formunculous-errors">{{ form.page.errors }}</span>
+		  {% endif %}
+		  {{ form.page.label_tag }} {{ form.page }}
+		  {% if form.page.help_text %}
+		  <div class="formunculous-info-box">{{ form.page.help_text }}</div>
+		  {% endif %}
+		</div>
+		<div>
+		  {% if form.help_text.errors %}
+		  <span class="formunculous-errors">{{ form.help_text.errors }}</span>
+		  {% endif %}
+		  {{ form.help_text.label }}<br />
+		  {{ form.help_text }}
+		  {% if form.help_text.help_text %}
+		  <div class="formunculous-info-box">{{ form.help_text.help_text }}</div>
+		  {% endif %}
+	  </div>
+
+	  </div>
+	  <div class="formunculous-right-column">
+		<div>
+		  {% if form.slug.errors %}
+		  <span class="formunculous-errors">{{ form.slug.errors }}</span>
+		  {% endif %}
+		  <strong>{{ form.slug.label_tag }}</strong> {{ form.slug }}
+		  {% if form.slug.help_text %}
+		  <div class="formunculous-info-box">{{ form.slug.help_text }}</div>
+		  {% endif %}
+		</div>
+		<div class="formunculous-left-column">
+		  <div>
+			{% if form.require.errors %}
+			<span class="formunculous-errors">{{ form.require.errors }}</span>
+			{% endif %}
+			{{ form.require }} {{ form.require.label }}
+  			{% if form.require.help_text %}
+			<div class="formunculous-info-box">{{ form.require.help_text }}</div>
+			{% endif %}
+		  </div>
+		  <div>
+			{% if form.group.errors %}
+			<span class="formunculous-errors">{{ form.group.errors }}</span>
+			{% endif %}
+			{{ form.group }} {{ form.group.label }}
+			{% if form.group.help_text %}
+			<div class="formunculous-info-box">{{ form.group.help_text }}</div>
+			{% endif %}
+		  </div>
+		</div>
+		<div class="formunculous-left-column">
+		  <div>
+			{% if form.reviewer_only.errors %}
+			<span class="formunculous-errors">{{ form.reviewer_only.errors }}</span>
+			{% endif %}
+			{{ form.reviewer_only }} {{ form.reviewer_only.label }}
+			{% if form.reviewer_only.help_text %}
+			<div class="formunculous-info-box">{{ form.reviewer_only.help_text }}</div>
+			{% endif %}
+		  </div>
+		  <div>
+			{% if form.header.errors %}
+			<span class="formunculous-errors">{{ form.header.errors }}</span>
+			{% endif %}
+			{{ form.header }} {{ form.header.label }}
+			{% if form.header.help_text %}
+			<div class="formunculous-info-box">{{ form.header.help_text }}</div>
+			{% endif %}
+		  </div>
+		</div>
+		<div style="clear:both"></div>
+		<div>
+		  <span class="formunculous-changelink formunculous-field-dropdown">
+			{% trans "Add/Modify Dropdown Selections" %}
+		  </span>
+		  <div class="formunculous-info-box">
+			{% blocktrans %}
+			  You may technically add dropdown selections to any field type and
+			  the application will honor them, however this is not recommended for
+			  getting valid data for fields such as file/image and Yes/No type fields.
+			{% endblocktrans %}
+		  </div>
+		</div>
+	  </div>
+	  <div style="clear:both;"></div>	  
+	  <div class="formunculous_field_head ui-state-default">
+		<span class="formunculous_field_collapse"></span>
+		HTML Formatting
+	  </div>
+	  <div class="formunculous_field_body">
+		<div class="formunculous-left-column">
+		  <div>
+			{% if form.pre_text.errors %}
+			<span class="formunculous-errors">{{ form.pre_text.errors }}</span>
+			{% endif %}
+			{{ form.pre_text.label_tag }}
+			<br />
+			{{ form.pre_text }}
+			{% if form.pre_text.help_text %}
+			<div class="formunculous-info-box">{{ form.pre_text.help_text }}</div>
+			{% endif %}
+		  </div>
+		</div>
+		<div class="formunculous-right-column">
+		  <div>
+			{% if form.post_text.errors %}
+			<span class="formunculous-errors">{{ form.post_text.errors }}</span>
+			{% endif %}
+			{{ form.post_text.label_tag }}
+			<br />
+			{{ form.post_text }}
+			{% if form.post_text.help_text %}
+ 			<div class="formunculous-info-box">{{ form.post_text.help_text }}</div>
+			{% endif %}
+		  </div>
+		</div>
+		<div style="clear:both;"></div>
+	  </div>
+	</div>
+  </div>
+</li>

@@ -1,0 +1,227 @@
+{% extends "formunculous/base.html" %}
+{% load i18n %}
+
+{% block css %}
+<link href="{{ MEDIA_URL }}formunculous/css/smoothness/jquery-ui-1.7.2.custom.css" rel="stylesheet" type="text/css">
+<link href="{{ MEDIA_URL }}formunculous/css/formunculous.css" rel="stylesheet" type="text/css" />
+<link href="{{ MEDIA_URL }}formunculous/css/apply.css" rel="stylesheet" type="text/css" />
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript" src="{{ MEDIA_URL }}formunculous/js/jquery-1.3.2.min.js"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}formunculous/js/jquery-ui-1.7.2.custom.min.js"></script>
+<script type="text/javascript">
+var current_app_id = 0;
+var current_app_slug = '';
+
+$(function() {
+
+// Delete Dialog Handling
+$('#del_dialog').dialog({
+       autoOpen: false,
+       modal: true,
+       width: 300,
+       buttons: {
+             "OK": function() {
+                 $('#ajax_results').load( '{% url builder-delete-ad %}',
+                                          { ad: current_app_id},
+                                           function() {
+                           $('#' + current_app_id).fadeOut(1000,
+                              function() { $(this).remove(); 
+                               $('#ajax_results').effect('highlight',{},1000); });});
+
+                 $(this).dialog("close");
+              },
+             "Cancel": function() {
+                 $(this).dialog("close");
+             }
+       },
+       show: 'drop',
+       bgiframe: true
+});
+
+
+// Copy Dialog Handling
+$('#copy_dialog').dialog({
+       autoOpen: false,
+       modal: true,
+       width: 400,
+	   resizable: true,
+       buttons: {
+             // Copy and redirect to ad edit form
+             "Copy and Edit": function() {
+                 $.ajax({
+                          url: '{% url builder-copy-ad %}',
+                          type: "POST",
+                          data: { ad: current_app_id,
+                                  slug: $('#id_copy_slug').attr('value'),
+                                  name: $('#id_copy_name').attr('value')},
+                          datatype: "html",
+                          success: function() {
+                                   window.location = '{% url builder-index %}edit/' + $('#id_copy_slug').attr('value');
+                                   },
+                          error: function() {
+                                   $('#copy_dialog').dialog('close');
+                                   $('#ajax_results').html("<p>Unable to copy the application definition. Duplicate name/slug?</p>");
+                                   $('#ajax_results').effect('highlight',{},1500);
+                                   }
+                        });
+              },
+             // Copy and add to AD table
+             "Copy and Close": function() {
+                 $.ajax({
+                          url: '{% url builder-copy-ad %}',
+                          type: "POST",
+                          data: { ad: current_app_id,
+                                  slug: $('#id_copy_slug').attr('value'),
+                                  name: $('#id_copy_name').attr('value')},
+                          datatype: "html",
+                          success: function(data) {
+                                   $('#copy_dialog').dialog('close');
+                                   $('#formunculous_def_table > tbody:last').append(data);
+                                   $('#formunculous_def_table > tbody tr:last').effect('pulsate',{ times: 1},750);
+                                   $('#ajax_results').html("<p>Successfully copied the application definition.");
+                                   $('#ajax_results').effect('highlight',{},1500);
+                                   },
+                          error: function() {
+                                   $('#copy_dialog').dialog('close');
+                                   $('#ajax_results').html("<p>Unable to copy the application definition. Duplicate name/slug?</p>");
+                                   $('#ajax_results').effect('highlight',{},1500);
+                                   }
+                        });
+              },
+
+             "Cancel": function() {
+                 $(this).dialog("close");
+             }
+       },
+       show: 'drop',
+       bgiframe: true
+});
+
+// Preview Dialog Handling
+$('#prev_dialog').dialog({
+       autoOpen: false,
+       modal: true,
+       width: 650,
+       height: 500,
+       buttons: {
+             "Close": function() {
+                 $(this).dialog("close");
+             }
+       },
+       bgiframe: true
+});
+
+
+});
+  
+
+  function show_copy_dialog(id, slug)
+  {
+    current_app_id = id;
+    current_app_slug = slug
+    $("#id_copy_name").attr({value: ''});
+    $("#id_copy_slug").attr({value: ''});
+    $("#copy_dialog").dialog('open');
+    $("#id_copy_name").focus();
+  }
+
+  function show_delete_dialog(id)
+  {
+    current_app_id = id;
+    $("#del_dialog").dialog('open');
+  }
+
+
+  function show_preview_dialog(id)
+  {
+    current_app_id = id;
+    $("#prev_dialog").html('<iframe height="98%" width="100%" frameborder="0" style="border: 0;" src="{% url builder-preview-ad %}?ad=' + current_app_id + '">Your browser does not support iframes</iframe>');
+
+    $("#prev_dialog").dialog('open');
+  }
+
+</script>
+<script type="text/javascript" src="{{ MEDIA_URL }}formunculous/js/urlify.js"></script>
+{% endblock %}
+
+{% block title %}
+  {% trans "Application Definitions" %}
+{% endblock %}
+
+{% block content_title %}
+  {% trans "Application Definitions" %}
+{% endblock %}
+
+{% block content %}
+<div id="del_dialog" title="{% trans "Confirm Application Definition Delete" %}">
+  <p>
+	Deleting the selected application definition will delete all of the applications
+	that are associated with it.
+  </p>
+</div>
+<div id="prev_dialog" title="{% trans "Application Definition Preview" %}">
+</div>
+
+
+<div id="copy_dialog" title="{% trans "Copy Application Definition" %}">
+  <form method="post" action="{% url builder-copy-ad %}">
+	<p>
+	  <label for="id_copy_name">New Name: </label><input type="text" id="id_copy_name" name="name" />
+	</p>
+	<p>
+	  <label for="id_copy_slug">New Slug: </label><input type="text" id="id_copy_slug" name="slug" />
+	</p>
+  </form>
+</div>
+
+
+<div id="ajax_results">
+</div>
+<div class="fr">
+  <a class="formunculous-addlink" href="{% url builder-add-ad %}">{% trans "Create Application Defintion" %}</a>
+</div>
+<div style="clear:right"></div>
+
+<table class="formunculous_table" id="formunculous_def_table">
+<thead>
+  <tr>
+	<th>{% trans "Name" %}</th>
+	<th>{% trans "Owner" %}</th>
+	<th>{% trans "Start Date" %}</th>
+	<th>{% trans "Stop Date" %}</th>
+	<th colspan="5">{% trans "Actions" %}</th>
+  </tr>
+</thead>
+<tbody>
+  {% for ad in app_defs %}
+  <tr id="{{ ad.id }}" class="{% cycle 'odd' 'even'%}">
+	<td>{{ ad.name }}</td>
+	<td>{{ ad.owner }}</td>
+	<td>
+	  {{ ad.start_date|date:"D d M Y" }}
+	</td>
+	<td>
+	  {{ ad.stop_date|date:"D d M Y" }}
+	</td>
+	<td><a href="{% url builder-edit-ad ad.slug %}" class="formunculous-changelink">Change</a></td>
+	<td><a href="{% url builder-edit-fields ad.slug %}" class="formunculous-changelink">Edit Form</a></td>
+	<td><a href="#" class="formunculous-copylink" onclick="javascript:show_copy_dialog({{ad.id}}, '{{ad.slug}}');">Copy</a></td>
+	<td><a href="#" class="formunculous-previewlink" onclick="javascript:show_preview_dialog({{ad.id}});">Preview</a></td>
+	<td><a href="#" class="formunculous-deletelink" onclick="javascript:show_delete_dialog({{ad.id}});">Delete</a></td>
+  </tr>
+  {% endfor %}
+</tbody>
+</table>
+<script type="text/javascript">
+
+    document.getElementById("id_copy_slug").onchange = function() { this._changed = true; };
+    
+    document.getElementById("id_copy_name").onkeyup = function() {
+        var e = document.getElementById("id_copy_slug");
+        if (!e._changed) { e.value = URLify(document.getElementById("id_copy_name").value, 50); }
+    }
+</script>
+
+{% endblock %}

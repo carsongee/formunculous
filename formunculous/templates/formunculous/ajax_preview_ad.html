@@ -1,0 +1,42 @@
+	{% if form.errors %}
+	<div class="apply_field_errors">{% trans "There are errors in your form, please correct them" %}</div>
+	{% endif %}
+	<fieldset class="apply_fieldset">
+	{% for field in fields %}
+  	  {% if field.field.is_hidden %}
+	    {{ field.field }}
+	  {% else %}
+	  
+	    {% ifchanged field.group %}
+	      {% if field.group %}
+	        <div class="apply_form_group">
+	      {% else %}
+	        {% if not forloop.first %}
+	          </div>
+		    {% endif %}
+	      {% endif %}
+		{% endifchanged %}
+	    <div class="apply_field_row {% cycle 'odd' 'even' %} ">
+	      <div class="apply_pretext">{{ field.pre_text }}</div>
+	      <div class="apply_field_errors">{{ field.field.errors }}</div>
+	      <div class="apply_field">
+			{% if field.field.label %}{{ field.field.label_tag }}{% endif %}
+			  {{ field.field }}
+	      </div>
+		  {% if field.field.help_text %}
+		  <div style="clear:both;"></div>
+		  <div class="apply-info-box">
+			{{ field.field.help_text }}
+		  </div>
+		  {% endif %}
+	      <div class="apply_posttext">{{ field.post_text }}</div>
+		  </div>
+	      {% if forloop.last  and field.group %}
+          </div>
+        {% endif %}
+	  {% endif %}
+	{% endfor %}
+    <div class="apply_submit">
+	{% if ad.authentication %}<input type="submit" name="save" value="Save" />{% endif %}<input type="submit" name="submit" value="Submit" />
+	</div>
+    </fieldset>
