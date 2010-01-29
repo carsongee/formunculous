@@ -64,7 +64,6 @@ function deleteApp(id) {
 {% endblock %}
 
 {% block content %}
-
 <div id="del_dialog" title="{% trans "Confirm Application Delete" %}">
   <p>
 	Deleting the selected application cannot be undone.  Are you sure
@@ -74,12 +73,21 @@ function deleteApp(id) {
 <div id="ajax_results">
 </div>
 
+<div class="fr" id="formunculous-review-search">
+  <form method="get" action="">
+	<input type="text" name="q" id="q" />
+	<input type="hidden" name="s" id="s" value="{{ sort }}" />
+	<input type="hidden" name="page" id="page" value="{{ page.number }}" />
+	<input type="submit" name="submit" value="&nbsp;" />
+  </form>
+</div>
+<div style="clear:both"></div>
 <table class="formunculous_table formunculous_review_table">
 <thead>
 <tr>
   {% for header in headers %}
-  <th>
-	<a href="{{ header.url }}">{{ header.name }}</a>
+  <th class="{% if header.sorted %}sort {% endif %}{% if header.rev_sorted %}sort-reverse{% endif %}">
+	<a href="{{ header.url }}&q={{ query }}&page={{ page.number }}">{{ header.name }}</a>
   </th>
   {% if forloop.last %}
     <th>
@@ -106,7 +114,10 @@ function deleteApp(id) {
 	</td>
 	{% else %}
 	<td><a href="{{ col.url }}">{{ col.value|date:"D d M Y" }} {{ col.value|time:"g:i A" }}</a></td>
-	<td id="app_{{ col.id }}"><a href="#" class="formunculous-deletelink" style="padding-left: 20px;" onclick="deleteApp({{ col.id }});">{% trans "Delete" %}</a></td>
+	<td id="app_{{ col.id }}">
+	  {% if perms.formunculous.can_delete_applications %}
+	  <a href="#" class="formunculous_deletelink" style="padding-left: 20px;" onclick="deleteApp({{ col.id }});">{% trans "Delete" %}</a></td>
+	  {% endif %}
 	{% endif %}
 
 	{% endfor %}
@@ -114,5 +125,39 @@ function deleteApp(id) {
   {% endfor %}
 </tbody>
 </table>
+
+{% if page.has_other_pages %}
+<div class="formunculous_pagination">
+  <ul>
+	<li>
+	  {% if page.has_previous %}
+	  <a href="?page=1&s={{ sort }}" class="direction">
+		{% endif %}
+		&#171;{% trans "first" %}
+		{% if page.has_previous %}</a>{% endif %}
+	</li>
+
+	{% for num in page.page_range %}
+	<li{% ifequal page.number num%} class="current"{% endifequal %}>
+	  {% if not num %} <span class="break">...</span>
+	  {% else %} 
+	  {% ifequal page.number num %}
+	  {{ num }}
+	  {% else %}
+	  <a href="?page={{ num }}&s={{ sort }}">{{ num }}</a> 
+	  {% endifequal %}
+	  {% endif %}
+	</li>
+	{% endfor %}
+	<li>
+	  {% if page.has_next %}
+	  <a href="?page={{ page.paginator.num_pages }}&s={{ sort }}" class="last" class="direction">
+		{% endif %}
+		{% trans "last" %}&#187;
+		{% if page.has_next %}</a>{% endif %}
+	</li>
+  </ul>
+</div>
+{% endif %}
 
 {% endblock %}

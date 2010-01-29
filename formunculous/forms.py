@@ -12,16 +12,21 @@
 #
 #     You should have received a copy of the GNU General Public License
 #     along with formunculous.  If not, see <http://www.gnu.org/licenses/>.
-#     Copyright 2009 Carson Gee
+#     Copyright 2009, 2010 Carson Gee
+
 
 from django import forms
 from django.db import models
 from django.utils.safestring import mark_safe
 from django.forms.util import ErrorList
 from formunculous.models import *
-from formunculous.fields import HoneypotField
+from formunculous.fields import HoneypotField, MultipleChoiceToStringField
 from django.utils.translation import ugettext as _
 from django.forms import ModelForm
+from django.forms.widgets import RadioSelect, Select, SelectMultiple, CheckboxSelectMultiple, HiddenInput
+
+from django.forms.formsets import BaseFormSet, TOTAL_FORM_COUNT, INITIAL_FORM_COUNT, ORDERING_FIELD_NAME, DELETION_FIELD_NAME, ManagementForm
+
 
 class ApplicationForm(forms.Form):
 
@@ -31,7 +36,15 @@ class ApplicationForm(forms.Form):
         self.app = app
         self.reviewer = reviewer
 
-        field_set = app_def.fielddefinition_set.filter(reviewer_only=self.reviewer)
+        # If there is an application defined, add it's pk
+        if app:
+            pk_field = forms.IntegerField(initial=app.id, widget=HiddenInput)
+            pk_field.is_hidden = True
+            pk_field.required = False
+            self.fields['pk'] = pk_field
+
+        field_set = app_def.fielddefinition_set.filter(
+            reviewer_only=self.reviewer)
         # Loop through the application field definition set
         # and create form fields for them.
         for field_def in field_set:
@@ -45,19 +58,45 @@ class ApplicationForm(forms.Form):
             data = None
             
             try:
-                # Grab the model if this value is already stored otherwise, ignore
+                # Grab the model if this value is already stored otherwise,
+                # ignore
                 field_model = field_model.objects.get(field_def = field_def,
                                                       app = self.app)
                 data = field_model.value
             except field_model.DoesNotExist:
                 pass
 
+            # If there are dropdown choices specified, create the
+            # choices tuple for use in the field determined by other
+            # user choices.
             field_def_choices = field_def.dropdownchoices_set.all()
-            if field_def_choices:
+            if field_def_choices and field_model.allow_dropdown:
                 choices = (())
                 for choice in field_def_choices:
                     choices += (choice.value, choice.text,),
-                form_field = forms.ChoiceField(choices = choices)
+
+                # Users are allowed to specify that a choiced
+                widget = Select
+                if field_def.multi_select:
+                    # Fix the data from being stored as a string to
+                    # being stored as a list
+                    if data:
+                        try:
+                            data = data.split(' | ')
+                        except:
+                            data = None
+                    widget = SelectMultiple
+                    if field_def.use_radio:
+                        widget = CheckboxSelectMultiple
+                if field_def.use_radio and not field_def.multi_select:
+                    widget = RadioSelect
+
+                if field_def.multi_select:
+                    form_field = MultipleChoiceToStringField(
+                        choices = choices, widget = widget)
+                else:
+                    form_field = forms.ChoiceField(choices=choices,
+                                             widget = widget)
             else:
                 form_field = field_model._meta.get_field('value').formfield()
                 # Custom field widgets
@@ -86,12 +125,13 @@ class ApplicationForm(forms.Form):
         """
         This is used for interim saves, and will save all data in the form
         """
-        
+
         # Save the app first
         self.app.save()
 
         # Go through the fieldset and save the values
-        field_set = self.app_def.fielddefinition_set.filter(reviewer_only=self.reviewer)
+        field_set = self.app_def.fielddefinition_set.filter(
+            reviewer_only=self.reviewer)
 
         for field_def in field_set:
             field_model = eval(field_def.type)
@@ -117,16 +157,29 @@ class ApplicationForm(forms.Form):
             # Probably should throw an exception
             return False
 
+        if not self.cleaned_data:
+            return False
+
         ret_val = True
 
-        field_set = self.app_def.fielddefinition_set.filter(reviewer_only=self.reviewer)
+        field_set = self.app_def.fielddefinition_set.filter(
+            reviewer_only=self.reviewer)
+
         for field_def in field_set:
+
             if field_def.require:
+                # If the field isn't clean, don't bother checking
+                if not self.cleaned_data.has_key(field_def.slug):
+                    self._errors[field_def.slug] = ErrorList([_('This field requires a value before the form can be submitted'),])
+                    ret_val = False
+                    continue
                 if self.cleaned_data[field_def.slug] == None \
                         or self.cleaned_data[field_def.slug] == '':
                     # Before assuming that because the field isn't saved, grab
                     # the value from the model to see if it actually is.
-                    fv = self.app.get_field_value(field_def.slug)
+                    fv = None
+                    if self.app:
+                        fv = self.app.get_field_value(field_def.slug)
                     if not fv:
                         self._errors[field_def.slug] = ErrorList([_('This field requires a value before the form can be submitted'),])
                         del self.cleaned_data[field_def.slug]
@@ -150,3 +203,83 @@ class FieldDefinitionForm(ModelForm):
 
     class Meta:
         model = FieldDefinition
+
+
+class FormunculousBaseFormSet(BaseFormSet):
+
+    def __init__(self, app_def=None, user=None, reviewer=False, parent=None,
+                 minimum=0, data=None, files=None, auto_id='id_%s', prefix=None,
+                 initial=None, error_class=ErrorList):
+        self.app_def = app_def
+        self.user = user
+        self.reviewer = reviewer
+        self.parent = parent
+        self.minimum = minimum
+
+
+        # Make sure we have at least minimum number of forms:
+        if not ( data or files ):
+            apps = Application.objects.filter(user = self.user, 
+                                              parent = self.parent,
+                                              app_definition = self.app_def)
+            initial_count = apps.count()
+            total = initial_count + self.extra
+            if total < self.minimum:
+                self.extra = self.minimum - initial_count
+
+        super(FormunculousBaseFormSet, self).__init__(data, files, auto_id,
+                                               prefix, initial, error_class)
+
+    def initial_form_count(self):
+        """Returns the number of forms that are required in this FormSet."""
+        if not (self.data or self.files):
+            apps = Application.objects.filter(user = self.user, 
+                                              parent = self.parent,
+                                              app_definition = self.app_def)
+            return apps.count()
+        return super(FormunculousBaseFormSet, self).initial_form_count()
+
+    def _construct_form(self, i, **kwargs):
+        """
+        Instantiates and returns the i-th form instance in a formset.
+        """
+        defaults = {'auto_id': self.auto_id, 
+                    'prefix': self.add_prefix(i)}
+        if self.data or self.files:
+            defaults['data'] = self.data
+            defaults['files'] = self.files
+        if self.initial:
+            try:
+                defaults['initial'] = self.initial[i]
+            except IndexError:
+                pass
+
+        # Allow extra forms to be empty.
+        if i >= self.initial_form_count():
+            defaults['empty_permitted'] = True
+        defaults.update(kwargs)
+
+        app = None
+        # Grab the proper app if this is an already existing instance
+        if i < self.initial_form_count():
+            
+            # If the form is already posted, grab the PK
+            # from it, instead of relying on a query
+            if self.is_bound:
+                pk_key = "%s-%s" % (self.add_prefix(i), 'pk')
+                pk = int(self.data[pk_key])
+                app = Application.objects.get(id=pk)
+
+            else:
+                apps = Application.objects.filter(
+                    user = self.user, 
+                    parent = self.parent,
+                    app_definition = self.app_def).order_by("id")
+                app = apps[i]
+            
+
+        form = self.form(self.app_def, app, self.reviewer, **defaults)
+        self.add_fields(form, i)
+        return form
+            
+        

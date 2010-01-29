@@ -1,0 +1,34 @@
+Second major version:
+
+New features:
+
+* Builder now integrated with Django admin interface
+* Forms can now be designated by django Site
+* Subforms now exist and enable many to one forms
+* There are new fields available including:
+	  . US Phone Number
+	  . US Zip code
+	  . US State
+* You can now have authenticated forms that can be filled out multiple times
+* You can choose to display drop down form elements with radio buttons
+* You can now have multi select drop down elements displayed either as
+  checkboxes or via a select widget
+* All templates used for forms are customizable (i.e. confirmation, thankyou,
+  completion) by creating a template directory with the same name as the form
+  definition's slug (i.e. contact-us/thankyou.html)
+* Fields are marked as dropdown safe to prevent having a file field with
+  dropdown selections, as this doesn't make sense.
+* Completed forms are now searchable via the reviewing index
+* Completed forms now have pagination, the number displayed is configurable
+* CKEditor/WYSIWYG available on all HTML capable fields via a button
+
+Bug fixes:
+
+* Massive style cleanup and prettifying, more compatible with IE
+* Fixed a sorting issue with submission date.
+* Boolean fields now default to False, previously they defaulted to Null/None
+
+
+Future release plans:
+* Add bulk copying/per item copying of form elements in the building interface
+* Show user previous submissions for multiple authenticated forms

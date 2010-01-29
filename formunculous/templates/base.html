@@ -8,6 +8,11 @@
 	<style type="text/css">
 	  html {
       font-family: Arial, Helvetica, sans-serif;
+	  font-size: .8em;
+	  }
+	  a {
+	    color: #3333ff;
+	    text-decoration: none;
 	  }
 	</style>
 
@@ -19,7 +24,7 @@
   <div id="formunculous_navigation">
 	<ul>
 	  <li><a href="{% url formunculous-index %}">Applications</a></li>
-	  {% if perms.application.can_edit_forms %}
+	  {% if perms.formunculous.change_form %}
 	  <li>
 		<a href="{% url builder-index %}">Builder</a></li>
 	  </li>
@@ -27,7 +32,7 @@
     </ul>
    </div>
   {% if user.is_authenticated %}
-  <div id="formunculous_auth"><a href="{% url formunculous-logout %}">Logout</a></div>
+  <div id="formunculous_auth"><a href="{% url formunculous-logout %}?next={% url formunculous-index %}">Logout</a></div>
   {% else %}
   <div id="formunculous_auth"><a href="{% url formunculous-login %}?next={{ request.path }}">Login</a></div>
   {% endif %}

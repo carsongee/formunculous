@@ -12,15 +12,22 @@
 #
 #     You should have received a copy of the GNU General Public License
 #     along with formunculous.  If not, see <http://www.gnu.org/licenses/>.
-#     Copyright 2009 Carson Gee
+#     Copyright 2009, 2010 Carson Gee
 
 
 from django.db import models
 from django.contrib.auth.models import User, Group
+from django.contrib.sites.models import Site
 from django.contrib.contenttypes.models import ContentType
+
+from django.contrib.localflavor.us.forms import USStateSelect
+from django.contrib.localflavor.us.models import PhoneNumberField
+
 from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import smart_unicode
 from django import forms
+from django.conf import settings
+
 from formunculous.widgets import *
 from formunculous.storage import *
 from formunculous import fields
@@ -32,13 +39,33 @@ import datetime
 class CurrentManager(models.Manager):
 
     def current(self, **kwargs):
-        return self.get_query_set().filter(start_date__lte=datetime.datetime.now(),
-                                           stop_date__gte=datetime.datetime.now())
+        return self.get_query_set().filter(
+            start_date__lte=datetime.datetime.now(),
+            stop_date__gte=datetime.datetime.now(),
+            parent = None, sites=Site.objects.get_current(), **kwargs
+            )
 
     def reviewer(self, user, **kwargs):
-        return self.get_query_set().filter( reviewers=user, email_only=False )
+        return self.get_query_set().filter( reviewers=user, email_only=False,
+                                            parent = None,
+                                            sites=Site.objects.get_current(),
+                                            **kwargs)
 
 class ApplicationDefinition(models.Model):
+
+
+    # Site differentiation
+    try: 
+        sid = settings.SITE_ID 
+    except AttributeError: 
+        from django.core.exceptions import ImproperlyConfigured 
+        raise ImproperlyConfigured("You're using the Django \"sites framework\"\
+                           without having set the SITE_ID setting. Create a site\
+                           in your database and set the SITE_ID setting to fix\
+                            this error.") 
+
+    sites = models.ManyToManyField(Site, default=(sid,))
+
 
     # Add an optional recursive relation to enable creating sub forms
     # to create one-to-many relations for applications
@@ -52,29 +79,60 @@ class ApplicationDefinition(models.Model):
     slug = models.SlugField(_('slug'),unique=True)
     description = models.TextField(blank=True)
 
-    start_date = models.DateTimeField(default=datetime.datetime.now(), help_text=_("The date the application will first be visible to user."))
-    stop_date = models.DateTimeField(default=datetime.datetime.now(), help_text=_("The date the application will no longer be available to be filled out"))
+    start_date = models.DateTimeField(default=datetime.datetime.now(),
+                                      help_text=_("The date the application \
+                                      will first be visible to user."))
+    stop_date = models.DateTimeField(default=datetime.datetime.now(), 
+                                     help_text=_("The date the application \
+                                     will no longer be available to be \
+                                     filled out"))
 
-    authentication = models.BooleanField(help_text="Require the applicant to authenticate before using the application?")
+    authentication = models.BooleanField(help_text=_("Require the applicant \
+                              to authenticate before using the application?"))
+
+    # New in 1.2 (requires sql patch for existing installs)
+    authentication_multi_submit = models.BooleanField(
+        "Multiple Submissions (Authenticated)",
+        help_text="Allow an authenticated user to submit multiple forms\
+                   (applicable only if the form requires authentication")
 
     reviewers = models.ManyToManyField(User, null=True, blank=True)
-    notify_reviewers = models.BooleanField(help_text="Email every reviewer each \
-                     time an application is submitted")
+    notify_reviewers = models.BooleanField(help_text="Email every reviewer each\
+                          time an application is submitted")
 
     email_only = models.BooleanField(help_text=_("If checked, completed \
-                           applications will not be stored in the database but \
-                           emailed to the owner/reviewers (dependent on whether \
-                           those notification flags are set"))
+                          applications will not be stored in the database but \
+                          emailed to the owner/reviewers (dependent on whether \
+                          those notification flags are set"))
 
     objects = CurrentManager()
 
     class Meta:
-        permissions = (
-            ("can_edit_forms", "Can edit forms"),
-        )
+        ordering = ["stop_date"]
 
     def __unicode__(self):
         return( u'%s' % self.name )
+
+class SubApplicationDefinition(models.Model):
+
+    # Get subform name and slug from the ApplicationDefinition
+    app_definition = models.ForeignKey(ApplicationDefinition)
+
+    min_entries = models.IntegerField(default = 0, 
+                                      help_text = _("The minimum number of\
+                                               instances of this sub-form the\
+                                               user must fill out.  0 if none."))
+    max_entries = models.IntegerField(default = 0,
+                                      help_text = _("The maximum number of\
+                                               instances of this sub-form the\
+                                               user must fill out. 0 if\
+                                               there is no limit."))
+
+    extras = models.IntegerField(default = 3, 
+                                 help_text = _("The number of extra forms to\
+                                                show by default on an\
+                                                application"))
+    
 
 # Application data types/fields
 
@@ -88,31 +146,56 @@ class FieldDefinition(models.Model):
 
     type = models.CharField(_('Type'),max_length=250,)
     application = models.ForeignKey(ApplicationDefinition)
-    pre_text = models.TextField(blank = True, help_text=_("The html here is prepended \
-                                                            to the form field."))
-    post_text = models.TextField(blank = True, help_text=_("The html here is appended \
-                                                            to the form field."))
+    pre_text = models.TextField(blank = True, 
+                                help_text=_("The html here is prepended \
+                                             to the form field."))
+    post_text = models.TextField(blank = True,
+                                 help_text=_("The html here is appended \
+                                              to the form field."))
 
     page = models.IntegerField(default=1)
     order = models.IntegerField()
-    group = models.BooleanField(default=False, help_text=_("Group this with nearby\
-                                  fields using an indented and colored background."))
+    group = models.BooleanField(default=False, 
+                                help_text=_("Group this with nearby\
+                                      fields using an indented and \
+                                      colored background."))
 
     label = models.CharField(max_length=250) 
     slug = models.SlugField()
 
-    help_text = models.TextField(blank = True, help_text=_("The text here is added \
-                                                to the defined field to help the \
-                                                user understand its purpose."))
+    help_text = models.TextField(blank = True,
+                                 help_text=_("The text here is added \
+                                              to the defined field to help the \
+                                              user understand its purpose."))
 
-    require = models.BooleanField(default=True, help_text=_("This requires that \
-                          value be entered for this field on the application form."))
-    reviewer_only = models.BooleanField(help_text=_("Make this field viewable only\
-                    to the reviewer of an application, not the applicant."))
+    require = models.BooleanField(default=True, 
+                                  help_text=_("This requires that value be \
+                                         entered for this field on \
+                                         the application form."))
+    reviewer_only = models.BooleanField(help_text=_("Make this field viewable\
+                    only to the reviewer of an application, not the applicant."))
     header = models.BooleanField(default=True,
-                                 help_text=_("If this is set to true the field will\
-                                            will be used as a header in the\
+                                 help_text=_("If this is set to true the field\
+                                              will be used as a header in the\
                                             reviewer view."))
+
+    # New in 1.2 (requires sql patch for existing installs)
+
+    multi_select = models.BooleanField(_("Allow Multiple Selections"),
+                       help_text=_("If selected, the user\
+                                   will be allowed to check multiple\
+                                   options from dropdown selections.  Be\
+                                   careful about which field type this is\
+                                   used for (generally only use large\
+                                   text area fields)."))
+
+    use_radio = models.BooleanField(_("Use Radio Buttons"),
+                       help_text=_("Dropdown selections\
+                                   will be represented with radio buttons\
+                                   for single select dropdowns and\
+                                   check boxes for multi-select.\
+                                   "))
+
     class Meta:
         ordering = ['page', 'order']
 
@@ -128,9 +211,16 @@ class DropDownChoices(models.Model):
     text = models.CharField(max_length = 255)
     value = models.CharField(max_length = 255)
 
+    class Meta:
+        ordering = ['text']
+
 # Instance Models (field and application)
 
 class Application(models.Model):
+
+    # Add an optional recursive relation to enable creating sub forms
+    # to create one-to-many relations for applications
+    parent = models.ForeignKey('self', null=True, blank=True)
 
     user = models.ForeignKey(User, blank=True, null=True)
     submission_date = models.DateTimeField(null=True, blank=True)
@@ -146,12 +236,15 @@ class Application(models.Model):
         into the function.
         """
         fields = []
-        field_set = self.app_definition.fielddefinition_set.filter(reviewer_only=reviewer_fields)
+        field_set = self.app_definition.fielddefinition_set.filter(
+            reviewer_only=reviewer_fields)
         for field_def in field_set:
             field_model = eval(field_def.type)
             try:
-                field_val = field_model.objects.get( app = self, field_def = field_def)
-                field_dict = {'label': field_def.label, 'data': field_val.value,},
+                field_val = field_model.objects.get( app = self,
+                                                     field_def = field_def)
+                field_dict = {'label': field_def.label,
+                              'data': field_val.value,},
             except:
                 field_dict = {'label': field_def.label, 'data': None,},
 
@@ -165,22 +258,34 @@ class Application(models.Model):
            or the field definition is not found.
         """
         try:
-            field_def = FieldDefinition.objects.get(slug=field_slug)
+            field_def = FieldDefinition.objects.get(
+                             slug=field_slug, 
+                             application=self.app_definition)
         except FieldDefinition.DoesNotExist:
             return None
 
         field_model = eval(field_def.type)
 
         try:
-            field_val = field_model.objects.get( app = self, field_def=field_def )
+            field_val = field_model.objects.get( app = self, 
+                                                 field_def=field_def )
         except field_model.DoesNotExist:
             return None
 
         return field_val.value
 
+
+# Define empty permission model for using builder
+class Form(models.Model):
+
+    class Meta:
+        permissions = (
+            ("can_delete_applications", "Can delete applications"),
+        )
+
 class BaseField(models.Model):
     """
-       This is the base model for all field types.  Each unique field type
+       This is the base model for all field types  Each unique field type
        must extend this model for the field to work properly.
     """
     
@@ -188,6 +293,8 @@ class BaseField(models.Model):
 
     field_def = models.ForeignKey(FieldDefinition)
     app = models.ForeignKey(Application)
+
+    allow_dropdown = False
 
 class TextField(BaseField):
     """
@@ -202,6 +309,9 @@ class TextField(BaseField):
 
     widget = None
 
+    allow_dropdown = True
+
+
 class TextArea(BaseField):
     """
        This is the large text area field.
@@ -213,18 +323,20 @@ class TextArea(BaseField):
     value = models.TextField(blank=True, null=True)
 
     widget = None
+    allow_dropdown = True
 
 class BooleanField(BaseField):
     """
        A simple yes/no field.
     """
 
-    FieldDefinition.field_types+=('BooleanField', 'Yes/No Question/Checkbox',),
+    FieldDefinition.field_types+=('BooleanField', 'Yes/No Question',),
 
     name = "Yes/No Question/Checkbox"
-    value = models.BooleanField(blank=True)
+    value = models.BooleanField(blank=True, default=False)
 
     widget = None
+    allow_dropdown = False
 
 class DateField(BaseField):
     """
@@ -236,6 +348,7 @@ class DateField(BaseField):
     value = models.DateField(blank=True, null=True)
 
     widget = DateWidget
+    allow_dropdown = True
 
 class EmailField(BaseField):
     """
@@ -247,6 +360,7 @@ class EmailField(BaseField):
     value = models.EmailField(blank=True, null=True)
 
     widget = None
+    allow_dropdown = True
 
 class FloatField(BaseField):
     """
@@ -258,6 +372,7 @@ class FloatField(BaseField):
     value = models.FloatField(blank=True, null=True)
 
     widget = None
+    allow_dropdown = True
 
 class IntegerField(BaseField):
     """
@@ -269,6 +384,43 @@ class IntegerField(BaseField):
     value = models.IntegerField(blank=True, null=True)
 
     widget = None
+    allow_dropdown = True
+
+class USStateField(BaseField):
+
+    """
+    Provides a dropdown selection of U.S. States and
+    provinces.
+    """
+
+    FieldDefinition.field_types+=('USStateField', 'U.S. States',),
+
+    name = "U.S. States"
+    value = models.CharField(null=True, blank=True, 
+                             max_length="255")
+
+    widget = USStateSelect
+    allow_dropdown = False
+
+class USZipCodeField(BaseField):
+
+    FieldDefinition.field_types+=('USZipCodeField', 'U.S. Zipcode',),
+    
+    name = "U.S. Zipcode"
+    value = fields.USZipCodeModelField(null=True, blank=True)
+
+    widget = None
+    allow_dropdown = True
+
+class USPhoneNumber(BaseField):
+
+    FieldDefinition.field_types+=('USPhoneNumber', 'U.S. Phone Number',),
+    
+    name = "U.S. Phone Number"
+    value = PhoneNumberField(null=True, blank=True)
+
+    widget = None
+    allow_dropdown = True
 
 class IPAddressField(BaseField):
     """
@@ -280,17 +432,20 @@ class IPAddressField(BaseField):
     value = models.IPAddressField(blank=True, null=True)
 
     widget = None
+    allow_dropdown = True
 
 class PositiveIntegerField(BaseField):
     """
       Integer field.  Accepts any whole number that is positive
     """
-    FieldDefinition.field_types+=('PositiveIntegerField', 'Positive Whole Number Field',),
+    FieldDefinition.field_types+=('PositiveIntegerField', 
+                                  'Positive Whole Number',),
 
     name = "Positive Whole Number Field"
     value = models.PositiveIntegerField(blank=True, null=True)
 
     widget = None
+    allow_dropdown = True
 
 class URLField(BaseField):
     """
@@ -302,8 +457,8 @@ class URLField(BaseField):
     value = models.URLField(blank=True, null=True)
 
     widget = None
+    allow_dropdown = True
     
-
 
 # File Based Fields
 
@@ -320,6 +475,7 @@ class FileField(BaseField):
                              storage=ApplicationStorage(),
                              blank=True, null=True)
     widget = FileWidget
+    allow_dropdown = False
 
 class ImageField(BaseField):
     """
@@ -333,6 +489,7 @@ class ImageField(BaseField):
                              storage=ApplicationStorage(),
                              blank=True, null=True)
     widget = FileWidget
+    allow_dropdown = False
 
 class DocumentField(BaseField):
     """
@@ -346,3 +503,4 @@ class DocumentField(BaseField):
                              storage=ApplicationStorage(),
                              blank=True, null=True)
     widget = FileWidget
+    allow_dropdown = False

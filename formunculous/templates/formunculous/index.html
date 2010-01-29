@@ -8,49 +8,42 @@
 {% block content %}
 
 {% if app_coll %}
-<h2>{% trans "Available Applications" %}</h2>
+<h2>{% trans "Available Forms" %}</h2>
 {% for app in app_coll %}
-<table class="formunculous_available">
-  <thead>
-	<tr>
-	  <th class="formunculous_available_title">
-		<a href="{% url formunculous-apply app.app_def.slug %}">
-		  {{ app.app_def.name }}
-		</a>
-	  </th>
-	  <th>
-		<strong>{% trans "Status:" %}</strong> {{ app.status }}
-	  </th>
-	</tr>
-  </thead>
-  <tbody>
-	<tr>
-	  <td colspan="2" class="formunculous_available_definition">
-		<p>{% trans "Description:" %}</p>
-		<p>
-		  {{ app.app_def.description }}
-		</p>
-	  </td>
-	</tr>
-	<tr class="formunculous_available_footer">
-	  <td colspan="2" align="right">
-		<strong>Available until:</strong> {{ app.app_def.stop_date|date:"D d M Y" }}
-		{{ app.app_def.stop_time|time:"g:i A" }}
-	  </td>
-	</tr>
-  </tbody>
-</table>
-<br /><br />
+<div class="formunculous_container">
+  <h2>
+	<a href="{% url formunculous-apply app.app_def.slug %}">
+	  {{ app.app_def.name }}
+	</a>
+  </h2>
+  <div class="formunculous_available_info">
+  	<div class="formunculous_available_description">
+	  <h3>{% trans "Description:" %}</h3>
+	  <p>
+		{{ app.app_def.description|safe }}
+	  </p>
+	</div>
+  </div>
+  <div class="formunculous_available_status">
+	<h3>{% trans "Status:" %}</h3>
+	<p>{{ app.status }}</p>
+	<h3>{% trans "Available until:" %}</h3>
+	<p>
+	  {{ app.app_def.stop_date|date:"D d M Y" }}
+	  {{ app.app_def.stop_time|time:"g:i A" }}
+	</p>
+  </div>
+</div>
+<div class="formunculous_available_cb"></div>
 {% endfor %}
 {% endif %}
 <br />
 {% if review_apps %}
 <h2>{% trans "Applications for Review" %}</h2>
-<dl class="formunculous-list">
+<ul class="formunculous_list">
   {% for app in review_apps %}
-  <dt><a href="{% url reviewer-index app.slug %}">{{ app.name }}</a></dt>
-  <dd>{{ app.description }}</dd>
+  <li><a href="{% url reviewer-index app.slug %}">{{ app.name }}</a></li>
   {% endfor %}
-</dl>
+</ul>
 {% endif %}
 {% endblock %}

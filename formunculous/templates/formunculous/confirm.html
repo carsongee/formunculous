@@ -18,7 +18,7 @@
    {% blocktrans %}
       Confirm the information below before clicking the continue link.  
       If any of the information is incorrect, click the cancel link and make
-      any needed correction before submitting.
+      any needed corrections before submitting.
    {% endblocktrans %}
 </p>
 <div class="formunculous_confirmation_info">
@@ -37,10 +37,39 @@
 		  </span>
 	   </li>
     {% endfor %}
-  </dl>
+  </ul>
+  {% if sub_apps %}
+  {% for sub_app_group in sub_apps %}
+    <h3 class="formunculous_sub_ad_title">{{ sub_app_group.sub_ad.name }}</h3>
+	{% for sub_app in sub_app_group.sub_apps %}
+	  <ul class="formunculous_form_info formunculous_sub_form_info">
+		{% for field in sub_app.fields %}
+		  <li>
+			<span class="formunculous_field_label">{{ field.label }}:</span>
+			<span class="formunculous_field_data">
+			  {% if field.data.url %}
+			  <a target="_blank" href="{{ field.data.url }}">
+				{% endif %}
+				{{ field.data }}
+				{% if field.data.url %}
+			  </a>
+			  {% endif %}
+			</span>
+		  </li>
+		{% endfor %}
+	  </ul>
+	{% endfor %}
+  {% endfor %}
+  {% endif %}
 </div>
 <div class="formunculous_confirmation_bar">
-  <span class="formunculous_continue_link"><a href="{% url formunculous-submit ad.slug, app.id %}">{% trans "Continue" %}</a></span>
-  <span class="formunculous_cancel_link"><a href="{% url formunculous-apply ad.slug %}">{% trans "Cancel" %}</a></span>
+  <ul>
+	<li>
+	  <span class="formunculous_continue_link"><a href="{% url formunculous-submit ad.slug, app.id %}">{% trans "Continue" %}</a></span>
+	</li>
+	<li>
+	  <span class="formunculous_cancel_link"><a href="{% url formunculous-apply ad.slug %}">{% trans "Cancel" %}</a></span>
+	</li>
+  </ul>
 </div>
 {% endblock %}
