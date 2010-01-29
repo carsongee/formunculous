@@ -31,11 +31,11 @@ $(document).ready(function()
 
 	// Connect the field types to the field list for drag/drop adding
 	// of fields.
-	$('.formunculous-field-types li').draggable({
+	$('.formunculous_field_types li').draggable({
 		connectToSortable: '.formunculous_field_list',
 		helper: 'clone'
 	});
-	$('.formunculous-field-types li').disableSelection();
+	$('.formunculous_field_types li').disableSelection();
 
 
 	// Handle expanding and collapsing
@@ -110,7 +110,7 @@ function urlify_slug() {
 
 // delete a field
 function delete_field() {
-	$('.formunculous-field-delete').unbind('click').click(function() {
+	$('.formunculous_field_delete').unbind('click').click(function() {
 		body = $(this).parents('.formunculous_field_actions').parents('li').children('.formunculous_field_body');
 		check = body.find('input').filter(function() {
 				return this.id.match(/id_fielddefinition_set-\d+-DELETE/);
@@ -140,7 +140,7 @@ function delete_field() {
 
 
 function dropdown() {
-	$('.formunculous-field-dropdown').unbind('click').click(function() {
+	$('.formunculous_field_dropdown').unbind('click').click(function() {
 		// Setup the dialog box iframe and display it
 		var id = $(this).parents('.formunculous_field_body').find('input').filter(
 			function() {
@@ -162,7 +162,7 @@ function dropdown() {
 
 // Register the add above event
 function add_above() {
-	$('.formunculous-field-add-above').unbind('click').click(function() {
+	$('.formunculous_field_add_above').unbind('click').click(function() {
 		// Call add_field with the newly created 'before' li item.
 		var el = $(this).parents('.formunculous_field_actions').parents('li').before('<li class="formunculous-new-field">New Item</li>');
 		add_field(el.prev());
@@ -175,7 +175,7 @@ function add_above() {
 
 // Register the add below event
 function add_below() {
-	$('.formunculous-field-add-below').unbind('click').click(function() {
+	$('.formunculous_field_add_below').unbind('click').click(function() {
 		// Call add_field with the newly created 'after' li item.
 		var el = $(this).parents('.formunculous_field_actions').parents('li').after('<li class="formunculous-new-field">New Item</li>');
 		add_field(el.next());

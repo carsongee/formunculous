@@ -1,20 +1,23 @@
-{% extends "formunculous/base.html" %}
+{% extends "formunculous/builder_base.html" %}
 
-{% load i18n %}
+{% load i18n widget_type %}
 
-{% block css %}
+{% block extrastyle %}{{ block.super }}
 {{ form.media }}
 <link href="{{ MEDIA_URL }}formunculous/css/formunculous.css" rel="stylesheet" type="text/css" />
 <link href="{{ MEDIA_URL }}formunculous/css/apply.css" rel="stylesheet" type="text/css" />
 {% endblock %}
 
-{% block js %}
+{% block extrahead %}{{ block.super }}
   <script type="text/javascript" src="{{ MEDIA_URL }}formunculous/js/urlify.js"></script>
+   <script type="text/javascript" src="{{ MEDIA_URL }}formunculous/js/ckeditor/ckeditor.js"></script>
+  <script type="text/javascript" src="{{ MEDIA_URL }}formunculous/js/toggle_ck.js"></script>
 {% endblock %}
 {% block title %}{% if add %}{% trans "New Application Definition" %}{% else %}{% trans "Modifying" %}{{ ad.name }}{% endif %}{% endblock %}
-{% block content_title %}{% if add %}{% trans "New Application Definition" %}{% else %}{% trans "Modifying" %}{{ ad.name }}{% endif %}{% endblock %}
+
 
 {% block content %}
+<h1>{% if add %}{% trans "New Application Definition" %}{% else %}{% trans "Modifying" %} &mdash; {{ ad.name }}{% endif %}</h1>
 
 <form method="post" action="{% if add %}{% url builder-add-ad %}{% else %}{% url builder-edit-ad form.instance.slug %}{% endif %}">
   {% if form.errors %}
@@ -33,8 +36,20 @@
 	{% ifnotequal field.name "parent" %}
 	<div class="apply_field_row">
 	    <div class="apply_field_errors">{{ field.errors }}</div>
-		<div class="apply_field">
-		  {{ field.label_tag }} {{ field }}
+		<div class="apply_field{% if field.field.required%} apply_required{% endif%}">
+		  {% widget_type field.field.widget as widget %}
+		  {% ifequal widget "CheckboxInput" %}
+		    {{ field }}
+		    <label for="{{ field.field.auto_id}}" class="apply_cb_label">
+			  {{field.field.label}}
+			</label>
+		  {% else %}
+			{{ field.label_tag }}
+			{% ifequal widget "Textarea" %}
+			  <span class="formunculous_wysiwyg">&nbsp;</span><br />
+			{% endifequal %}
+			{{ field }}
+		  {% endifequal %}
 		</div>
 		{% if field.help_text %}
 		<div style="clear:both"></div>

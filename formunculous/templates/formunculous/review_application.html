@@ -1,5 +1,5 @@
 {% extends "formunculous/base.html" %}
-{% load i18n %}
+{% load i18n widget_type %}
 {% block css %}
 {{ review_form.media }}
 <link href="{{ MEDIA_URL }}formunculous/css/formunculous.css" rel="stylesheet" type="text/css" />
@@ -43,7 +43,7 @@ $('#del_dialog').dialog({
        show: 'drop',
        bgiframe: true
 });
-$('.formunculous-deletelink').click(function() { $('#del_dialog').dialog('open');}); 
+$('.formunculous_deletelink').click(function() { $('#del_dialog').dialog('open');}); 
 });
 	
 </script>
@@ -97,11 +97,36 @@ $('.formunculous-deletelink').click(function() { $('#del_dialog').dialog('open')
 			{{ app.submission_date|date:"D d M Y" }}
 			{{ app.submission_date|time:"g:i A" }}
 		  </span>
-	   </li>
-		 
-  </dl>
+	   </li>	 
+  </ul>
+  {% if sub_apps %}
+  {% for sub_app_group in sub_apps %}
+    <h3 class="formunculous_sub_ad_title">{{ sub_app_group.sub_ad.name }}</h3>
+	{% for sub_app in sub_app_group.sub_apps %}
+	  <ul class="formunculous_form_info formunculous_sub_form_info">
+		{% for field in sub_app.fields %}
+		  <li>
+			<span class="formunculous_field_label">{{ field.label }}:</span>
+			<span class="formunculous_field_data">
+			  {% if field.data.url %}
+			  <a target="_blank" href="{{ field.data.url }}">
+				{% endif %}
+				{{ field.data }}
+				{% if field.data.url %}
+			  </a>
+			  {% endif %}
+			</span>
+		  </li>
+		{% endfor %}
+	  </ul>
+	{% endfor %}
+  {% endfor %}
+  {% endif %}
+
 <div class="fr">
-  <span class="formunculous-deletelink" style="cursor:pointer">{% trans "Delete Application" %}</span>
+  {% if perms.formunculous.can_delete_applications %}
+  <span class="formunculous_deletelink" style="cursor:pointer">{% trans "Delete Application" %}</span>
+  {% endif %}
 </div>
 
 </div>
@@ -110,7 +135,10 @@ $('.formunculous-deletelink').click(function() { $('#del_dialog').dialog('open')
 {% if fields %}
 <hr>
 <h1>{% trans "Reviewer Fields" %}</h1>
+{% if message %}
   <div class="apply_messages">{{ message }}</div>
+{% endif %}
+
   <form method="post" action="{% url reviewer-application ad.slug app.id %}"{% if review_form.is_multipart %} enctype="multipart/form-data"{% endif %}>
 	{% if review_form.errors %}
 	<div class="apply_field_errors">{% trans "There are errors in your form, please correct them" %}</div>
@@ -130,18 +158,35 @@ $('.formunculous-deletelink').click(function() { $('#del_dialog').dialog('open')
 		    {% endif %}
 	      {% endif %}
 		{% endifchanged %}
-	    <div class="apply_field_row">
-	    <div class="apply_pretext">{{ field.pre_text }}</div>
-	    <div class="apply_field_errors">{{ field.field.errors }}</div>
-	    <div class="apply_field">
-	    {% if field.field.label %}{{ field.field.label_tag }}{% endif %}
-	    {{ field.field }}
-	    </div>
-	    <div class="apply_posttext">{{ field.post_text }}</div>
-	    {% if forloop.last  and field.group %}
-          </div>
-        {% endif %}
-		</div>
+	    <div class="apply_field_row {% cycle 'odd' 'even' %} ">
+	      <div class="apply_field_errors">{{ field.field.errors }}</div>
+	      <div class="apply_field{% if field.required %} apply_required{% endif %}">
+			{% widget_type field.field.field.widget as widget %}
+			{%  ifequal widget "CheckboxInput" %}
+			  {{ field.field }}
+			  {% if field.field.label %}
+			    <label for="{{ field.field.auto_id}}" class="apply_cb_label">
+				  {{field.field.label}}
+				</label>
+			  {% endif %}
+			{% else %}
+  			  {% if field.field.label %}
+ 			    {{ field.field.label_tag }}
+			  {% endif %}
+			  {{ field.field }}
+			{% endifequal %}
+	      </div>
+		  <div style="clear:both;"></div>
+		  {% if field.field.help_text %}
+		  <div class="apply-info-box">
+			{{ field.field.help_text }}
+		  </div>
+		  {% endif %}
+		  </div>
+	      {% if forloop.last and field.group %}
+            </div>
+          {% endif %}
+	      {{ field.post_text }}
 	  {% endif %}
 	{% endfor %}
     </fieldset>

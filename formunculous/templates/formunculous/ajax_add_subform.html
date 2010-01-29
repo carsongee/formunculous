@@ -1,0 +1,16 @@
+{% load i18n %}
+
+<tr id="{{ subform.app_definition.id }}">
+  <td>{{ subform.app_definition.name }}</td>
+  <td>{{ subform.min_entries }}</td>
+  <td>{{ subform.max_entries }}</td>
+  <td>{{ subform.extras }}</td>
+  <td><a href="" class="formunculous_changelink" onclick="javascript:show_change_dialog({{subform.app_definition.id}});">Change</a></td>
+  <td><a href="{% url builder-edit-fields subform.app_definition.slug %}" class="formunculous_changelink">Edit Form</a></td>
+  <td>
+	<a href="#" class="formunculous_deletelink"
+		 onclick="javascript:show_delete_dialog({{ subform.app_definition.id }});">
+	  Delete
+	</a>
+  </td>
+</tr>

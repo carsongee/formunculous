@@ -5,5 +5,22 @@ The following has been submitted to {{ appname }} for your review.  Any files in
 {% for field in fields %}{% if not field.data.url %}
 {{ field.label }}:
 {{ field.data }}
-
 {% endif %}{% endfor %}
+
+{% if sub_apps %}
+{% for sub_app_group in sub_apps %}
+
+
+{{ sub_app_group.sub_ad.name }} Sub Forms
+
+{% for sub_app in sub_app_group.sub_apps%}
+{{ sub_app_group.sub_ad.name }} Form {{ forloop.counter }}:
+{% for field in sub_app.fields %}{% if not field.data.url %}
+{{ field.label }}:
+{{ field.data }}
+{% endif%}{% endfor %}
+___________________________
+{% endfor %}
+{% endfor %}
+{% endif %}
+

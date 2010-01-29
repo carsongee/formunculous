@@ -1,0 +1,17 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+{% block userlinks %}{% url django-admindocs-docroot as docsroot %}{% if docsroot %}<a href="{{ docsroot }}">{% trans 'Documentation' %}</a> / {% endif %}<a href="{% url admin:password_change %}">{% trans 'Change password' %}</a> / <a href="{% url admin:logout %}">{% trans 'Log out' %}</a>{% endblock %}
+
+
+{% block breadcrumbs %}
+    <div class="breadcrumbs">
+	  <a href="{% url admin:index %}">Home</a>
+	  {% if breadcrumbs %}
+	  {% for crumb in breadcrumbs %}
+	  &#187;
+	    <a href="{{ crumb.url }}">{{ crumb.name }}</a>
+	  {% endfor %}
+	{% endif %}
+	  
+	</div>
+{% endblock %}

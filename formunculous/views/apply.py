@@ -12,16 +12,19 @@
 #
 #     You should have received a copy of the GNU General Public License
 #     along with formunculous.  If not, see <http://www.gnu.org/licenses/>.
-#     Copyright 2009 Carson Gee
+#     Copyright 2009, 2010 Carson Gee
 
+
+# Create your views here.
 from formunculous.models import *
 from formunculous.forms import *
+from formunculous.utils import build_template_structure, get_formsets, validate_formsets, save_formsets, fully_validate_formsets, get_sub_app_fields
 from django import http
 from django.utils.http import http_date
 from django.db import models
 from django.conf import settings
 from django import template
-from django.shortcuts import get_object_or_404, redirect, render_to_response
+from django.shortcuts import get_object_or_404, render_to_response, redirect
 from django.template.loader import render_to_string
 from django.http import HttpResponseRedirect, HttpResponse
 from django.utils.safestring import mark_safe
@@ -29,6 +32,10 @@ from django.utils.translation import ugettext as _
 from django.core.mail import send_mail, EmailMessage
 from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
+
+from django.contrib.auth import logout
+
+from django.forms.formsets import formset_factory
 
 import datetime
 import mimetypes
@@ -38,6 +45,12 @@ import stat
 
 def index(request):
 
+    """
+    Displays a listing of all the available forms.  If the authenticated
+    user is a flagged as a reviewer for any of the existing forms, links
+    are provided for the review page of those forms.
+    """
+
     app_defs = ApplicationDefinition.objects.current()
 
     app_coll = []
@@ -45,13 +58,13 @@ def index(request):
         status = _('N/A')
         if request.user.is_authenticated() and app_def.authentication:
             try:
-                app = Application.objects.get(user=request.user,
-                                              app_definition = app_def)
+                app = Application.objects.filter(user=request.user,
+                       app_definition = app_def).order_by("id").reverse()[0]
                 if app.submission_date:
                     status = _('Completed')
                 else:
                     status = _('Started - Not Complete')
-            except Application.DoesNotExist:
+            except (Application.DoesNotExist, IndexError):
                 status = _('Not Started')
         app_coll.append( {'app_def': app_def, 'status': status })
 
@@ -65,9 +78,21 @@ def index(request):
                               context_instance=template.RequestContext(request))
 
 def apply(request, slug):
+
+    """
+    This is the primary form view.  It handles displaying the form
+    defined by the slug, and redirecting to either of the completion
+    states.  There are two primary branches, authenticated or
+    unauthenticated.  If the app is authenticated it searches for
+    an existing partial or full application from the user for the
+    slug definition.  If it finds one, it displays either the partially
+    completed form in an editable state, or a completion page if it is
+    complete.
+    """
     
     form = None
     app = None
+    formsets = None
 
     breadcrumbs = [{'url': reverse('formunculous-index'), 'name': _('Applications')},]
 
@@ -80,21 +105,53 @@ def apply(request, slug):
         if not request.user.is_authenticated():
             return HttpResponseRedirect('%s?next=%s' % (reverse('formunculous-login'), request.path))
 
-        # Grab the app if it already exists.
+
+        # Grab the most recent app if it already exists.
         try:
-            app = Application.objects.get(user__username__exact=request.user.username, app_definition=ad)
-        except Application.DoesNotExist:
+            app = Application.objects.filter(
+                user__username__exact=request.user.username,
+                app_definition=ad).order_by('id').reverse()[0]
+        except (Application.DoesNotExist, IndexError):
             pass
 
         # Got the app, if it is already submitted, render a different
-        # template that displays the application's data.
+        # template that displays the application's data unless the
+        # application definition allows multiple submissions and the
+        # user has requested a new instance.
         if app:
-            if app.submission_date:
-                return render_to_response('formunculous/completed.html',
+
+            new = False
+            if request.GET.has_key('new'):
+                new = True
+
+            if app.submission_date and \
+                    not (new and ad.authentication_multi_submit):
+                # Load a custom template if it exists.
+                try:
+                    t = template.loader.get_template(
+                        'formunculous/%s/completed.html' % ad.slug)
+
+                    t = 'formunculous/%s/completed.html' % ad.slug
+                except:
+                    t = 'formunculous/completed.html'
+
+                sub_apps = get_sub_app_fields(app)
+                
+                return render_to_response(t,
                                           {'ad': ad, 'app': app, 
                                            'fields': app.get_field_values(),
+                                           'sub_apps': sub_apps,
                                            'breadcrumbs': breadcrumbs, },
                                           context_instance=template.RequestContext(request))
+            # If this is a new request and the existing app is finished,
+            # create an additional app instance.
+            if new and ad.authentication_multi_submit\
+                   and app.submission_date:
+                app = Application(user = request.user, app_definition = ad)
+                app.save()
+
+
+    # Begin form post processing.
     message = ''
     if request.method == 'POST':
 
@@ -103,16 +160,31 @@ def apply(request, slug):
             if not app:
                 app = Application(app_definition = ad, user = request.user)
                 app.save()
+                
             form = ApplicationForm(ad, app, False, request.POST, request.FILES)
-            if form.is_valid():
+            if ad.applicationdefinition_set.all():
+                formsets = get_formsets(ad, request, request.user)
+
+            valid = True
+            if not form.is_valid():
+                valid = False
+            if not validate_formsets(formsets):
+                valid = False
+            
+            if valid:
                 form.save()
-                message = _('%s Application Data Saved' % ad.name)
+
+                # Save formsets
+                if formsets:
+                    save_formsets(formsets, form.app, request.user)
+                
+                request.session['message'] = _('Form Data Saved')
                 # Redirect to prevent repost
                 return redirect("formunculous-apply", slug=slug)
 
         # If final submission, save form and redirect to the confirmation
         # page.
-        if request.POST.has_key('submit'):
+        elif request.POST.has_key('submit'):
             # If the app doesn't exist yet, create it
             if not app:
                 user = None
@@ -120,45 +192,77 @@ def apply(request, slug):
                     user = request.user
                 # Create the instance of the app
                 app = Application(app_definition = ad, user = user)
+            else:
+                user = app.user
 
             form = ApplicationForm(ad, app, False, request.POST, request.FILES)
+            
+            # Walk through and grab the subapp formsets
+            if ad.applicationdefinition_set.all():
+                formsets = get_formsets(ad, request, user)
             # Check for required fields, and show errors before
             # redirect
-            if form.is_valid() and form.check_required():
-
+            
+            # Check for base form validity
+            valid = True
+            if not (form.is_valid() and form.check_required()):
+                valid = False
+            if not fully_validate_formsets(formsets):
+                valid = False
+            if valid:
                 form.save()
+                # Save subapps if there are any
+                if formsets:
+                    save_formsets(formsets, form.app, user)
 
                 # Redirect to confirmation or thank you page
                 if ad.authentication:
-                    return redirect("formunculous-confirm", slug=slug, app=app.id)
+                    return redirect("formunculous-confirm", slug=slug, 
+                                    app=app.id)
                 else:
-                    return redirect("formunculous-thankyou",slug=slug, app=app.id)
+                    return redirect("formunculous-thankyou",slug=slug,
+                                    app=app.id)
 
     # Grab form from formunculous.forms
     if not form:
         form = ApplicationForm(ad, app)
 
-    # create structure for the template that looks like
-    # form-> (group, pre-text, post-text, page)
-    inc = {}
-    fields = []
-    for field in ad.fielddefinition_set.filter(reviewer_only=False):
-        field_dict = {'group': field.group, 'pre_text': mark_safe(field.pre_text), 
-                      'post_text': mark_safe(field.post_text),
-                      'field': form.__getitem__(field.slug),
-                      'required': field.require},
-        fields += field_dict
-        inc[field.slug] = True
+    fields = build_template_structure(form, ad)
 
-    # Got all the DB fields in the form, now run through any extras that
-    # may have shown up.
-    for field in form.fields:
-        if not inc.has_key(field):
-            field_dict = {'group': None, 'pre_text': None, 'post_text': None,
-                         'field': form.__getitem__(field), 
-                         'required': form.__getitem__(field).field.required,},
-            fields += field_dict
+    # Build user for use in subapps
+    user = None
+    if request.user and ad.authentication:
+        user = request.user
+
+    # Build sub forms based on sub application definitions
+    if not formsets:
+        formsets = []
+        if ad.applicationdefinition_set.all():
+            sub_apps = ad.applicationdefinition_set.all()
+            for sub_app in sub_apps:
+                sub_ad = sub_app.subapplicationdefinition_set.get()
+                sub_app_formset = formset_factory(ApplicationForm,
+                                              formset=FormunculousBaseFormSet,
+                                              extra=sub_ad.extras,
+                                              max_num = sub_ad.max_entries,)
+                formset = sub_app_formset(app_def=sub_app, parent=app,user=user,
+                                          minimum=sub_ad.min_entries, 
+                                          prefix=sub_app.slug)
+                formsets.append(formset)
+
+    subforms = []
+    for formset in formsets:
+        forms = []
+        for sub_form in formset.forms:
+            forms.append({"form": sub_form,
+                          "fields": build_template_structure(sub_form,
+                                                             formset.app_def)})
+        subforms.append({ "sub_ad": formset.app_def, "forms": forms,
+                          "formset": formset})
     
+                
+            
+            
 
     # Try a customized template.
     # if it is there use it, else use the default template.
@@ -167,25 +271,46 @@ def apply(request, slug):
         t = 'formunculous/%s/apply.html' % ad.slug
     except:
         t = 'formunculous/apply.html'
+
+    if 'message' in request.session:
+        message = request.session['message']
+        del request.session['message']
+
     return render_to_response(t,
-                              {'form': form, 'ad': ad, 'fields': fields, 'message': message,
+                              {'form': form, 'ad': ad, 'fields': fields,
+                               'subforms': subforms, 
+                               'message': message,
                                'breadcrumbs': breadcrumbs, },
                               context_instance=template.RequestContext(request))
+
+
     
 
 def confirm(request, slug, app):
     """
-       This confirms that the user wishes to finish their authenticated formunculous.
-       If it is confirmed they are sent to submit.  If it is cancelled they
-       returned to the apply page.
+       This confirms that the user wishes to finish their
+       authenticated form. If it is confirmed they are sent to
+       submit.  If it is cancelled they returned to the apply page.
+
+       When rendering, try to load a custom template based on
+       the slug.  If it isn't there, load the default template.
     """
     
     app = get_object_or_404(Application, id=app)
     ad = get_object_or_404(ApplicationDefinition, slug=slug)
+    sub_apps = get_sub_app_fields(app)
 
-    return render_to_response('formunculous/confirm.html',
+    try:
+        t = template.loader.get_template('formunculous/%s/confirm.html'
+                                         % ad.slug)
+        t = 'formunculous/%s/confirm.html' % ad.slug
+    except:
+        t = 'formunculous/confirm.html'
+
+
+    return render_to_response(t,
                               {'fields': app.get_field_values(), 'ad': ad,
-                               'app': app, },
+                               'app': app, 'sub_apps': sub_apps},
                               context_instance=template.RequestContext(request))
 
 def submit(request, slug, app):
@@ -225,19 +350,35 @@ def thankyou(request, slug, app):
     """
        This is the completion page for non-authenticated applications.
        It flags the app with a submission date and notifies all of the
-       reviewers
+       reviewers.
+
+       When rendering, try to load a custom template based on
+       the slug.  If it isn't there, load the default template.
     """
     app = get_object_or_404(Application, id=app)
     ad = get_object_or_404(ApplicationDefinition, slug=slug)
+
+    
     
     app.submission_date = datetime.datetime.now()
     app.save()
 
     notify_reviewers(request, ad, app)
 
-    # Build the template context before deleting the formunculous.
-    t = template.loader.get_template('formunculous/thankyou.html')
-    c = template.RequestContext( request, {'ad': ad, 'fields': app.get_field_values(),})
+    # Build the template context before deleting the form.
+    try:
+        t = template.loader.get_template('formunculous/%s/thankyou.html'
+                                         % ad.slug)
+        t = 'formunculous/%s/thankyou.html' % ad.slug
+    except:
+        t = 'formunculous/thankyou.html'
+
+    sub_apps = get_sub_app_fields(app)
+
+    t = template.loader.get_template(t)
+    c = template.RequestContext( request, {'ad': ad,
+                                           'fields': app.get_field_values(),
+                                           'sub_apps': sub_apps })
 
     # If this is an email_only AD, delete the application completely now that
     # we have fired off the email.
@@ -257,15 +398,18 @@ def notify_reviewers(request, ad, app):
 
     fields = app.get_field_values()
 
+    sub_apps = []
+
     if ad.email_only:
-        t = 'formunculous/email_formunculous.html'
+        t = 'formunculous/email_application.html'
+        sub_apps = get_sub_app_fields(app)
     else:
         t = 'formunculous/notify_reviewers_email.html'
 
     body = render_to_string(
         t,
         { 'ad': ad, 'app': app, 'fields': app.get_field_values(), 
-          'site': Site.objects.get_current(), },
+          'sub_apps': sub_apps, 'site': Site.objects.get_current(), },
         context_instance=template.RequestContext(request))
 
     notify_list = []
@@ -288,8 +432,33 @@ def notify_reviewers(request, ad, app):
                     email.attach_file(field['data'].path)
             except:
                 pass
+        if sub_apps:
+            for sub_app_group in sub_apps:
+                for sub_app in sub_app_group['sub_apps']:
+                    for field in sub_app['fields']:
+                        try:
+                            if issubclass(field['data'].field.__class__, models.FileField):
+                                email.attach_file(field['data'].path)
+                        except:
+                            pass
+                            
+                
 
     email.send(fail_silently=True)
+
+def logout_view(request):
+
+    """
+       Redirect to the location in the "next" key on logout, or
+       redirect to the index page if there is no next key specified.
+    """
+
+    logout(request)
+    if request.GET.has_key('next'):
+        return HttpResponseRedirect(request.GET['next'])
+    else:
+        return redirect("formunculous-index")
+
 
 
 def file_view(request, ad_slug, app, field_slug, file):
@@ -312,7 +481,7 @@ def file_view(request, ad_slug, app, field_slug, file):
     # If the application is not anonymous and the user isn't either a reviewer
     # or the applicant, deny access.
     if ad.authentication and \
-            not(request.user is app.user or request.user in ad.reviewers.all()):
+            not(request.user == app.user or request.user in ad.reviewers.all()):
         return render_to_response('formunculous/denied.html',
                                   context_instance=template.RequestContext(request))
 

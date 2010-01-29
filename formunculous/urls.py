@@ -12,12 +12,10 @@
 #
 #     You should have received a copy of the GNU General Public License
 #     along with formunculous.  If not, see <http://www.gnu.org/licenses/>.
-#     Copyright 2009 Carson Gee
+#     Copyright 2009, 2010 Carson Gee
+
 
 from django.conf.urls.defaults import *
-from django.contrib import admin
-from django.core.urlresolvers import reverse
-
 
 urlpatterns = patterns('',
 
@@ -26,13 +24,12 @@ urlpatterns = patterns('',
 
     url(r'^accounts/login/$', 'django.contrib.auth.views.login',
         name='formunculous-login',),
-    # In case you forget to set the right login redirect URL in settings.py
-    (r'^accounts/profile/$', 'django.views.generic.simple.redirect_to', {'url': '/'}),
-    url(r'^logout/$', 'django.contrib.auth.views.logout', {'next_page': '/'},
+
+    url(r'^logout/$', 'formunculous.views.apply.logout_view',
         name='formunculous-logout',),
 
     # Apply views
-    url(r'^forms/(?P<slug>[-\w]+)/$', 'formunculous.views.apply.apply', name="formunculous-apply"),
+    url(r'^forms/(?P<slug>[-\w]+)/?$', 'formunculous.views.apply.apply', name="formunculous-apply"),
     url(r'^confirm/(?P<slug>[-\w]+)/(?P<app>\d+)/$', 'formunculous.views.apply.confirm', name="formunculous-confirm"),
     url(r'^thankyou/(?P<slug>[-\w]+)/(?P<app>\d+)/$', 'formunculous.views.apply.thankyou', name="formunculous-thankyou"),
     url(r'^submit/(?P<slug>[-\w]+)/(?P<app>\d+)/$', 'formunculous.views.apply.submit', name="formunculous-submit"),
@@ -52,7 +49,13 @@ urlpatterns = patterns('',
     url(r'^builder/delete/$', 'formunculous.views.builder.delete_app_def', name="builder-delete-ad"),
     url(r'^builder/copy/$', 'formunculous.views.builder.copy_app_def', name="builder-copy-ad"),
     url(r'^builder/preview/$', 'formunculous.views.builder.preview_app_def', name="builder-preview-ad"),
-    url(r'^builder/$', 'formunculous.views.builder.index', name="builder-index"),
+
+    url(r'^builder/subform/add/$', 'formunculous.views.builder.add_subapp_def', name="builder-add-subapp"),
+    url(r'^builder/subform/change/$', 'formunculous.views.builder.change_subapp_def', name="builder-change-subapp"),
+
+    url(r'^builder/?$', 'formunculous.views.builder.index', name="builder-index"),
+
+
 
     # File static server view
     url(r'^storage/(?P<ad_slug>[-\w]+)/(?P<app>\d+)/(?P<field_slug>[-\w]+)/(?P<file>.+)$',

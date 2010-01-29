@@ -1,13 +1,13 @@
-{% extends "formunculous/base.html" %}
+{% extends "formunculous/builder_base.html" %}
 {% load i18n %}
 
-{% block css %}
+{% block extrastyle %}{{ block.super }}
 <link href="{{ MEDIA_URL }}formunculous/css/smoothness/jquery-ui-1.7.2.custom.css" rel="stylesheet" type="text/css">
 <link href="{{ MEDIA_URL }}formunculous/css/formunculous.css" rel="stylesheet" type="text/css" />
 <link href="{{ MEDIA_URL }}formunculous/css/apply.css" rel="stylesheet" type="text/css" />
 {% endblock %}
 
-{% block js %}
+{% block extrahead %}{{ block.super }}
 <script type="text/javascript" src="{{ MEDIA_URL }}formunculous/js/jquery-1.3.2.min.js"></script>
 <script type="text/javascript" src="{{ MEDIA_URL }}formunculous/js/jquery-ui-1.7.2.custom.min.js"></script>
 <script type="text/javascript">
@@ -45,7 +45,7 @@ $('#del_dialog').dialog({
 $('#copy_dialog').dialog({
        autoOpen: false,
        modal: true,
-       width: 400,
+       width: 500,
 	   resizable: true,
        buttons: {
              // Copy and redirect to ad edit form
@@ -147,32 +147,36 @@ $('#prev_dialog').dialog({
 {% endblock %}
 
 {% block title %}
-  {% trans "Application Definitions" %}
+  {% trans "Form Definitions" %}
 {% endblock %}
 
-{% block content_title %}
-  {% trans "Application Definitions" %}
-{% endblock %}
+
+{% trans "Form Definitions" %}
+
 
 {% block content %}
-<div id="del_dialog" title="{% trans "Confirm Application Definition Delete" %}">
+<h1>{% trans "Form Definitions" %}</h1>
+
+<div id="del_dialog" title="{% trans "Confirm Form Definition Delete" %}">
   <p>
 	Deleting the selected application definition will delete all of the applications
 	that are associated with it.
   </p>
 </div>
-<div id="prev_dialog" title="{% trans "Application Definition Preview" %}">
+<div id="prev_dialog" title="{% trans "Form Definition Preview" %}">
 </div>
 
 
-<div id="copy_dialog" title="{% trans "Copy Application Definition" %}">
+<div id="copy_dialog" title="{% trans "Copy Form Definition" %}">
   <form method="post" action="{% url builder-copy-ad %}">
+	<fieldset class="apply_fieldset">
 	<p>
 	  <label for="id_copy_name">New Name: </label><input type="text" id="id_copy_name" name="name" />
 	</p>
 	<p>
 	  <label for="id_copy_slug">New Slug: </label><input type="text" id="id_copy_slug" name="slug" />
 	</p>
+	</fieldset>
   </form>
 </div>
 
@@ -180,7 +184,8 @@ $('#prev_dialog').dialog({
 <div id="ajax_results">
 </div>
 <div class="fr">
-  <a class="formunculous-addlink" href="{% url builder-add-ad %}">{% trans "Create Application Defintion" %}</a>
+  <a class="formunculous_addlink" href="{% url builder-add-ad %}">{% trans "Create Form Definition" %}</a>
+  <a class="formunculous_offsitelink" style="margin-left: 10px;" href="{% url formunculous-index %}">{% trans "Form Index" %}</a>
 </div>
 <div style="clear:right"></div>
 
@@ -205,11 +210,11 @@ $('#prev_dialog').dialog({
 	<td>
 	  {{ ad.stop_date|date:"D d M Y" }}
 	</td>
-	<td><a href="{% url builder-edit-ad ad.slug %}" class="formunculous-changelink">Change</a></td>
-	<td><a href="{% url builder-edit-fields ad.slug %}" class="formunculous-changelink">Edit Form</a></td>
-	<td><a href="#" class="formunculous-copylink" onclick="javascript:show_copy_dialog({{ad.id}}, '{{ad.slug}}');">Copy</a></td>
-	<td><a href="#" class="formunculous-previewlink" onclick="javascript:show_preview_dialog({{ad.id}});">Preview</a></td>
-	<td><a href="#" class="formunculous-deletelink" onclick="javascript:show_delete_dialog({{ad.id}});">Delete</a></td>
+	<td><a href="{% url builder-edit-ad ad.slug %}" class="formunculous_changelink">Change</a></td>
+	<td><a href="{% url builder-edit-fields ad.slug %}" class="formunculous_changelink">Edit Form</a></td>
+	<td><a href="#" class="formunculous_copylink" onclick="javascript:show_copy_dialog({{ad.id}}, '{{ad.slug}}');">Copy</a></td>
+	<td><a href="#" class="formunculous_previewlink" onclick="javascript:show_preview_dialog({{ad.id}});">Preview</a></td>
+	<td><a href="#" class="formunculous_deletelink" onclick="javascript:show_delete_dialog({{ad.id}});">Delete</a></td>
   </tr>
   {% endfor %}
 </tbody>

@@ -1,0 +1,107 @@
+{% load i18n %}
+<div id="add_subform_dialog" title="{% trans "Add Sub-form" %}">
+  <form method="post" action="" id="add_subform_form">
+	<fieldset class="apply_fieldset">
+	  <input type="hidden" name="ad" value="{{ad.id}}" id="subform_ad"/>
+	  <p>
+		<label for="id_subform_name">{% trans "Title" %}:</label>
+		<input type="text" id="id_subform_name" name="name" />
+	  </p>
+	  <p>
+		<label for="id_subform_slug">{% trans "Slug" %}:</label>
+		<input type="text" id="id_subform_slug" name="slug" />
+	  </p>
+
+	  <p>
+		<label for="id_min_entries">{% trans "Minimum Entries" %}:</label>
+		<input type="text" id="id_min_entries" name="min_entries" />
+		<div class="apply-info-box">
+		  {% blocktrans %}
+		  The minimum number of
+          instances of this sub-form the
+          user must fill out.  0 if none.
+		  {% endblocktrans %}
+		</div>
+	  </p>
+	  <p>
+		<label for="id_max_entries">{% trans "Maximum Entries" %}:</label>
+		<input type="text" id="id_max_entries" name="max_entries" />
+		<div class="apply-info-box">
+		  {% blocktrans %}
+		  The maximum number of
+          instances of this sub-form the
+		  user must fill out. 0 if
+		  there is no limit.
+		  {% endblocktrans %}
+		</div>
+	  </p>
+	  <p>
+		<label for="id_extras">{% trans "Number of Extras" %}:</label>
+		<input type="text" id="id_extras" name="extras" />
+		<div class="apply-info-box">
+		  {% blocktrans %}
+		  The number of extra forms to
+          show by default on an
+          application.
+		  {% endblocktrans %}
+		</div>
+	  </p>
+	</fieldset>
+  </form>
+</div>
+<div id="change_subform_dialog" title="{% trans "Change Sub-form" %}">
+  <form method="post" action="" id="change_subform_form">
+	<fieldset class="apply_fieldset">
+	  <p>
+		<label for="id_change_subform_name">{% trans "Title" %}:</label>
+		<input type="text" id="id_change_subform_name" name="change_name" />
+	  </p>
+	  <p>
+		<label for="id_change_subform_slug">{% trans "Slug" %}:</label>
+		<input type="text" id="id_change_subform_slug" name="change_slug" />
+	  </p>
+
+	  <p>
+		<label for="id_change_min_entries">{% trans "Minimum Entries" %}:</label>
+		<input type="text" id="id_change_min_entries" name="change_min_entries" />
+		<div class="apply-info-box">
+		  {% blocktrans %}
+		  The minimum number of
+          instances of this sub-form the
+          user must fill out.  0 if none.
+		  {% endblocktrans %}
+		</div>
+	  </p>
+	  <p>
+		<label for="id_change_max_entries">{% trans "Maximum Entries" %}:</label>
+		<input type="text" id="id_change_max_entries" name="change_max_entries" />
+		<div class="apply-info-box">
+		  {% blocktrans %}
+		  The maximum number of
+          instances of this sub-form the
+		  user must fill out. 0 if
+		  there is no limit.
+		  {% endblocktrans %}
+		</div>
+	  </p>
+	  <p>
+		<label for="id_change_extras">{% trans "Number of Extras" %}:</label>
+		<input type="text" id="id_change_extras" name="change_extras" />
+		<div class="apply-info-box">
+		  {% blocktrans %}
+		  The number of extra forms to
+          show by default on an
+          application.
+		  {% endblocktrans %}
+		</div>
+	  </p>
+	</fieldset>
+  </form>
+</div>
+
+<div id="del_dialog" title="{% trans "Confirm Sub-form Delete" %}">
+  <p>
+	Deleting the selected sub-form will delete 
+	all of the data that is associated with it.
+  </p>
+</div>
