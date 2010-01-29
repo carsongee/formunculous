@@ -34,4 +34,19 @@ If you intend on using the email notifications you will need to define
 the SERVER_EMAIL and EMAIL_HOST constants in your settings file.  See the
 django settings documentation for more details/options.
 
+There are also required media files for formunculous, so you will need to
+copy symlink in the $PYTHON_PATH/formunculous/media/formunculous directory
+into your MEDIA_ROOT directory for the CSS/JS/Images used by formunculous
 
+
+** Upgrading **
+
+If you are upgrading from a previous of version of formunculous there are
+likely to be DB Schema changes for added functionality.  After upgrading
+always run "python manage.py syncdb" and then check the upgrade directory
+for sql files for upgrading the schema.  So if you went from 1.0 to 1.2
+for example you will want to apply any and all .sql files that are designated
+between those versions to your database.
+
+Of course if you have been using something like Django Evolution, this isn't
+an issue, and running "manage.py syncdb" should be adequate.

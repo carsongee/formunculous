@@ -1,12 +1,18 @@
 import os
 import sys
 
-# Django settings for application project.
-SERVER_EMAIL = 'ecs-auto@ku.edu'
-EMAIL_HOST = 'smtp.ku.edu'
+# Django settings for formunculous project.
+SERVER_EMAIL = 'root@localhost'
+EMAIL_HOST = '127.0.0.1'
 
-APP_STORAGE_ROOT = '/Users/cgee/tmp'
-APP_STORAGE_URL = '/'
+
+FORMUNCULOUS_REVIEW_PAGE_SIZE = 10
+
+APP_STORAGE_ROOT = '/home/cgee/tmp'
+APP_STORAGE_URL = '/apply/'
+
+LOGIN_REDIRECT_URL = '/'
+
 
 #Create path to application for correct pathing.
 project_path = os.path.dirname(__file__)
@@ -76,6 +82,14 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+)
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+    "django.core.context_processors.auth",
+    "django.core.context_processors.debug",
+    "django.core.context_processors.i18n",
+    "django.core.context_processors.media",
+    "django.core.context_processors.request",
 )
 
 ROOT_URLCONF = 'harness.urls'

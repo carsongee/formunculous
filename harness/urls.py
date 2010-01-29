@@ -1,10 +1,12 @@
 from django.conf.urls.defaults import *
 from django.conf import settings
+from django.contrib import admin
 import os
+
+admin.autodiscover()
 
 project_path = os.path.dirname(__file__)
 app_path = os.path.normpath(project_path + '/..')
-print('%s/formunculous/media/' % app_path)
 
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
@@ -17,7 +19,7 @@ if settings.SERVE_MEDIA:
 
 
 urlpatterns += patterns('',
-    (r'^', include('formunculous.urls')),
+    (r'^apply/', include('formunculous.urls')),
     # Example:
     # (r'^application/', include('application.foo.urls')),
 
@@ -26,5 +28,5 @@ urlpatterns += patterns('',
     # (r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
     # Uncomment the next line to enable the admin:
-    # (r'^admin/', include(admin.site.urls)),
+    (r'^admin/', include(admin.site.urls)),
 )
