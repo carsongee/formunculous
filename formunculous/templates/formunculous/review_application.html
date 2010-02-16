@@ -1,19 +1,19 @@
 {% extends "formunculous/base.html" %}
 {% load i18n widget_type %}
-{% block css %}
+{% block css %}{{ block.super }}
 {{ review_form.media }}
 <link href="{{ MEDIA_URL }}formunculous/css/formunculous.css" rel="stylesheet" type="text/css" />
 <link href="{{ MEDIA_URL }}formunculous/css/apply.css" rel="stylesheet" type="text/css" />
 <link href="{{ MEDIA_URL }}formunculous/css/smoothness/jquery-ui-1.7.2.custom.css" rel="stylesheet" type="text/css">
 {% endblock %}
-{% block js %}
+{% block js %}{{ block.super }}
 <script type="text/javascript" src="{{ MEDIA_URL }}formunculous/js/jquery-1.3.2.min.js"></script>
 <script type="text/javascript" src="{{ MEDIA_URL }}formunculous/js/jquery-ui-1.7.2.custom.min.js"></script>
 <script type="text/javascript">
 
 var delete_url = "{% url reviewer-delete ad.slug %}";
 var app_id = {{ app.id }}
-$(document).ready(function()
+jQuery(document).ready(function($)
 {
 $('#del_dialog').dialog({
        autoOpen: false,
@@ -43,7 +43,7 @@ $('#del_dialog').dialog({
        show: 'drop',
        bgiframe: true
 });
-$('.formunculous_deletelink').click(function() { $('#del_dialog').dialog('open');}); 
+jQuery('.formunculous_deletelink').click(function() { jQuery('#del_dialog').dialog('open');}); 
 });
 	
 </script>

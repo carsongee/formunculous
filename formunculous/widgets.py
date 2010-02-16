@@ -14,13 +14,14 @@
 #     along with formunculous.  If not, see <http://www.gnu.org/licenses/>.
 #     Copyright 2009, 2010 Carson Gee
 
-
 from django import forms
 
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
 from django.conf import settings
 
+from django.contrib.localflavor.us.us_states import STATE_CHOICES
+from django.forms.fields import Select
 
 class FileWidget(forms.FileInput):
 
@@ -68,3 +69,11 @@ class HoneypotWidget(forms.TextInput):
         value = super(HoneypotWidget, self).render(*args, **kwargs)
         return value
 
+class OptionalStateSelect(Select):
+   """
+   A Select widget that uses a list of U.S. states/territories as its choices.
+   From the django project but a null option is prepended to the list.
+   """
+   def __init__(self, attrs=None):
+       states_with_blank = tuple([('', '-----------')] + list(STATE_CHOICES))
+       super(OptionalStateSelect, self).__init__(attrs, choices=states_with_blank)

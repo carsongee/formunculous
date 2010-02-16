@@ -14,7 +14,6 @@
 #     along with formunculous.  If not, see <http://www.gnu.org/licenses/>.
 #     Copyright 2009, 2010 Carson Gee
 
-
 from formunculous.models import *
 from formunculous.forms import *
 from formunculous.utils import build_template_structure, get_sub_app_fields

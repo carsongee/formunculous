@@ -13,9 +13,8 @@
 <script type="text/javascript" src="{{ MEDIA_URL }}formunculous/js/apply_sub_form.js"></script>
 
 <script type="text/javascript">
-  $(function() {
+  jQuery(function($) {
     {% for subform in subforms %}
-    var max_forms_{{subform.formset.prefix }} = {{ subform.formset.max_num }}
     $('#formset-{{ subform.formset.prefix }} .apply_sub_form_form').formset({
       prefix: '{{ subform.formset.prefix }}',
       formCssClass: 'dynamic-formset-{{subform.formset.prefix}}',

@@ -1,4 +1,4 @@
-$(document).ready(function()
+jQuery(document).ready(function($)
 {
 	$('#add_subform_dialog').dialog( {
 		autoOpen: false,

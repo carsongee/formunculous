@@ -14,7 +14,7 @@
 var current_app_id = 0;
 var current_app_slug = '';
 
-$(function() {
+jQuery(function($) {
 
 // Delete Dialog Handling
 $('#del_dialog').dialog({
@@ -121,25 +121,25 @@ $('#prev_dialog').dialog({
   {
     current_app_id = id;
     current_app_slug = slug
-    $("#id_copy_name").attr({value: ''});
-    $("#id_copy_slug").attr({value: ''});
-    $("#copy_dialog").dialog('open');
-    $("#id_copy_name").focus();
+    jQuery("#id_copy_name").attr({value: ''});
+    jQuery("#id_copy_slug").attr({value: ''});
+    jQuery("#copy_dialog").dialog('open');
+    jQuery("#id_copy_name").focus();
   }
 
   function show_delete_dialog(id)
   {
     current_app_id = id;
-    $("#del_dialog").dialog('open');
+    jQuery("#del_dialog").dialog('open');
   }
 
 
   function show_preview_dialog(id)
   {
     current_app_id = id;
-    $("#prev_dialog").html('<iframe height="98%" width="100%" frameborder="0" style="border: 0;" src="{% url builder-preview-ad %}?ad=' + current_app_id + '">Your browser does not support iframes</iframe>');
+    jQuery("#prev_dialog").html('<iframe height="98%" width="100%" frameborder="0" style="border: 0;" src="{% url builder-preview-ad %}?ad=' + current_app_id + '">Your browser does not support iframes</iframe>');
 
-    $("#prev_dialog").dialog('open');
+    jQuery("#prev_dialog").dialog('open');
   }
 
 </script>

@@ -1,4 +1,4 @@
-$(document).ready(function()
+jQuery(document).ready(function($)
 {
 	$(".apply_sub_form_title").click(function(e)
 	{

@@ -71,7 +71,7 @@ if ( window.CKEDITOR )
 }
 
 
-$(document).ready(function()
+jQuery(document).ready(function($)
 {
 	$('.formunculous_wysiwyg').click(function(e) {
 			text = $(e.target).next().next();

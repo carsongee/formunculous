@@ -157,7 +157,7 @@ class ApplicationForm(forms.Form):
             # Probably should throw an exception
             return False
 
-        if not self.cleaned_data:
+        if not hasattr(self, 'cleaned_data'):
             return False
 
         ret_val = True
