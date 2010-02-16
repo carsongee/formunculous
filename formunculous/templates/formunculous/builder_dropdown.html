@@ -1,8 +1,10 @@
 {% load i18n %}
 <html>
 <head>
-{% block css %}
+{% block extrastyle %}{{ block.super }}
+{{ form.media }}
 <link href="{{ MEDIA_URL }}formunculous/css/formunculous.css" rel="stylesheet" type="text/css" />
+<link href="{{ MEDIA_URL }}formunculous/css/apply.css" rel="stylesheet" type="text/css" />
 <style type="text/css">
   html {
     font-family: Arial, Helvetica, sans-serif;

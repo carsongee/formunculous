@@ -23,7 +23,7 @@
 
 <script type="text/javascript">
 
-  $(function() {
+  jQuery(function($) {
   // Preview Dialog Handling
   $('#prev_dialog').dialog({
   autoOpen: false,
@@ -51,9 +51,9 @@
   function show_preview_dialog(id)
   {
   current_app_id = id;
-  $("#prev_dialog").html('<iframe height="98%" frameborder="0" width="100%" style="border: 0;" src="{% url builder-preview-ad %}?ad=' + current_app_id + '">Your browser does not support iframes</iframe>');
+  jQuery("#prev_dialog").html('<iframe height="98%" frameborder="0" width="100%" style="border: 0;" src="{% url builder-preview-ad %}?ad=' + current_app_id + '">Your browser does not support iframes</iframe>');
 
-  $("#prev_dialog").dialog('open');
+  jQuery("#prev_dialog").dialog('open');
   }
 
 

@@ -399,7 +399,7 @@ class USStateField(BaseField):
     value = models.CharField(null=True, blank=True, 
                              max_length="255")
 
-    widget = USStateSelect
+    widget = OptionalStateSelect
     allow_dropdown = False
 
 class USZipCodeField(BaseField):

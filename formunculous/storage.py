@@ -14,7 +14,6 @@
 #     along with formunculous.  If not, see <http://www.gnu.org/licenses/>.
 #     Copyright 2009, 2010 Carson Gee
 
-
 from django.core.files.storage import FileSystemStorage
 from django.conf import settings
 
