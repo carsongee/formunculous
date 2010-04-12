@@ -29,9 +29,27 @@
 .apply_field_errors {
 	color: #ff3333;
 	background: url('../img/icon_error.gif') no-repeat;
-	padding-left: 16px;
+	padding-left: 22px;
 	margin-left: 220px;
 }
+
+.apply_field_errors .errorlist {
+	padding-left: 1em;
+	
+}
+.apply_field_errors .errorlist li {
+	list-style-type: none;
+	
+}
+.apply_row_errors {
+	border: 1px dashed #ff3333;
+}
+
+.apply_row_errors input {
+	background-color: #ffefef;
+	border: 1px solid #ff3333;
+}
+
 
 .apply_field_row {
 	width: 100%;

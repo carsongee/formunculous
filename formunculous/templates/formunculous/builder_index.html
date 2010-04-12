@@ -58,7 +58,7 @@ $('#copy_dialog').dialog({
                                   name: $('#id_copy_name').attr('value')},
                           datatype: "html",
                           success: function() {
-                                   window.location = '{% url builder-index %}edit/' + $('#id_copy_slug').attr('value');
+                                   window.location = '{% url builder-index %}/edit/' + $('#id_copy_slug').attr('value');
                                    },
                           error: function() {
                                    $('#copy_dialog').dialog('close');
@@ -192,16 +192,32 @@ $('#prev_dialog').dialog({
 <table class="formunculous_table" id="formunculous_def_table">
 <thead>
   <tr>
-	<th>{% trans "Name" %}</th>
-	<th>{% trans "Owner" %}</th>
-	<th>{% trans "Start Date" %}</th>
-	<th>{% trans "Stop Date" %}</th>
+	<th class="{% ifequal s "name" %}sort{% endifequal %}{% ifequal s "-name" %}sort-reverse{% endifequal %}">
+	  <a href="?s={% ifequal s "name"%}-name{% else %}name{%endifequal%}">
+		{% trans "Name" %}
+	  </a>
+	</th>
+	<th class="{% ifequal s "owner" %}sort{% endifequal %}{% ifequal s "-owner" %}sort-reverse{% endifequal %}">
+	  <a href="?s={% ifequal s "owner"%}-owner{% else %}owner{% endifequal %}">
+		{% trans "Owner" %}
+	  </a>
+	</th>
+	<th class="{% ifequal s "start_date" %}sort{% endifequal %}{% ifequal s "-start_date" %}sort-reverse{% endifequal %}">
+	  <a href="?s={% ifequal s "start_date"%}-start_date{% else %}start_date{% endifequal %}">
+		{% trans "Start Date" %}
+	  </a>
+	</th>
+	<th class="{% ifequal s "stop_date" %}sort{% endifequal %}{% ifequal s "-stop_date" %}sort-reverse{% endifequal %}">
+	  <a href="?s={% ifequal s "stop_date"%}-stop_date{% else %}stop_date{% endifequal %}">
+		{% trans "Stop Date" %}
+	  </a>
+	</th>
 	<th colspan="5">{% trans "Actions" %}</th>
   </tr>
 </thead>
 <tbody>
   {% for ad in app_defs %}
-  <tr id="{{ ad.id }}" class="{% cycle 'odd' 'even'%}">
+  <tr id="{{ ad.id }}" class="{% cycle 'odd' 'even'%}{% if not ad.is_active %} formunculous_inactive{% endif %}">
 	<td>{{ ad.name }}</td>
 	<td>{{ ad.owner }}</td>
 	<td>

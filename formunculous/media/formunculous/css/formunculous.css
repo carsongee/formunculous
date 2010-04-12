@@ -3,6 +3,10 @@
 	float:right;
 }
 
+.fl {
+	float:left;
+}
+
 /* Standard table styles */
 table.formunculous_table thead tr
 {
@@ -52,6 +56,11 @@ table.formunculous_table td
 table.formunculous_table tr.odd
 {
 	background-color: #f1f1fa;
+}
+
+.formunculous_inactive {
+	color: #999;
+	font-style: italic;
 }
 
 /* Reviewer table specific styles */
@@ -129,7 +138,7 @@ table.formunculous_review_table tr.odd:hover
 
 /* Common Links */
 .formunculous_previewlink, .formunculous_deletelink, .formunculous_addlink,
-.formunculous_changelink, .formunculous_copylink, .formunculous_subform_add, formunculous_newapplink {
+.formunculous_changelink, .formunculous_copylink, .formunculous_subform_add, .formunculous_newapplink, .formunculous_historylink, .formunculous_currentlink {
 	font-size: 1.1em;
 }
 .formunculous_previewlink {
@@ -170,6 +179,44 @@ table.formunculous_review_table tr.odd:hover
 .formunculous_newapplink {
 	padding-left: 22px;
 	background: url('../img/new_form.png') no-repeat;
+}
+.formunculous_historylink {
+	padding-left: 22px;
+	background: url('../img/history.png') no-repeat;
+}
+.formunculous_currentlink {
+	padding-left: 22px;
+	background: url('../img/current.png') no-repeat;
+}
+
+.formunculous_printlink {
+	padding-left: 22px;
+	background: url('../img/print.png') no-repeat;
+}
+.formunculous_csvlink {
+	padding-left: 22px;
+	background: url('../img/csv.png') no-repeat;
+}
+.formunculous_downloadlink {
+	padding-left: 22px;
+	background: url('../img/download.png') no-repeat;
+}
+.formunculous_statslink {
+	padding-left: 22px;
+	background: url('../img/stats.png') no-repeat;
+}
+
+.formunculous_completelink {
+	padding-left: 22px;
+	background: url('../img/complete.png') no-repeat;
+}
+.formunculous_incompletelink {
+	padding-left: 22px;
+	background: url('../img/incomplete.png') no-repeat;
+}
+.formunculous_reviewlink {
+	padding-left: 22px;
+	background: url('../img/review.png') no-repeat;
 }
 
 
@@ -237,6 +284,10 @@ table.formunculous_review_table tr.odd:hover
 .formunculous_field_title {
 	float: left;
 	width: 40%;
+	cursor: pointer;
+}
+.formunculous_field_name {
+	cursor: pointer;
 }
 
 .formunculous_field_actions {
@@ -364,8 +415,7 @@ table.formunculous_review_table tr.odd:hover
 }
 
 .formunculous_dropdown_group{ 
-	border: 1px dashed #ccc;
-	padding: 10px 10px 0 10px;
+	margin-top: 1em;
 }
 
 .formunculous_field_dropdown {
@@ -404,9 +454,114 @@ table.formunculous_review_table tr.odd:hover
 	background-color: #f1f1f1;
 }
 
+
+
+/* Start history styles */
+.formunculous_tab_bar {
+	border-bottom: 1px solid #ccc;
+	margin-top: 3em;
+	margin-bottom: 3em;
+}
+.formunculous_tab_bar ul {
+	list-style-type: none;
+	margin: 0;
+}
+.formunculous_tab_bar ul li {
+	background: url('../img/sub_form_bg.png') repeat-x;
+	list-style-type: none;
+	display: inline;
+	margin-right: 3px;
+	font-size: 1.1em;
+	font-weight: bold;
+	border-left: 1px solid #ccc;
+	border-right: 1px solid #ccc;
+	border-top: 1px solid #ccc;
+	padding: 5px 5px 1px 7px;
+}
+
+.formunculous_tab_bar ul li:hover{
+	background: none #f1f1f1;
+}
+
+
+.formunculous_tab_bar ul li a{
+	color: #999;
+}
+
+
+.formunculous_tab_bar ul .here {
+	background: none #fff !important;
+	border-bottom: 1px solid #fff;
+}
+
+.formunculous_tab_bar ul .here a{
+	color: #000;
+}
+
+.formunculous_history_bar {
+	display:none;
+	width: 100%;
+}
+
+.formunculous_history_list {
+	float:left;
+	margin-left: 2em;
+	padding-right: 2em;
+	width: 175px;
+}
+.formunculous_history_list ul {
+	list-style-type: none;
+	padding-left: 0;
+}
+
+.formunculous_history_list ul li a{
+	color: #3333ff;
+}
+
+.formunculous_history_list ul li {
+	list-style-type: none;
+	border-bottom: 1px dashed #ccc;
+	border-left: 1px dashed #ccc;
+	padding: 8px;
+}
+
+.formunculous_history_list ul li:hover {
+	background-color: #f1f1f1;
+}
+
+
+.formunculous_history_list ul .here{
+	list-style-type: none;
+	padding-left: 0;
+	font-weight: bold;
+	border: 1px solid #ccc;
+	background-color: #6666ff;
+	padding: 8px;
+}
+
+.formunculous_history_list ul .here:hover {
+	background-color: #6666ff;
+}
+
+
+.formunculous_history_list ul .here a{
+	color: #f1f1f1;
+}
+
+#formunculous-history-app {
+	float: left;
+	border-left: 1px dashed #ccc;
+	padding-left: 1em;
+	margin-top: 1em;
+	max-width: 60%
+}
+
+/* End history styles */
+
 .formunculous_form_info {
 	list-style-type: none;
 	padding-top: 1em;
+	padding-right: 3em;
 	margin: 0 2em 0 2em;
 }
 
@@ -417,7 +572,6 @@ table.formunculous_review_table tr.odd:hover
 }
 
 .formunculous_form_info li {
-	width: 100%;
 	overflow: hidden;
 	list-style-type: none;
 }
@@ -479,10 +633,14 @@ table.formunculous_review_table tr.odd:hover
 }
 
 .formunculous_list {
-	margin-left: 20px;
-	list-style: none;
-	font-weight: bold;
+	list-style: disc;
 }
+
+.formunculous_list li {
+	margin: 0 0 1.5em 15px;
+	list-style: disc;
+}
+
 
 .formunculous_container {
 	width: 100%;
@@ -532,6 +690,17 @@ table.formunculous_review_table tr.odd:hover
 	border-bottom: 1px dashed #ccc;
 	margin-right: 6em;
 }
+
+.formunculous_messages {
+	font-size: .8em;
+	background-color: #f1faf1;
+	width: 40%;
+	color: #333f33;
+	text-align: center;
+	margin: 0 auto 20px auto;
+	
+}
+
 
 /*ckeditor fix*/
 .cke_wrapper {

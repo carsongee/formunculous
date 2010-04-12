@@ -73,52 +73,24 @@ function deleteApp(id) {
 <div id="ajax_results">
 </div>
 
-{% if partials %}
 <div class="formunculous_tab_bar">
   <ul>
-	<li class="here">
+	<li>
 	  <a href="{% url reviewer-index ad.slug %}" class="formunculous_completelink">{% trans "Completed" %}</a>
 	</li>
-	<li>
+	<li class="here">
 	  <a href="{% url reviewer-index-incomplete ad.slug %}" class="formunculous_incompletelink">{% trans "In Progress" %}</a>
 	</li>
   </ul>
 </div>
-{% endif %}
 
-{% if status %}
-<div class="formunculous_messages">
-  {{ status }}
-</div>
-{% endif %}
-
-<div class="fr" id="formunculous-review-search">
-  <form method="get" action="">
-	<input type="text" name="q" id="q" value="{{ query }}"/>
-	<input type="hidden" name="s" id="s" value="{{ sort }}" />
-	<input type="hidden" name="page" id="page" value="{{ page.number }}" />
-	<input type="submit" name="submit" value="&nbsp;" />
-  </form>
-</div>
-<div class="fr" style="margin: 5px 2em 0 0;">
-  <a href="{% url reviewer-export ad.slug %}" class="formunculous_csvlink">
-	{% trans "Spreadsheet" %}
-  </a>
-  <a href="{% url reviewer-export-zip ad.slug %}" class="formunculous_downloadlink">
-	{% trans "Download Files" %}
-  </a>
-  <a href="{% url reviewer-statistics ad.slug %}" class="formunculous_statslink">
-	{% trans "Statistics" %}
-  </a>
-
-</div>
 <div style="clear:both"></div>
 <table class="formunculous_table formunculous_review_table">
 <thead>
 <tr>
   {% for header in headers %}
-  <th class="{% if header.sorted %}sort {% endif %}{% if header.rev_sorted %}sort-reverse{% endif %}">
-	<a href="{{ header.url }}&q={{ query }}&page={{ page.number }}">{{ header.name }}</a>
+  <th>
+	{{ header }}</a>
   </th>
   {% if forloop.last %}
     <th>
@@ -135,19 +107,12 @@ function deleteApp(id) {
 
 	{% if not forloop.last %}
 	<td>
-	  {% if col.url %}
-	  <a href="{{ col.url }}">
-	  {% endif %}
-	  {{ col.value }}
-	  {% if col.url %}
-	  </a>
-	  {% endif %}
+	  {{ col }}
 	</td>
 	{% else %}
-	<td><a href="{{ col.url }}">{{ col.value|date:"D d M Y" }} {{ col.value|time:"g:i A" }}</a></td>
-	<td id="app_{{ col.id }}">
+	<td id="app_{{ col }}">
 	  {% if perms.formunculous.can_delete_applications %}
-	  <a href="#" class="formunculous_deletelink" style="padding-left: 20px;" onclick="deleteApp({{ col.id }});">{% trans "Delete" %}</a></td>
+	  <a href="#" class="formunculous_deletelink" style="padding-left: 20px;" onclick="deleteApp({{ col }});">{% trans "Delete" %}</a></td>
 	  {% endif %}
 	{% endif %}
 
@@ -156,39 +121,5 @@ function deleteApp(id) {
   {% endfor %}
 </tbody>
 </table>
-
-{% if page.has_other_pages %}
-<div class="formunculous_pagination">
-  <ul>
-	<li>
-	  {% if page.has_previous %}
-	  <a href="?page=1&s={{ sort }}" class="direction">
-		{% endif %}
-		&#171;{% trans "first" %}
-		{% if page.has_previous %}</a>{% endif %}
-	</li>
-
-	{% for num in page.page_range %}
-	<li{% ifequal page.number num%} class="current"{% endifequal %}>
-	  {% if not num %} <span class="break">...</span>
-	  {% else %} 
-	  {% ifequal page.number num %}
-	  {{ num }}
-	  {% else %}
-	  <a href="?page={{ num }}&s={{ sort }}">{{ num }}</a> 
-	  {% endifequal %}
-	  {% endif %}
-	</li>
-	{% endfor %}
-	<li>
-	  {% if page.has_next %}
-	  <a href="?page={{ page.paginator.num_pages }}&s={{ sort }}" class="last" class="direction">
-		{% endif %}
-		{% trans "last" %}&#187;
-		{% if page.has_next %}</a>{% endif %}
-	</li>
-  </ul>
-</div>
-{% endif %}
 
 {% endblock %}

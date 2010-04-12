@@ -1,6 +1,6 @@
 {% load i18n %}
 
-<tr id="{{ ad.id }}">
+<tr id="{{ ad.id }}" {% if not ad.is_active %}class="formunculous_inactive"{% endif %}>
   <td>{{ ad.name }}</td>
   <td>{{ ad.owner }}</td>
   <td>

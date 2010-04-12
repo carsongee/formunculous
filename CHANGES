@@ -1,34 +1,41 @@
-Second major version:
+2.1 Feature Release:
 
 New features:
 
-* Builder now integrated with Django admin interface
-* Forms can now be designated by django Site
-* Subforms now exist and enable many to one forms
-* There are new fields available including:
-	  . US Phone Number
-	  . US Zip code
-	  . US State
-* You can now have authenticated forms that can be filled out multiple times
-* You can choose to display drop down form elements with radio buttons
-* You can now have multi select drop down elements displayed either as
-  checkboxes or via a select widget
-* All templates used for forms are customizable (i.e. confirmation, thankyou,
-  completion) by creating a template directory with the same name as the form
-  definition's slug (i.e. contact-us/thankyou.html)
-* Fields are marked as dropdown safe to prevent having a file field with
-  dropdown selections, as this doesn't make sense.
-* Completed forms are now searchable via the reviewing index
-* Completed forms now have pagination, the number displayed is configurable
-* CKEditor/WYSIWYG available on all HTML capable fields via a button
+* Graphical statistics for showing responses over time.
+* Pie charts for showing percentage choices for drop down type fields.
+* Improved notification e-mail with direct links to related areas of the app.
+* Interface improvements on form index page--tab with forms available for
+  review.
+* New review tab shows the number of complete and incomplete forms for each
+  form.
+* Incomplete forms are now shown on the reviewing view along with the completion
+  percentage.
+* There are now print links on the completion page and review page for forms.
+* Link to download all of the files associated with a form definition as a
+  single zip file.
+* There is a link to export all form submission data as a single CSV.
+* Restyle of form building view to make it more compact.
+* The accordion expansion handle for form building is now available in 
+  a larger area.
+* In the builder index, inactive forms are now greyed out.
+* Each column in the builder index is now sortable.
+* Input errors for the end user have an improved look and feel
+* If you have an authenticated multi-use form, the user can now view each
+  form that they have previously filled out.
 
-Bug fixes:
+Bug Fixes:
 
-* Massive style cleanup and prettifying, more compatible with IE
-* Fixed a sorting issue with submission date.
-* Boolean fields now default to False, previously they defaulted to Null/None
-
-
-Future release plans:
-* Add bulk copying/per item copying of form elements in the building interface
-* Show user previous submissions for multiple authenticated forms
+* Sorting on the review index has been improved to include fields with the
+  special "None" value.
+* Searching forms in the review index now properly cases and trims the search
+  terms.
+* The preview form no longer shows the submit/save buttons.
+* Copying a form definition now properly performs a deep copy of dropdown
+  selections and sub-forms.
+* Copying a form definition now properly copies the site status and list of
+  reviewers.
+* Notification for non-authenticated forms no longer sends multiple e-mail
+  notifications if the user refreshes the page.
+* Verification of whether the requested form is a parent or child is now
+  working properly.

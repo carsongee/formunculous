@@ -1,0 +1,56 @@
+{% extends "formunculous/base.html" %}
+{% load i18n %}
+{% block css %}{{ block.super }}
+<link href="{{ MEDIA_URL }}formunculous/css/formunculous.css" rel="stylesheet" type="text/css" />
+{% endblock %}
+
+{% block title %}
+{% trans "Statistics for " %}{{ ad.name }}
+{% endblock %}
+
+{% block content_title %}
+{% trans "Statistics for " %}{{ ad.name }}
+{% endblock %}
+
+
+{% block content %}
+<br /><br />
+<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
+		codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,115,0"
+		width="80%" height="400" id="chart_ajax" align="middle">
+	<param name="allowScriptAccess" value="sameDomain"/>
+
+	<param name="movie" value="{{ MEDIA_URL }}formunculous/flash/OFC.swf"/>
+	<param name="FlashVars" value="data-file={% url reviewer-stats-response-vs-time ad.slug %}"/>
+	<param name="quality" value="high"/>
+	<param name="bgcolor" value="#FFFFFF"/>
+	<embed src="{{ MEDIA_URL }}formunculous/flash/OFC.swf" FlashVars="data-file={% url reviewer-stats-response-vs-time ad.slug %}" quality="high" bgcolor="#FFFFFF"
+		   width=100% height=300 name="chart_ajax" align="middle" allowScriptAccess="sameDomain"
+		   type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer"/>
+</object>
+
+{% if fields %}
+  <br /><br />
+  {% for field in fields %}
+  <div style="width: 100%;">
+   <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
+		   codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,115,0"
+		   width="100%" height="300" id="chart_ajax" align="left">
+	 <param name="allowScriptAccess" value="sameDomain"/>
+	 
+	 <param name="movie" value="{{ MEDIA_URL }}formunculous/flash/OFC.swf"/>
+	 <param name="FlashVars" value="data-file={% url reviewer-stats-field-pie ad.slug field.id %}"/>
+	 <param name="quality" value="high"/>
+	 <param name="bgcolor" value="#FFFFFF"/>
+	 <embed src="{{ MEDIA_URL }}formunculous/flash/OFC.swf" FlashVars="data-file={% url reviewer-stats-field-pie ad.slug field.id %}" quality="high" bgcolor="#FFFFFF"
+			width=100% height=300 name="chart_ajax" align="middle" allowScriptAccess="sameDomain"
+			type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer"/>
+   </object>
+   <br /><br />
+   </div>
+   <div style=\"clear:both\"></div>
+  {% endfor %}
+{% endif %}
+
+
+{% endblock %}

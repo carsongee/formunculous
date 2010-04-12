@@ -68,6 +68,11 @@ jQuery('.formunculous_deletelink').click(function() { jQuery('#del_dialog').dial
 </div>
 
 <h1>{% trans "Responses" %}</h1>
+<div class="formunculous_container">
+  <div class="fr" style="margin-right: 2em;">
+	<a href="javascript:window.print()" class="formunculous_printlink">{% trans "Print" %}</a>
+  </div>
+
 <div class="formunculous_confirmation_info">
   <ul class="formunculous_form_info">
 	{% if app.user %}

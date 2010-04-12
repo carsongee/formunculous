@@ -43,8 +43,18 @@ jQuery(document).ready(function($)
 
 	$(".formunculous_field_list").click(function(e)
 	{
-		if($(e.target).is('.formunculous_field_collapse')) {
-			j = $(e.target);
+		if($(e.target).is('.formunculous_field_collapse') || $(e.target).is('.formunculous_field_title') || $(e.target).is('.formunculous_field_name')) {
+
+			if($(e.target).is('.formunculous_field_title')) {
+				j = $(e.target).find('.formunculous_field_collapse');
+			}
+			else if($(e.target).is('.formunculous_field_name')) {
+				j = $(e.target).parent().find('.formunculous_field_collapse')
+			}
+			else {
+				j = $(e.target);
+			}
+			
 
 			if( j.css('background-image').indexOf('img/arrow-down.gif') > -1)
 			{

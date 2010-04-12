@@ -12,8 +12,7 @@
 #
 #     You should have received a copy of the GNU General Public License
 #     along with formunculous.  If not, see <http://www.gnu.org/licenses/>.
-#     Copyright 2009, 2010 Carson Gee
-
+#     Copyright 2009,2010 Carson Gee
 
 from django import forms
 from django.db import models

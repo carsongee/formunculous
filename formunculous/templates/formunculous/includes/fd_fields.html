@@ -48,7 +48,7 @@
 		  {% endif %}
 		  
 		</div>
-		<div>
+		<div style="display:none">
 		  {% if form.page.errors %}
 		  <span class="formunculous_errors">{{ form.page.errors }}</span>
 		  {% endif %}
@@ -90,6 +90,7 @@
 			<div class="formunculous_info_box">{{ form.require.help_text }}</div>
 			{% endif %}
 		  </div>
+		  <br />
 		  <div>
 			{% if form.group.errors %}
 			<span class="formunculous_errors">{{ form.group.errors }}</span>
@@ -121,6 +122,15 @@
 		  </div>
 		</div>
 		<div style="clear:both"></div>
+	  </div>
+	  <div style="clear:both;"></div>
+	  <div class="formunculous_field_head ui-state-default">
+		<span class="formunculous_field_collapse"></span>
+		<span class="formunculous_field_name">
+		  {% trans "Dropdown Selections" %}
+		</span>
+	  </div>
+	  <div class="formunculous_field_body">
 		<div class="formunculous_dropdown_group">
 		  <span class="formunculous_changelink formunculous_field_dropdown">
 			{% trans "Add/Modify Dropdown Selections" %}
@@ -132,8 +142,9 @@
 			  fields that they do not make sense for.
 			{% endblocktrans %}
 		  </div>
+		  <br />
 		  <div class="formunculous_left_column">
-			<div style="font-size: .7em">
+			<div>
 			  {% if form.multi_select.errors %}
 			  <span class="formunculous_errors">
 				{{ form.multi_select.errors }}
@@ -146,7 +157,7 @@
 			</div>
 		  </div>
 		  <div class="formunculous_right_column">
-			<div style="font-size: .7em">
+			<div>
 			  {% if form.use_radio.errors %}
 			  <span class="formunculous_errors">
 				{{ form.use_radio.errors }}
@@ -159,13 +170,15 @@
 			</div>
 		  </div>
 		  <div style="clear:both"></div>
-
 		</div>
 	  </div>
-	  <div style="clear:both;"></div>	  
+	  <div style="clear:both;"></div>
+	  <br />
 	  <div class="formunculous_field_head ui-state-default">
 		<span class="formunculous_field_collapse"></span>
-		HTML Formatting
+		<span class="formunculous_field_name">
+		  {% trans "HTML Formatting" %}
+		</span>
 	  </div>
 	  <div class="formunculous_field_body">
 		<div class="formunculous_left_column">
