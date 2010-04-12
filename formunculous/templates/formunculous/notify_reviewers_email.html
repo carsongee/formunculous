@@ -2,6 +2,18 @@
 Someone has completed {{ appname }}. You can view the completed form by going to:
 {% endblocktrans %}
 http://{{ site.domain }}{% url reviewer-application ad.slug app.id %}
+{% blocktrans %}
+or you can view all currently completed forms by going to:
+{% endblocktrans %}
+http://{{ site.domain }}{% url reviewer-index ad.slug %}
+
+{% blocktrans %}
+If you are a reviewer for multiple forms you may view a list of all the forms you can review by going to:
+{% endblocktrans %}
+http://{{ site.domain }}{% url formunculous-index %}
+{% blocktrans %}logging in, and the clicking the "Review Forms" Tab.{% endblocktrans %}
+
+
 {% blocktrans with ad.owner as owner %}
 You are being notified of this because you are listed as a reviewer of this application.  If this is not correct please contact {{ owner }} and request to be removed from the reviewer list.
 

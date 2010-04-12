@@ -12,7 +12,7 @@
 #
 #     You should have received a copy of the GNU General Public License
 #     along with formunculous.  If not, see <http://www.gnu.org/licenses/>.
-#     Copyright 2009, 2010 Carson Gee
+#     Copyright 2009,2010 Carson Gee
 
 from formunculous.models import *
 from formunculous.utils import build_template_structure
@@ -39,10 +39,19 @@ def index(request):
        Lists available applications, links to create/copy/delete/modify
        application definitions.
     """
-    app_defs = ApplicationDefinition.objects.filter(parent=None)
+
+    # Sort application definition objects based on what is selected, default
+    # to alphabetical by Name.
+    s = "name"
+    if "s" in request.GET:
+        s = request.GET['s']
+        if s.lstrip('-') not in ["name", "owner", "start_date", "stop_date",]:
+            s = "name"
+
+    app_defs = ApplicationDefinition.objects.filter(parent=None).order_by(s)
 
     return render_to_response('formunculous/builder_index.html',
-                              {'app_defs': app_defs,},
+                              {'app_defs': app_defs, 's': s},
                               context_instance=template.RequestContext(request))
 
 
@@ -136,21 +145,71 @@ def copy_app_def(request):
         if request.POST.has_key('ad'):
             ad = get_object_or_404(ApplicationDefinition,
                                    id=int(request.POST['ad']))
+            ad_id = ad.id
             new_name = request.POST['name']
             new_slug = request.POST['slug']
             # Get field definition set for duplication
             field_definitions = ad.fielddefinition_set.all()
-            # Set new parameters for the duped AD, nuke the pk,
-            # so a new one is created
+
+            # Set new parameters for the duped AD
+            # Nuke the pk so a new one is created
+            # Set the sites and reviewers.
+
             ad.name = new_name
             ad.slug = new_slug
             ad.id = None
             ad.save()
+            
+            old_ad = ApplicationDefinition.objects.get(id=ad_id)
+            for site in old_ad.sites.all():
+                ad.sites.add(site)
+
+            for reviewer in old_ad.reviewers.all():
+                ad.reviewers.add(reviewer)
+
             # Loop through the fields and dupe them to point to the new AD
             for fd in field_definitions:
+                # Find any dropdown definitions for later copying
+                dropdowns = DropDownChoices.objects.filter(field_definition = fd)
+
                 fd.id = None
                 fd.application = ad
                 fd.save()
+
+                for dd in dropdowns:
+                    dd.id = None
+                    dd.field_definition = fd
+                    dd.save()
+
+            # Do it all again for sub_apps, should do tail recursion, but it is
+            # only one level deep.
+            sub_ads = ApplicationDefinition.objects.filter(parent__id = ad_id)
+            for sub_ad in sub_ads:
+                new_sub_slug = "%s_%s" % (new_slug, sub_ad.slug)
+                field_definitions = sub_ad.fielddefinition_set.all()
+                sub_app_def = SubApplicationDefinition.objects.get(app_definition=sub_ad)
+                
+                sub_ad.slug = new_sub_slug
+                sub_ad.id = None
+                sub_ad.parent = ad
+
+                sub_ad.save()
+
+                sub_app_def.id = None
+                sub_app_def.app_definition = sub_ad
+                sub_app_def.save()
+
+                for fd in field_definitions:
+                    dropdowns = DropDownChoices.objects.filter(field_definition = fd)
+
+                    fd.id = None
+                    fd.application = sub_ad
+                    fd.save()
+
+                    for dd in dropdowns:
+                        dd.id = None
+                        dd.field_definition = fd
+                        dd.save()
 
     return render_to_response('formunculous/ajax_copy_ad.html',
                               { 'ad': ad,},
@@ -172,9 +231,9 @@ def delete_app_def(request):
             name = ad.name
             ad.delete()
         else:
-            raise http.Http404, _('Application Defintion does not exist')
+            raise http.Http404, _('Application Definition does not exist')
     else:
-        raise http.Http404, _('Application Defintion does not exist')
+        raise http.Http404, _('Application Definition does not exist')
 
     return render_to_response('formunculous/ajax_delete_ad.html',
                               {'name': name,},
@@ -191,9 +250,9 @@ def preview_app_def(request):
             ad = get_object_or_404(ApplicationDefinition,
                                    id=int(request.GET['ad']))
         else:
-            raise http.Http404, _('Application Defintion does not exist')
+            raise http.Http404, _('Application Definition does not exist')
     else:
-        raise http.Http404, _('Application Defintion does not exist')
+        raise http.Http404, _('Application Definition does not exist')
     
     form = ApplicationForm(ad)
     # create structure for the template that looks like
@@ -238,7 +297,7 @@ def preview_app_def(request):
 
     return render_to_response('formunculous/apply.html',
                               {'form': form, 'ad': ad, 'fields': fields,
-                               'subforms': subforms},
+                               'subforms': subforms, 'preview': True,},
                               context_instance=template.RequestContext(request))
 
 preview_app_def = permission_required('formunculous.change_form')(preview_app_def)

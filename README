@@ -38,6 +38,14 @@ There are also required media files for formunculous, so you will need to
 copy symlink in the $PYTHON_PATH/formunculous/media/formunculous directory
 into your MEDIA_ROOT directory for the CSS/JS/Images used by formunculous
 
+**** Important *****
+
+As of version 2.1.0 Formunculous uses json, and either the python cjson or json libraries
+are required.  These are common libraries, but they generally come as python eggs
+which may cause problems on your Web server depending on the setup.  Generally you will
+need to set the "PYTHON_EGG_CACHE" environment variable to a place the Web server has
+read/write access in order for it to work properly.
+
 
 ** Upgrading **
 

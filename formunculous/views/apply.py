@@ -12,10 +12,8 @@
 #
 #     You should have received a copy of the GNU General Public License
 #     along with formunculous.  If not, see <http://www.gnu.org/licenses/>.
-#     Copyright 2009, 2010 Carson Gee
+#     Copyright 2009,2010 Carson Gee
 
-
-# Create your views here.
 from formunculous.models import *
 from formunculous.forms import *
 from formunculous.utils import build_template_structure, get_formsets, validate_formsets, save_formsets, fully_validate_formsets, get_sub_app_fields
@@ -32,6 +30,7 @@ from django.utils.translation import ugettext as _
 from django.core.mail import send_mail, EmailMessage
 from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
+from django.core.servers.basehttp import FileWrapper
 
 from django.contrib.auth import logout
 
@@ -93,12 +92,16 @@ def apply(request, slug):
     form = None
     app = None
     formsets = None
+    history = None
 
     breadcrumbs = [{'url': reverse('formunculous-index'), 'name': _('Applications')},]
 
     ad = get_object_or_404(ApplicationDefinition, slug=slug)
+    if ad.parent:
+        raise http.Http404, _("This application doesn't exist")
+
     if datetime.datetime.now() < ad.start_date or datetime.datetime.now() > ad.stop_date:
-        raise http.Http404, _('This application is no longer active')
+        raise http.Http404, _('This application is not active')
 
     # Require auth and redirect
     if ad.authentication:
@@ -136,12 +139,26 @@ def apply(request, slug):
                     t = 'formunculous/completed.html'
 
                 sub_apps = get_sub_app_fields(app)
+
+                # If there are previous apps and this is a multi-auth
+                # form, populate <history> with them
+                if ad.authentication_multi_submit:
+                    try:
+                        apps_history = Application.objects.filter(
+                            user__username__exact=request.user.username,
+                            app_definition=ad).order_by('id').reverse()[1:]
+                        if apps_history.count() > 0:
+                            history = apps_history
+                    except:
+                        history = None
+
                 
                 return render_to_response(t,
                                           {'ad': ad, 'app': app, 
                                            'fields': app.get_field_values(),
                                            'sub_apps': sub_apps,
-                                           'breadcrumbs': breadcrumbs, },
+                                           'breadcrumbs': breadcrumbs, 
+                                           'history': history, },
                                           context_instance=template.RequestContext(request))
             # If this is a new request and the existing app is finished,
             # create an additional app instance.
@@ -220,6 +237,8 @@ def apply(request, slug):
                     return redirect("formunculous-confirm", slug=slug, 
                                     app=app.id)
                 else:
+                    # Notify here, so refreshing doesn't resend notification
+                    notify_reviewers(request, ad, app)
                     return redirect("formunculous-thankyou",slug=slug,
                                     app=app.id)
 
@@ -276,11 +295,25 @@ def apply(request, slug):
         message = request.session['message']
         del request.session['message']
 
+    # If there are previous apps and this is a multi-auth
+    # form, populate <history> with them
+    if ad.authentication_multi_submit:
+        try:
+            apps_history = Application.objects.filter(
+                user__username__exact=request.user.username,
+                app_definition=ad, ).exclude(submission_date=None).order_by('id').reverse()
+            if apps_history.count() > 0:
+                history = apps_history
+        except:
+            history = None
+
+
     return render_to_response(t,
                               {'form': form, 'ad': ad, 'fields': fields,
                                'subforms': subforms, 
                                'message': message,
-                               'breadcrumbs': breadcrumbs, },
+                               'breadcrumbs': breadcrumbs, 
+                               'history': history, },
                               context_instance=template.RequestContext(request))
 
 
@@ -363,8 +396,6 @@ def thankyou(request, slug, app):
     app.submission_date = datetime.datetime.now()
     app.save()
 
-    notify_reviewers(request, ad, app)
-
     # Build the template context before deleting the form.
     try:
         t = template.loader.get_template('formunculous/%s/thankyou.html'
@@ -446,6 +477,35 @@ def notify_reviewers(request, ad, app):
 
     email.send(fail_silently=True)
 
+
+def history(request):
+
+    if not request.method == "POST":
+        raise http.Http404, _('Invalid Method')
+    if not request.POST.has_key('app'):
+        raise http.Http404, _('Invalid Method')
+
+
+    app = get_object_or_404(Application, id=request.POST['app'])
+
+    if not app.user.username == request.user.username:
+        return HttpResponse("You are not authorized to view this form.")
+
+    # Build the template context before deleting the form.
+    try:
+        t = template.loader.get_template('formunculous/%s/apply_history.html'
+                                         % app.app_definition.slug)
+        t = 'formunculous/%s/apply_history.html' % app.app_definition.slug
+    except:
+        t = 'formunculous/apply_history.html'
+
+    sub_apps = get_sub_app_fields(app)
+    t = template.loader.get_template(t)
+    c = template.RequestContext( request, {'ad': app.app_definition,
+                                           'fields': app.get_field_values(),
+                                           'sub_apps': sub_apps })
+    return HttpResponse(t.render(c))
+
 def logout_view(request):
 
     """
@@ -500,15 +560,17 @@ def file_view(request, ad_slug, app, field_slug, file):
         raise http.Http404, _('"%s" does not exist' % file)
     
     if not issubclass(file_field.field.__class__, models.FileField):
-        raise http.Http500, _('The specified file is not the correct type')
+        raise http.Http404, _('The specified file is not the correct type')
 
     if not os.path.isfile(file_field.path) or not os.access(file_field.path, os.R_OK):
         raise http.Http404, _('"%s" does not exist' % file)
 
     statobj = os.stat(file_field.path)
     mimetype = mimetypes.guess_type(file_field.path)[0] or 'application/octet-stream'
-    contents = open(file_field.path, 'rb').read()
-    response = http.HttpResponse(contents, mimetype=mimetype)
+    contents = open(file_field.path, 'rb')
+    wrapper = FileWrapper(contents)
+    response = http.HttpResponse(wrapper, mimetype=mimetype)
     response["Last-Modified"] = http_date(statobj[stat.ST_MTIME])
-    response["Content-Length"] = len(contents)
+    response["Content-Length"] = os.path.getsize(file_field.path)
+
     return response

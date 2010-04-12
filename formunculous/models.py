@@ -12,8 +12,7 @@
 #
 #     You should have received a copy of the GNU General Public License
 #     along with formunculous.  If not, see <http://www.gnu.org/licenses/>.
-#     Copyright 2009, 2010 Carson Gee
-
+#     Copyright 2009,2010 Carson Gee
 
 from django.db import models
 from django.contrib.auth.models import User, Group
@@ -112,6 +111,13 @@ class ApplicationDefinition(models.Model):
 
     def __unicode__(self):
         return( u'%s' % self.name )
+
+    def is_active(self):
+        now = datetime.datetime.now()
+        if now >= self.stop_date or now <= self.start_date:
+            return False
+        else:
+            return True
 
 class SubApplicationDefinition(models.Model):
 
@@ -226,7 +232,7 @@ class Application(models.Model):
     submission_date = models.DateTimeField(null=True, blank=True)
     app_definition = models.ForeignKey(ApplicationDefinition)
 
-    def get_field_values(self, reviewer_fields=False):
+    def get_field_values(self, reviewer_fields=False, all_fields=False):
         """
         Returns a collection of dictionary objects with the field names
         and their values.
@@ -236,8 +242,12 @@ class Application(models.Model):
         into the function.
         """
         fields = []
-        field_set = self.app_definition.fielddefinition_set.filter(
-            reviewer_only=reviewer_fields)
+        if not all_fields:
+            field_set = self.app_definition.fielddefinition_set.filter(
+                reviewer_only=reviewer_fields)
+        else:
+            field_set = self.app_definition.fielddefinition_set.all()
+
         for field_def in field_set:
             field_model = eval(field_def.type)
             try:

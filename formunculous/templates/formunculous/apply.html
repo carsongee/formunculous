@@ -14,75 +14,123 @@
 
 <script type="text/javascript">
   jQuery(function($) {
-    {% for subform in subforms %}
-    $('#formset-{{ subform.formset.prefix }} .apply_sub_form_form').formset({
-      prefix: '{{ subform.formset.prefix }}',
-      formCssClass: 'dynamic-formset-{{subform.formset.prefix}}',
-      addText: 'Add Another Form',
-      addCssClass: 'apply_sub_form_addlink',
-      deleteText: 'Remove',
-      deleteCssClass: 'apply_sub_form_deletelink',
-      maxForms: {{ subform.formset.max_num }},
-      alertText: '{% trans "You have reached the maximum number of forms for this group"%}'
-    });
-    {% endfor %}
+  {% for subform in subforms %}
+  $('#formset-{{ subform.formset.prefix }} .apply_sub_form_form').formset({
+  prefix: '{{ subform.formset.prefix }}',
+  formCssClass: 'dynamic-formset-{{subform.formset.prefix}}',
+  addText: 'Add Another Form',
+  addCssClass: 'apply_sub_form_addlink',
+  deleteText: 'Remove',
+  deleteCssClass: 'apply_sub_form_deletelink',
+  maxForms: {{ subform.formset.max_num }},
+  alertText: '{% trans "You have reached the maximum number of forms for this group"%}'
+  });
+  {% endfor %}
   });
 </script>
 {% endif %}
+
+{% if history %}
+<script type="text/javascript" src="{{ MEDIA_URL }}formunculous/js/history.js"></script>
+<script type="text/javascript">
+  var historyURL = '{% url formunculous-apply-history %}'
+</script>
+{% endif %}
+
+
 {% endblock %}
+
+
 {% block title %}{{ ad.name }}{% endblock %}
 {% block content_title %}{{ ad.name }}{% endblock %}
 {% block content %}
-{% if message %}
-<div class="apply_messages">{{ message }}</div>
+
+{% if history %}
+<div class="formunculous_tab_bar">
+  <ul>
+	<li class="here" id="formunculous-current">
+	  <a href="#" class="formunculous_currentlink">{% trans "Current" %}</a>
+	</li>
+	<li id="formunculous-history">
+	  <a href="#" class="formunculous_historylink">{% trans "History" %}</a>
+	</li>
+  </ul>
+</div>
+
+
+<div class="formunculous_history_bar">
+  <div class="formunculous_history_list">
+	<p>View previously completed {{ ad.name }} forms:</p>
+	<ul>
+	  {% for item in history %}
+	  <li>
+		<a href="#" onclick="getHistory({{ item.id }},this);">{{ item.submission_date|date:"D d M Y" }} {{ item.submission_date|time:"g:i A" }}</a>
+	  </li>
+	  {% endfor %}
+	</ul>
+  </div>
+  <div id="formunculous-history-app">
+	
+  </div>
+</div>
 {% endif %}
-<form method="post" action="{% url formunculous-apply ad.slug %}"{% if form.is_multipart %} enctype="multipart/form-data"{% endif %}>
-  {% if form.errors %}
-  <div class="apply_field_errors">{% trans "There are errors in your form, please correct them" %}</div>
+
+<div class="formunculous_container">
+  {% if message %}
+  <div class="apply_messages">{{ message }}</div>
   {% endif %}
-  <fieldset class="apply_fieldset">
-	{% for field in fields %}
-  	{% if field.field.is_hidden %}
-	{{ field.field }}
-	{% else %}
 
-	{{ field.pre_text }}
+  <form method="post" action="{% url formunculous-apply ad.slug %}"{% if form.is_multipart %} enctype="multipart/form-data"{% endif %}>
 
-	{% ifchanged field.group %}
-	{% if field.group %}
-	<div class="apply_form_group">
-	  {% else %}
-	  {% if not forloop.first %}
+
+	{% if form.errors %}
+	<div class="apply_field_errors">{% trans "There are errors in your form, please correct them" %}
 	</div>
 	{% endif %}
-	{% endif %}
-	{% endifchanged %}
-	{% widget_type field.field.field.widget as widget %}
-	<div class="apply_field_row {% cycle 'odd' '' %} ">
-	  <div class="apply_field_errors">{{ field.field.errors }}</div>
-	  <div class="apply_field{% if field.required %} apply_required{% endif %}">
-		{%  ifequal widget "CheckboxInput" %}
-		{{ field.field }}
-		{% if field.field.label %}
-		<label for="{{ field.field.auto_id}}" class="apply_cb_label">
-		  {{field.field.label}}
-		</label>
-		{% endif %}
+
+	<fieldset class="apply_fieldset">
+	  {% for field in fields %}
+  	  {% if field.field.is_hidden %}
+	  {{ field.field }}
+	  {% else %}
+
+	  {{ field.pre_text }}
+
+	  {% ifchanged field.group %}
+	  {% if field.group %}
+	  <div class="apply_form_group">
 		{% else %}
-  		{% if field.field.label %}
- 		{{ field.field.label_tag }}
-		{% endif %}
-		{{ field.field }}
-		{% endifequal %}
-	  </div>
-	  <div style="clear:both;"></div>
-	  {% if field.field.help_text %}
-	  <div class="apply-info-box">
-		{{ field.field.help_text }}
+		{% if not forloop.first %}
 	  </div>
 	  {% endif %}
-	</div>
-	{% if forloop.last and field.group %}
+	  {% endif %}
+	  {% endifchanged %}
+	  {% widget_type field.field.field.widget as widget %}
+	  <div class="apply_field_row{% cycle ' odd' '' %}{% if field.field.errors %} apply_row_errors{% endif%}">
+		<div class="apply_field_errors">{{ field.field.errors }}</div>
+		<div class="apply_field{% if field.required %} apply_required{% endif %}">
+		  {%  ifequal widget "CheckboxInput" %}
+		  {{ field.field }}
+		  {% if field.field.label %}
+		  <label for="{{ field.field.auto_id}}" class="apply_cb_label">
+			{{field.field.label}}
+		  </label>
+		  {% endif %}
+		  {% else %}
+  		  {% if field.field.label %}
+ 		  {{ field.field.label_tag }}
+		  {% endif %}
+		  {{ field.field }}
+		  {% endifequal %}
+		</div>
+		<div style="clear:both;"></div>
+		{% if field.field.help_text %}
+		<div class="apply-info-box">
+		  {{ field.field.help_text }}
+		</div>
+		{% endif %}
+	  </div>
+	  {% if forloop.last and field.group %}
 </div>
 {% endif %}
 {{ field.post_text }}
@@ -130,7 +178,7 @@
 	    {% endif %}
 		{% endifchanged %}
 		{% widget_type field.field.field.widget as widget %}
-	    <div class="apply_field_row {% cycle 'odd' 'even' %} ">
+	    <div class="apply_field_row{% cycle ' odd' ' even' %}{% if field.field.errors %} apply_row_errors{% endif%}">
 	      <div class="apply_field_errors">{{ field.field.errors }}</div>
 	      <div class="apply_field{% if field.required %} apply_required{% endif %}">
 			{%  ifequal widget "CheckboxInput" %}
@@ -166,9 +214,12 @@
 </div>
 </div>
 {% endfor %}
+{% if not preview %}
 <div class="apply_submit{% if subforms %} apply_sub_form_submit{% endif %}">
   {% if ad.authentication %}<input type="submit" name="save" value="Save" />{% endif %}<input type="submit" name="submit" value="Submit" />
 </div>
+{% endif %}
 
 </form>
+</div>
 {% endblock %}
