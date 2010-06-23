@@ -66,6 +66,6 @@ with the application.
     packages = packages, 
     data_files = data_files,
     scripts = [],
-    requires = ('django (>=1.1)','pil','cjson'),
+    install_requires = ['django (>=1.1)','pil','simplejson'],
     zip_safe = False,
 )
