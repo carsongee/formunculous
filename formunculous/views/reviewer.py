@@ -54,7 +54,7 @@ def index(request, slug):
     ad = get_object_or_404(ApplicationDefinition, slug=slug)
 
     breadcrumbs = [{'url': reverse('formunculous-index'),
-                    'name': _('Applications')},]
+                    'name': _('Forms')},]
 
     # Check if they are authorized to view this page.
     validation = validate_user(request, ad)
@@ -99,19 +99,19 @@ def index(request, slug):
     # for each app id, then pass the sorted list into the pager.
     # A little inefficient, but there isn't much of a choice.
 
-    # By default sort on date, since that is the only column I know
-    # will be displayed
-    reverse_sort = False
+    # By default sort on the submission date in reverse, since that is
+    # the only column I know will be displayed
+    reverse_sort = True
     field_def_sort = False
     sort_field_def_id = 0
     
     sort = "submission_date"
-    sort_column = "0"
+    sort_column = "-0"
 
     if "s" in request.GET:
         sort_column = request.GET['s']
-        if sort_column[0] == '-':
-            reverse_sort = True
+        if not sort_column[0] == '-':
+            reverse_sort = False
         sort_field_def_id = int(sort_column.lstrip('-'))
 
         # Special case of sorting by submission_date
@@ -277,7 +277,7 @@ def index_incomplete(request, slug):
     ad = get_object_or_404(ApplicationDefinition, slug=slug)
 
     breadcrumbs = [{'url': reverse('formunculous-index'),
-                    'name': _('Applications')},]
+                    'name': _('Forms')},]
 
     # Check if they are authorized to view this page.
     validation = validate_user(request, ad)
@@ -287,7 +287,7 @@ def index_incomplete(request, slug):
     # Create the base query
     apps = Application.objects.filter(app_definition = ad, submission_date=None)
 
-    headers = [_('Application ID'), _('User'), _('Percent Complete'),]
+    headers = [_('Form ID'), _('User'), _('Percent Complete'),]
     
     data_table = []
     for app in apps:
@@ -335,7 +335,7 @@ def statistics(request, slug):
 
 
     breadcrumbs = [{'url': reverse('formunculous-index'), 
-                    'name': _('Application Index')},
+                    'name': _('Form Index')},
                    {'url': reverse('reviewer-index', kwargs={'slug': slug}), 
                     'name':  ad.name},
                    ]
@@ -491,7 +491,7 @@ def application(request, slug, app):
 
 
     breadcrumbs = [{'url': reverse('formunculous-index'), 
-                    'name': _('Application Index')},
+                    'name': _('Form Index')},
                    {'url': reverse('reviewer-index', kwargs={'slug': slug}), 
                     'name':  ad.name},
                    ]
@@ -540,9 +540,9 @@ def delete(request, slug):
                 return validation
             app.delete()
         else:
-            raise Http404, _('Application does not exist')
+            raise Http404, _('Form does not exist')
 
-    return HttpResponse(_('Application Successfully Delete'))
+    return HttpResponse(_('Form Successfully Deleted'))
 delete = permission_required('formunculous.can_delete_applications')(delete)
 
 

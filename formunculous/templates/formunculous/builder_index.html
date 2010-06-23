@@ -62,7 +62,7 @@ $('#copy_dialog').dialog({
                                    },
                           error: function() {
                                    $('#copy_dialog').dialog('close');
-                                   $('#ajax_results').html("<p>Unable to copy the application definition. Duplicate name/slug?</p>");
+                                   $('#ajax_results').html("<p>Unable to copy the form definition. Duplicate name/slug?</p>");
                                    $('#ajax_results').effect('highlight',{},1500);
                                    }
                         });
@@ -80,12 +80,12 @@ $('#copy_dialog').dialog({
                                    $('#copy_dialog').dialog('close');
                                    $('#formunculous_def_table > tbody:last').append(data);
                                    $('#formunculous_def_table > tbody tr:last').effect('pulsate',{ times: 1},750);
-                                   $('#ajax_results').html("<p>Successfully copied the application definition.");
+                                   $('#ajax_results').html("<p>Successfully copied the form definition.");
                                    $('#ajax_results').effect('highlight',{},1500);
                                    },
                           error: function() {
                                    $('#copy_dialog').dialog('close');
-                                   $('#ajax_results').html("<p>Unable to copy the application definition. Duplicate name/slug?</p>");
+                                   $('#ajax_results').html("<p>Unable to copy the form definition. Duplicate name/slug?</p>");
                                    $('#ajax_results').effect('highlight',{},1500);
                                    }
                         });
@@ -159,7 +159,7 @@ $('#prev_dialog').dialog({
 
 <div id="del_dialog" title="{% trans "Confirm Form Definition Delete" %}">
   <p>
-	Deleting the selected application definition will delete all of the applications
+	Deleting the selected form definition will delete all of the forms
 	that are associated with it.
   </p>
 </div>
@@ -168,7 +168,7 @@ $('#prev_dialog').dialog({
 
 
 <div id="copy_dialog" title="{% trans "Copy Form Definition" %}">
-  <form method="post" action="{% url builder-copy-ad %}">
+  <form method="post" action="{% url builder-copy-ad %}">{% csrf_token %}
 	<fieldset class="apply_fieldset">
 	<p>
 	  <label for="id_copy_name">New Name: </label><input type="text" id="id_copy_name" name="name" />

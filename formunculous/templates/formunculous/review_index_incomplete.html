@@ -26,13 +26,13 @@ $('#del_dialog').dialog({
                            data: { id: app_id },
                            success: function() {
                                    $('#del_dialog').dialog('close');
-                                   $('#ajax_results').html("<p>Application Successfully Deleted</p>");
+                                   $('#ajax_results').html("<p>Form Successfully Deleted</p>");
                                    $('#ajax_results').effect('highlight',{},1500);
                                    $('#app_' + app_id).parent('tr').fadeOut(1000, function() {$(this).remove();});
                            },
                            error: function() {
                                    $('#del_dialog').dialog('close');
-                                   $('#ajax_results').html("<p>Unable to delete the application</p>");
+                                   $('#ajax_results').html("<p>Unable to delete the form</p>");
                                    $('#ajax_results').effect('highlight',{},1500);
                                    }
                         });
@@ -64,10 +64,10 @@ function deleteApp(id) {
 {% endblock %}
 
 {% block content %}
-<div id="del_dialog" title="{% trans "Confirm Application Delete" %}">
+<div id="del_dialog" title="{% trans "Confirm Form Deletion" %}">
   <p>
-	Deleting the selected application cannot be undone.  Are you sure
-	you want to delete this application?
+	Deleting the selected form cannot be undone.  Are you sure
+	you want to delete this form?
   </p>
 </div>
 <div id="ajax_results">

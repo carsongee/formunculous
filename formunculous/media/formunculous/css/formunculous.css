@@ -430,6 +430,7 @@ table.formunculous_review_table tr.odd:hover
 .formunculous_edit_buttons input[type=submit] {
 	border: 1px solid #ccc;
 	background-color: #f1f1f7;
+	color: #666;
 }
 
 /* Reviewer Comments */
