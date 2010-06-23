@@ -231,9 +231,9 @@ def delete_app_def(request):
             name = ad.name
             ad.delete()
         else:
-            raise http.Http404, _('Application Definition does not exist')
+            raise http.Http404, _('Form Definition does not exist')
     else:
-        raise http.Http404, _('Application Definition does not exist')
+        raise http.Http404, _('Form Definition does not exist')
 
     return render_to_response('formunculous/ajax_delete_ad.html',
                               {'name': name,},
@@ -250,9 +250,9 @@ def preview_app_def(request):
             ad = get_object_or_404(ApplicationDefinition,
                                    id=int(request.GET['ad']))
         else:
-            raise http.Http404, _('Application Definition does not exist')
+            raise http.Http404, _('Form Definition does not exist')
     else:
-        raise http.Http404, _('Application Definition does not exist')
+        raise http.Http404, _('Form Definition does not exist')
     
     form = ApplicationForm(ad)
     # create structure for the template that looks like
@@ -271,7 +271,7 @@ def preview_app_def(request):
         sub_apps = ad.applicationdefinition_set.all()
         for sub_app in sub_apps:
             sub_ad = sub_app.subapplicationdefinition_set.get()
-            sub_app_formset = formset_factory(ApplicationForm,
+            sub_app_formset = formunculous_subformset_factory(ApplicationForm,
                                               formset=FormunculousBaseFormSet,
                                               extra=sub_ad.extras,
                                               max_num = sub_ad.max_entries)

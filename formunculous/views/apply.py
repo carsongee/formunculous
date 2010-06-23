@@ -14,6 +14,7 @@
 #     along with formunculous.  If not, see <http://www.gnu.org/licenses/>.
 #     Copyright 2009,2010 Carson Gee
 
+# Create your views here.
 from formunculous.models import *
 from formunculous.forms import *
 from formunculous.utils import build_template_structure, get_formsets, validate_formsets, save_formsets, fully_validate_formsets, get_sub_app_fields
@@ -94,7 +95,7 @@ def apply(request, slug):
     formsets = None
     history = None
 
-    breadcrumbs = [{'url': reverse('formunculous-index'), 'name': _('Applications')},]
+    breadcrumbs = [{'url': reverse('formunculous-index'), 'name': _('Forms')},]
 
     ad = get_object_or_404(ApplicationDefinition, slug=slug)
     if ad.parent:
@@ -260,7 +261,8 @@ def apply(request, slug):
             sub_apps = ad.applicationdefinition_set.all()
             for sub_app in sub_apps:
                 sub_ad = sub_app.subapplicationdefinition_set.get()
-                sub_app_formset = formset_factory(ApplicationForm,
+
+                sub_app_formset = formunculous_subformset_factory(ApplicationForm,
                                               formset=FormunculousBaseFormSet,
                                               extra=sub_ad.extras,
                                               max_num = sub_ad.max_entries,)
@@ -278,7 +280,6 @@ def apply(request, slug):
                                                              formset.app_def)})
         subforms.append({ "sub_ad": formset.app_def, "forms": forms,
                           "formset": formset})
-    
                 
             
             

@@ -282,3 +282,23 @@ class FormunculousBaseFormSet(BaseFormSet):
         return form
             
         
+# This is a straight rip of the standard formset_factory, but customized
+# to handle the Django 1.2 formset backwards incompatible fix
+def formunculous_subformset_factory(form, formset=BaseFormSet, extra=1, 
+                                    can_order=False, can_delete=False,
+                                    max_num=None):
+    """Return a FormSet for the given form class."""
+
+    # Here is the version checking and max_num fixing
+    # Django Ticket: 13023
+    import django
+    if django.VERSION[0] == 1 and django.VERSION[1] >= 2 \
+            or django.VERSION[0] > 1:
+        #apply the max_num fix.
+        if max_num == 0:
+            max_num = None
+
+    attrs = {'form': form, 'extra': extra,
+             'can_order': can_order, 'can_delete': can_delete,
+             'max_num': max_num}
+    return type(form.__name__ + 'FormSet', (formset,), attrs)

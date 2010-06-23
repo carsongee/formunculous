@@ -80,7 +80,7 @@
 <h1>{% trans "Editing Form for " %} {{ ad.name }}</h1>
 
 
-<div id="prev_dialog" title="{% trans "Application Definition Preview" %}">
+<div id="prev_dialog" title="{% trans "Form Definition Preview" %}">
 </div>
 <div id="dropdown_dialog" title="{% trans "Field Dropdown Selections" %}">
 </div>
@@ -115,13 +115,13 @@
 	  </a>
 	  {% endif %}
 	  <a href="{% if is_parent %}{% url builder-edit-ad ad.slug %}{% else %}{% url builder-edit-ad ad.parent.slug %}{% endif %}" class="formunculous_changelink">
-		{% trans "Edit Application Definition" %}
+		{% trans "Edit Form Definition" %}
 	  </a>
 	  <a href="#" class="formunculous_previewlink" onclick="javascript:show_preview_dialog({% if is_parent %}{{ ad.id }}{% else %}{{ ad.parent.id }}{% endif %});">
 		{% trans "Preview" %}
 	  </a>
 	</div>
-	<form method="POST" action="">
+	<form method="POST" action="">{% csrf_token %}
 	  <div class="formunculous_edit_buttons">
 		<input type="submit" name="finish" value="Save and Finish" />
 		<input type="submit" name="edit" value="Save and Continue Editing" />

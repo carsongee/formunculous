@@ -1,6 +1,6 @@
 {% load i18n %}
 <div id="add_subform_dialog" title="{% trans "Add Sub-form" %}">
-  <form method="post" action="" id="add_subform_form">
+  <form method="post" action="" id="add_subform_form">{% csrf_token %}
 	<fieldset class="apply_fieldset">
 	  <input type="hidden" name="ad" value="{{ad.id}}" id="subform_ad"/>
 	  <p>
@@ -41,8 +41,8 @@
 		<div class="apply-info-box">
 		  {% blocktrans %}
 		  The number of extra forms to
-          show by default on an
-          application.
+          show by default on a
+          form.
 		  {% endblocktrans %}
 		</div>
 	  </p>
@@ -90,8 +90,8 @@
 		<div class="apply-info-box">
 		  {% blocktrans %}
 		  The number of extra forms to
-          show by default on an
-          application.
+          show by default on a
+          form.
 		  {% endblocktrans %}
 		</div>
 	  </p>

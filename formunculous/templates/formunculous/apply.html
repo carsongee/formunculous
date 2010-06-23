@@ -22,7 +22,7 @@
   addCssClass: 'apply_sub_form_addlink',
   deleteText: 'Remove',
   deleteCssClass: 'apply_sub_form_deletelink',
-  maxForms: {{ subform.formset.max_num }},
+  maxForms: {% if not subform.formset.max_num %}0{% else %}{{ subform.formset.max_num }}{% endif %},
   alertText: '{% trans "You have reached the maximum number of forms for this group"%}'
   });
   {% endfor %}
@@ -80,7 +80,7 @@
   <div class="apply_messages">{{ message }}</div>
   {% endif %}
 
-  <form method="post" action="{% url formunculous-apply ad.slug %}"{% if form.is_multipart %} enctype="multipart/form-data"{% endif %}>
+  <form method="post" action="{% url formunculous-apply ad.slug %}"{% if form.is_multipart %} enctype="multipart/form-data"{% endif %}>{% csrf_token %}
 
 
 	{% if form.errors %}

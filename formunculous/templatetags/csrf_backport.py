@@ -15,31 +15,21 @@
 #     Copyright 2009,2010 Carson Gee
 
 from django import template
-from django.template import TemplateSyntaxError
+
+
+# This is just to make formunculous works in any Django version 1.1 and up.
+# it is registered in the __init__ for formunculous if we are using a version
+# that doesn't have this tag.
 
 register = template.Library()
 
-class WidgetType(template.Node):
-    def __init__(self, object_name, var_name = None):
-        self.var_name = var_name
+class CsrfTokenNode(template.Node):
+    # This no-op tag exists to allow 1.1.X code to be compatible with Django 1.2
+    def render(self, context):
+        return u''
 
-        self.object_name = template.Variable(object_name)
+def csrf_token(parser, token):
 
-    def render(self,context):
-        context[self.var_name] = self.object_name.resolve(context).__class__.__name__
-        return ''
-        
+    return CsrfTokenNode()
 
-
-
-#@register.tag(widget_type)
-def widget_type(parser, token):
-    bits = list(token.split_contents())
-    if len(bits) != 4:
-        raise TemplateSyntaxError, "%r takes three arguments" % bits[0]
-    
-
-    return WidgetType(bits[1], bits[3])
-
-
-widget_type = register.tag(widget_type)
+register.tag(csrf_token)

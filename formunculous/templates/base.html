@@ -23,7 +23,7 @@
 <body id="{% block body_id %}{% endblock %}">
   <div id="formunculous_navigation">
 	<ul>
-	  <li><a href="{% url formunculous-index %}">Applications</a></li>
+	  <li><a href="{% url formunculous-index %}">Forms</a></li>
 	  {% if perms.formunculous.change_form %}
 	  <li>
 		<a href="{% url builder-index %}">Builder</a></li>

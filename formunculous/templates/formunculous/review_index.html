@@ -26,13 +26,13 @@ $('#del_dialog').dialog({
                            data: { id: app_id },
                            success: function() {
                                    $('#del_dialog').dialog('close');
-                                   $('#ajax_results').html("<p>Application Successfully Deleted</p>");
+                                   $('#ajax_results').html("<p>Form Successfully Deleted</p>");
                                    $('#ajax_results').effect('highlight',{},1500);
                                    $('#app_' + app_id).parent('tr').fadeOut(1000, function() {$(this).remove();});
                            },
                            error: function() {
                                    $('#del_dialog').dialog('close');
-                                   $('#ajax_results').html("<p>Unable to delete the application</p>");
+                                   $('#ajax_results').html("<p>Unable to delete the form</p>");
                                    $('#ajax_results').effect('highlight',{},1500);
                                    }
                         });
@@ -64,10 +64,10 @@ function deleteApp(id) {
 {% endblock %}
 
 {% block content %}
-<div id="del_dialog" title="{% trans "Confirm Application Delete" %}">
+<div id="del_dialog" title="{% trans "Confirm Form Deletion" %}">
   <p>
-	Deleting the selected application cannot be undone.  Are you sure
-	you want to delete this application?
+	Deleting the selected form cannot be undone.  Are you sure
+	you want to delete this form?
   </p>
 </div>
 <div id="ajax_results">
@@ -93,7 +93,7 @@ function deleteApp(id) {
 {% endif %}
 
 <div class="fr" id="formunculous-review-search">
-  <form method="get" action="">
+  <form method="get" action="">{% csrf_token %}
 	<input type="text" name="q" id="q" value="{{ query }}"/>
 	<input type="hidden" name="s" id="s" value="{{ sort }}" />
 	<input type="hidden" name="page" id="page" value="{{ page.number }}" />
@@ -162,7 +162,7 @@ function deleteApp(id) {
   <ul>
 	<li>
 	  {% if page.has_previous %}
-	  <a href="?page=1&s={{ sort }}" class="direction">
+	  <a href="?page=1&s={{ sort }}&q={{ query }}" class="direction">
 		{% endif %}
 		&#171;{% trans "first" %}
 		{% if page.has_previous %}</a>{% endif %}
@@ -175,14 +175,14 @@ function deleteApp(id) {
 	  {% ifequal page.number num %}
 	  {{ num }}
 	  {% else %}
-	  <a href="?page={{ num }}&s={{ sort }}">{{ num }}</a> 
+	  <a href="?page={{ num }}&s={{ sort }}&q={{ query }}">{{ num }}</a> 
 	  {% endifequal %}
 	  {% endif %}
 	</li>
 	{% endfor %}
 	<li>
 	  {% if page.has_next %}
-	  <a href="?page={{ page.paginator.num_pages }}&s={{ sort }}" class="last" class="direction">
+	  <a href="?page={{ page.paginator.num_pages }}&s={{ sort }}&q={{ query }}" class="last" class="direction">
 		{% endif %}
 		{% trans "last" %}&#187;
 		{% if page.has_next %}</a>{% endif %}

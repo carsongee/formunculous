@@ -20,7 +20,7 @@
 {% endif %}
 
 <div style="width:100%; height: 225px">
-<form method="POST" action="">
+<form method="POST" action="">{% csrf_token %}
   {{ formset.management_form }}
   <table class="formunculous_table">
 	{% for form in formset.forms %}

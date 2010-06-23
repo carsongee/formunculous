@@ -1,8 +1,12 @@
 #!/usr/bin/env python
-from ez_setup import use_setuptools
-use_setuptools()
+
+try:
+    import setuptools
+except ImportError:
+    from ez_setup import use_setuptools
+    use_setuptools()
+
 from setuptools import setup
-from distutils.command.install import INSTALL_SCHEMES
 import os
 
 def fullsplit(path, result=None):
@@ -18,12 +22,6 @@ def fullsplit(path, result=None):
     if head == path:
         return result
     return fullsplit(head, [tail] + result)
-
-# Tell distutils to put the data_files in platform-specific installation
-# locations. See here for an explanation:
-# http://groups.google.com/group/comp.lang.python/browse_thread/thread/35ec7b2fed36eaec/2105ee4d9e8042cb
-for scheme in INSTALL_SCHEMES.values():
-    scheme['data'] = scheme['purelib']
 
 # Compile the list of packages available, because distutils doesn't have
 # an easy way to do this.
@@ -50,14 +48,24 @@ setup(
     version = version.replace(' ', '-'),
     author = 'Carson Gee',
     author_email = 'x@carsongee.com',
-    url = 'http://carsongee.com',
-    download_url = 'http://formunculous.com/downloads/formunculous-%s.tar.gz' % version,
+    url = 'http://formunculous.org/',
+    download_url = 'http://formunculous.org/media/downloads/formunculous-%s.tar.gz' % version,
     platforms = ('Any',),
-    keywords = ('forms','generic ',),
-    description = 'A Django Web application that builds database backed Web forms utilizing a nice javascript user interface',
+    keywords = ('forms','django','web',),
+    description = 'A Django Web application that builds database backed Web forms utilizing a nice javascript user interface to create them.',
+    long_description = """
+This is a Django based application for creating database backed or
+email forms. It features an innovative drag and drop interface for
+building forms, a workflow for reviewing forms, and infinite
+customization.
+
+The Website for this project at http://formunculous.org has
+a lot of documentation, demos, and screenshots for getting you up and running
+with the application.
+""",
     packages = packages, 
     data_files = data_files,
     scripts = [],
-    requires = ('django (>=1.1)',),
+    requires = ('django (>=1.1)','pil','cjson'),
     zip_safe = False,
 )
