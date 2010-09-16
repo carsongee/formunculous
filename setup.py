@@ -63,9 +63,21 @@ The Website for this project at http://formunculous.org has
 a lot of documentation, demos, and screenshots for getting you up and running
 with the application.
 """,
+    classifiers = ['Development Status :: 5 - Production/Stable',
+                   'Environment :: Web Environment',
+                   'Framework :: Django',
+                   'Intended Audience :: System Administrators',
+                   'Intended Audience :: Developers',
+                   'License :: OSI Approved :: GNU General Public License (GPL)',
+                   'Natural Language :: English',
+                   'Programming Language :: Python',
+                   'Topic :: Internet :: WWW/HTTP',
+                   'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
+                   ],
     packages = packages, 
     data_files = data_files,
     scripts = [],
-    install_requires = ['django>=1.1','pil','simplejson',],
+    requires = ('django (>=1.1)','pil','simplejson',),
+#    install_requires = ['django>=1.1','pil','simplejson',],
     zip_safe = False,
 )

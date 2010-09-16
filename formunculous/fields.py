@@ -53,6 +53,8 @@ class DocumentFormField(FileField):
     """A validating document upload field"""
     valid_content_types = ('text/html', 'text/plain', 'text/rtf',
                            'text/xml', 'application/msword',
+                           'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                           'application/vnd.oasis.opendocument.text','application/xhtml+xml',
                            'application/rtf', 'application/pdf')
     valid_file_extensions = ('odt', 'pdf', 'doc', 'docx', 'txt',
                              'html', 'rtf', 'htm', 'xhtml')

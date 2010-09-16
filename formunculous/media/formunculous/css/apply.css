@@ -112,6 +112,11 @@
 	display: block;
 	margin-left: 220px;
 }
+.apply_field ul.selector-chooser li { margin: 0; }
+.selector .selector-filter {
+	margin-top: -8px !important;
+}
+
 .apply_field ul li label {
 	display: inline;
 	font-weight: normal;

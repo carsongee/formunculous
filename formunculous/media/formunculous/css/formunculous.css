@@ -219,6 +219,10 @@ table.formunculous_review_table tr.odd:hover
 	background: url('../img/review.png') no-repeat;
 }
 
+/* Builder index table styles */
+#formunculous_def_table tr:hover {
+	background-color: #f1f7f1;
+}
 
 /* Builder Field Editor Styles */
 #formunculous-page-container {
@@ -364,7 +368,12 @@ table.formunculous_review_table tr.odd:hover
 	width: 8em;
 	float: left;
 }
-
+.formunculous_form_row label.formunculous_builder_cb {
+	display:inline;
+	width: auto;
+	float: none;
+	margin: 0 0 0 5px;
+}
 .formunculous_left_column {
 	width: 48%;
 	float: left;
@@ -386,7 +395,7 @@ table.formunculous_review_table tr.odd:hover
 	width: 100%;
 	background-color: #f1f1f1;
 	border: 1px solid #ccc;
-	padding: 0 8px 0 0;
+	padding: 0;
 	list-style-type: none;
 	margin: 0;
 }
@@ -394,8 +403,14 @@ table.formunculous_review_table tr.odd:hover
 	cursor: default;
 	list-style-type: none;
 	margin: 0;
-	padding: 3px;
 	width: 100%;
+}
+.formunculous_field_types li .ui-icon {
+	margin: 0 10px 0 0;
+}
+.formunculous_field_types li img {
+	margin-right: 10px;
+	vertical-align: middle;
 }
 
 .formunculous_field_delete {
@@ -701,6 +716,16 @@ table.formunculous_review_table tr.odd:hover
 	margin: 0 auto 20px auto;
 	
 }
+
+.formunculous_no, .formunculous_yes {
+	padding-left: 20px;
+	display: block;
+	float: left;
+	text-indent: -9999px;
+	margin-top: 3px;
+}
+.formunculous_yes { background: url('../img/icon-yes.gif') no-repeat; }
+.formunculous_no { background: url('../img/icon-no.gif') no-repeat; }
 
 
 /*ckeditor fix*/

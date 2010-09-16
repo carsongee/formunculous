@@ -37,17 +37,10 @@
       <a href="mailto:{{ email }}">{{ email }}</a> to make any corrections.
    {% endblocktrans %}
 </p>
-{% if not ad.email_only %}
-<p>
-  {% blocktrans %}
-    Below is the information that you submitted:
-  {% endblocktrans %}
-</p>
-
 {% if ad.authentication %}
   {% if ad.authentication_multi_submit %}
   {# Offer link to start an additional form #}
-    <div style="float:right;margin-top: 1em;">
+    <div style="float:right;margin-top: 3em;">
 	  <p>
 		<a href="{% url formunculous-apply ad.slug %}?new=1" class="formunculous_newapplink">
 		  {% trans "Start an additional form" %}
@@ -56,6 +49,13 @@
 	</div>
   {% endif %}
 {% endif %}
+
+{% if not ad.email_only %}
+<p>
+  {% blocktrans %}
+    Below is the information that you submitted:
+  {% endblocktrans %}
+</p>
 
 {% if history %}
 <div class="formunculous_tab_bar">

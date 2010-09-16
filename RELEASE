@@ -1,0 +1,72 @@
+Formunculous 2.2.0 Release Notes:
+
+New Features:
+
+* Reviewer list is now a better widget and is searchable and sorted.
+* Ordering for dropdown selections - done by ordering on non-displayed
+  value (note added to dropdown iframe form to that effect).
+* Update CKEditor to 3.4
+* Change display of boolean values to be icon based.
+* Icons for each of the currently written field types for easier field selection
+* Template tag for rendering pre/post text as templates
+  (including tags/filters, etc).  Added to apply.html default template
+  for rendering.
+* Template tag for rendering a form anywhere.
+* Static media linking/copying easier with manage.py command line extension of
+  func_media_link for symlinking media and func_media_copy for copying the media.
+* Better display of available for definitions (tr:hover added).
+
+
+Bug fixes:
+
+* Multi submit authenticated e-mail only forms weren't allowing multi-submit.
+* There were several broken login type issues leftover from django 1.0.
+* Storage duplicate slug across application definition issue resolved.
+* If optional file field left blank, template error on null field resolved.
+* Corrected language on confirmation screen of authenticated forms
+  that may have lead users to believe the form was submitted when
+  it hadn't been.
+* Fixed form building checkbox labels to have proper labels and behavior
+
+
+Formunculous 2.1.1 Release Notes:
+
+Bugfix and compatibility release.
+
+* Now fully compatible with both Django 1.1 and 1.2 (any bugfix release)
+* Word fixes (replacing "Application" with "Form" - legacy problem)
+* Minor HTML and CSS fixes
+
+
+
+Formunculous 2.1.0 Release Notes/New Features 
+
+Applying:
+
+ * Better interface for seeing which forms are available for review (tab)
+ * Better instructions in notification e-mails.
+ * For multiple submission authenticated forms, the user can see a list of all the previous forms they have completed
+ * Added a print link to the form completion and new history screen
+ * Better displaying of form errors to the user.
+
+
+
+Reviewing:
+
+ * Better search and sorting of completed forms
+ * If your form has incomplete forms, you can view those and how close the user is to completing the form
+ * You can now export all of your completed forms as a spreadsheet
+ * You can now download all the files that have been submitted to your form as a zip file
+ * Graphical statistics for form completions over time and pie charts displaying selection percentages for drop down/radio type fields
+ * A print link when reviewing an individual form
+
+
+
+Building:
+
+  * Sortable form list
+  * Inactive forms are grayed out in the builder form index
+  * More compact field displays when editing forms
+  * Better drag and drop and expansion behavior for fields when editing forms\
+  * Copying a form now fully copies drop downs and any sub-forms in the original form definition.
+

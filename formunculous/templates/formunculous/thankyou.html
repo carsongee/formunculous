@@ -30,17 +30,31 @@
 	   <li>
 	      <span class="formunculous_field_label">{{ field.label }}:</span>
 		  <span class="formunculous_field_data">
-			{% if field.data.url %}
-			{% if not ad.email_only %}
-			<a target="_blank" href="{{ field.data.url }}">
-			{% endif %}
-			{% endif %}
-			{{ field.data }}
-			{% if field.data.url %}
-			{% if not ad.email_only %}
-			</a>
-			{% endif %}
-			{% endif %}
+			{% ifequal field.type "BooleanField" %}
+			  <span class="
+				{{ field.data|yesno:"formunculous_yes\">Yes, formunculous_no\">No"|safe }}
+			  </span>
+			{% else %}
+
+			  {% if field.data %}
+
+			    {% if field.data.url %}
+			      {% if not ad.email_only %}
+			        <a target="_blank" href="{{ field.data.url }}">
+			      {% endif %}
+			    {% endif %}
+
+			    {{ field.data }}
+
+			    {% if field.data.url %}
+			      {% if not ad.email_only %}
+			        </a>
+			      {% endif %}
+			    {% endif %}
+
+			  {% endif %}
+
+          {% endifequal %}
 		  </span>
 	   </li>
     {% endfor %}

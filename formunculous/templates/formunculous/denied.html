@@ -5,7 +5,12 @@
 {% block content %}
 {% blocktrans %}
 <p>
-  You are not authorized to view this page.  Please login if you are not already.
+  You are not authorized to view this page.  Please 
+{% endblocktrans %}
+
+  <a href="{% url formunculous-login %}?next={{ request.path }}">{% trans "login" %}</a>
+{% blocktrans %}
+ if you are not already logged in.
 </p>
 {% endblocktrans %}
 {% endblock %}

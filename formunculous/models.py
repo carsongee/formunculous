@@ -30,7 +30,6 @@ from django.conf import settings
 from formunculous.widgets import *
 from formunculous.storage import *
 from formunculous import fields
-
 import datetime
 
 
@@ -218,7 +217,7 @@ class DropDownChoices(models.Model):
     value = models.CharField(max_length = 255)
 
     class Meta:
-        ordering = ['text']
+        ordering = ['value']
 
 # Instance Models (field and application)
 
@@ -241,6 +240,10 @@ class Application(models.Model):
         are in the application definition. To get those, pass True
         into the function.
         """
+
+        # Introspect model namespace
+        import formunculous.models as funcmodels
+
         fields = []
         if not all_fields:
             field_set = self.app_definition.fielddefinition_set.filter(
@@ -249,15 +252,16 @@ class Application(models.Model):
             field_set = self.app_definition.fielddefinition_set.all()
 
         for field_def in field_set:
-            field_model = eval(field_def.type)
+            field_model = getattr(funcmodels, field_def.type)
             try:
                 field_val = field_model.objects.get( app = self,
                                                      field_def = field_def)
                 field_dict = {'label': field_def.label,
-                              'data': field_val.value,},
+                              'data': field_val.value,
+                              'type': field_def.type },
             except:
-                field_dict = {'label': field_def.label, 'data': None,},
-
+                field_dict = {'label': field_def.label, 'data': None,
+                              'type': field_def.type },
             fields += field_dict
         return fields
 
@@ -267,6 +271,10 @@ class Application(models.Model):
            application instance, or returns None if either the value
            or the field definition is not found.
         """
+        
+        # Introspect model namespace
+        import formunculous.models as funcmodels
+                
         try:
             field_def = FieldDefinition.objects.get(
                              slug=field_slug, 
@@ -274,7 +282,7 @@ class Application(models.Model):
         except FieldDefinition.DoesNotExist:
             return None
 
-        field_model = eval(field_def.type)
+        field_model = getattr(funcmodels, field_def.type)
 
         try:
             field_val = field_model.objects.get( app = self, 
@@ -300,6 +308,7 @@ class BaseField(models.Model):
     """
     
     name = 'Base'
+    icone = None
 
     field_def = models.ForeignKey(FieldDefinition)
     app = models.ForeignKey(Application)
@@ -315,6 +324,8 @@ class TextField(BaseField):
     FieldDefinition.field_types+=('TextField','Text Input',),
 
     name = 'Text Input'
+    icon = 'formunculous/img/field_icons/text_input.png'
+
     value = models.CharField(max_length=255, blank=True, null=True)
 
     widget = None
@@ -330,6 +341,8 @@ class TextArea(BaseField):
     FieldDefinition.field_types+=('TextArea', 'Large Text Area',),
 
     name= "Large Text Area"
+    icon = 'formunculous/img/field_icons/text_area.png'
+
     value = models.TextField(blank=True, null=True)
 
     widget = None
@@ -343,22 +356,12 @@ class BooleanField(BaseField):
     FieldDefinition.field_types+=('BooleanField', 'Yes/No Question',),
 
     name = "Yes/No Question/Checkbox"
+    icon = 'formunculous/img/field_icons/yes_no.png'
+
     value = models.BooleanField(blank=True, default=False)
 
     widget = None
     allow_dropdown = False
-
-class DateField(BaseField):
-    """
-       Uses a nice jquery widget for selecting a date.
-    """
-    FieldDefinition.field_types+=('DateField', 'Date Input',),
-
-    name = "Date Input"
-    value = models.DateField(blank=True, null=True)
-
-    widget = DateWidget
-    allow_dropdown = True
 
 class EmailField(BaseField):
     """
@@ -367,10 +370,70 @@ class EmailField(BaseField):
     FieldDefinition.field_types+=('EmailField', 'Email Address',),
 
     name = "Email Address"
+    icon = 'formunculous/img/field_icons/email.png'
+
     value = models.EmailField(blank=True, null=True)
 
     widget = None
     allow_dropdown = True
+
+class USPhoneNumber(BaseField):
+
+    FieldDefinition.field_types+=('USPhoneNumber', 'U.S. Phone Number',),
+    
+    name = "U.S. Phone Number"
+    icon = 'formunculous/img/field_icons/phone.png'
+
+    value = PhoneNumberField(null=True, blank=True)
+
+    widget = None
+    allow_dropdown = True
+
+
+class USStateField(BaseField):
+
+    """
+    Provides a dropdown selection of U.S. States and
+    provinces.
+    """
+
+    FieldDefinition.field_types+=('USStateField', 'U.S. States',),
+
+    name = "U.S. States"
+    icon = 'formunculous/img/field_icons/usstate.png'
+
+    value = models.CharField(null=True, blank=True, 
+                             max_length="255")
+
+    widget = OptionalStateSelect
+    allow_dropdown = False
+
+class USZipCodeField(BaseField):
+
+    FieldDefinition.field_types+=('USZipCodeField', 'U.S. Zipcode',),
+    
+    name = "U.S. Zipcode"
+    icon = 'formunculous/img/field_icons/zipcode.png'
+
+    value = fields.USZipCodeModelField(null=True, blank=True)
+
+    widget = None
+    allow_dropdown = True
+
+class DateField(BaseField):
+    """
+       Uses a nice jquery widget for selecting a date.
+    """
+    FieldDefinition.field_types+=('DateField', 'Date Input',),
+
+    name = "Date Input"
+    icon = 'formunculous/img/field_icons/date.png'
+
+    value = models.DateField(blank=True, null=True)
+
+    widget = DateWidget
+    allow_dropdown = True
+
 
 class FloatField(BaseField):
     """
@@ -379,6 +442,8 @@ class FloatField(BaseField):
     FieldDefinition.field_types+=('FloatField', 'Decimal Number',),
 
     name = "Decimal Number Field"
+    icon = 'formunculous/img/field_icons/decimal.png'
+
     value = models.FloatField(blank=True, null=True)
 
     widget = None
@@ -391,55 +456,9 @@ class IntegerField(BaseField):
     FieldDefinition.field_types+=('IntegerField', 'Whole Number',),
 
     name = "Whole Number Field"
+    icon = 'formunculous/img/field_icons/wholenumber.png'
+
     value = models.IntegerField(blank=True, null=True)
-
-    widget = None
-    allow_dropdown = True
-
-class USStateField(BaseField):
-
-    """
-    Provides a dropdown selection of U.S. States and
-    provinces.
-    """
-
-    FieldDefinition.field_types+=('USStateField', 'U.S. States',),
-
-    name = "U.S. States"
-    value = models.CharField(null=True, blank=True, 
-                             max_length="255")
-
-    widget = OptionalStateSelect
-    allow_dropdown = False
-
-class USZipCodeField(BaseField):
-
-    FieldDefinition.field_types+=('USZipCodeField', 'U.S. Zipcode',),
-    
-    name = "U.S. Zipcode"
-    value = fields.USZipCodeModelField(null=True, blank=True)
-
-    widget = None
-    allow_dropdown = True
-
-class USPhoneNumber(BaseField):
-
-    FieldDefinition.field_types+=('USPhoneNumber', 'U.S. Phone Number',),
-    
-    name = "U.S. Phone Number"
-    value = PhoneNumberField(null=True, blank=True)
-
-    widget = None
-    allow_dropdown = True
-
-class IPAddressField(BaseField):
-    """
-      IP address field field.  Accepts any valid IPv4 address.
-    """
-    FieldDefinition.field_types+=('IPAddressField', 'IP Address',),
-
-    name = "IP Address"
-    value = models.IPAddressField(blank=True, null=True)
 
     widget = None
     allow_dropdown = True
@@ -452,6 +471,8 @@ class PositiveIntegerField(BaseField):
                                   'Positive Whole Number',),
 
     name = "Positive Whole Number Field"
+    icon = 'formunculous/img/field_icons/positivewhole.png'
+
     value = models.PositiveIntegerField(blank=True, null=True)
 
     widget = None
@@ -464,7 +485,23 @@ class URLField(BaseField):
     FieldDefinition.field_types+=('URLField', 'URL',),
 
     name = "URL"
+    icon = 'formunculous/img/field_icons/url.png'
+
     value = models.URLField(blank=True, null=True)
+
+    widget = None
+    allow_dropdown = True
+
+class IPAddressField(BaseField):
+    """
+      IP address field field.  Accepts any valid IPv4 address.
+    """
+    FieldDefinition.field_types+=('IPAddressField', 'IP Address',),
+
+    name = "IP Address"
+    icon = 'formunculous/img/field_icons/ipaddress.png'
+
+    value = models.IPAddressField(blank=True, null=True)
 
     widget = None
     allow_dropdown = True
@@ -481,6 +518,8 @@ class FileField(BaseField):
     FieldDefinition.field_types+=('FileField','File Upload',),
 
     name = 'File Upload'
+    icon = 'formunculous/img/field_icons/file.png'
+
     value = models.FileField(upload_to=upload_to_path, 
                              storage=ApplicationStorage(),
                              blank=True, null=True)
@@ -495,6 +534,8 @@ class ImageField(BaseField):
     FieldDefinition.field_types+=('ImageField','Picture Upload',),
 
     name = 'Picture Upload'
+    icon = 'formunculous/img/field_icons/picture.png'
+
     value = models.ImageField(upload_to=upload_to_path, 
                              storage=ApplicationStorage(),
                              blank=True, null=True)
@@ -509,6 +550,8 @@ class DocumentField(BaseField):
     FieldDefinition.field_types+=('DocumentField', 'Document Upload',),
     
     name = "Document Upload"
+    icon = 'formunculous/img/field_icons/document.png'
+
     value = fields.DocumentField(upload_to=upload_to_path, 
                              storage=ApplicationStorage(),
                              blank=True, null=True)
