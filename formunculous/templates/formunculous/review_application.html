@@ -86,13 +86,25 @@ jQuery('.formunculous_deletelink').click(function() { jQuery('#del_dialog').dial
 	   <li>
 	      <span class="formunculous_field_label">{{ field.label }}:</span>
 		  <span class="formunculous_field_data">
-			{% if field.data.url %}
-			<a target="_blank" href="{{ field.data.url }}">
-			{% endif %}
-			{{ field.data }}
-			{% if field.data.url %}
-			</a>
-			{% endif %}
+			{% ifequal field.type "BooleanField" %}
+			  <span class="
+				{{ field.data|yesno:"formunculous_yes\">Yes, formunculous_no\">No"|safe }}
+			  </span>
+			{% else %}
+
+			  {% if field.data %}
+
+			    {% if field.data.url %}
+			      <a target="_blank" href="{{ field.data.url }}">
+			    {% endif %}
+
+			   {{ field.data }}
+
+			   {% if field.data.url %}
+			     </a>
+			   {% endif %}
+			 {% endif %}
+		    {% endifequal %}
 		  </span>
 	   </li>
     {% endfor %}

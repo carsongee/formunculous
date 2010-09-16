@@ -15,6 +15,7 @@
 #     Copyright 2009,2010 Carson Gee
 
 from formunculous.models import *
+
 from formunculous.utils import build_template_structure
 from django.forms.formsets import formset_factory
 from django import http
@@ -302,6 +303,10 @@ def preview_app_def(request):
 
 preview_app_def = permission_required('formunculous.change_form')(preview_app_def)
 
+
+# Used for getting classes as attributes for field classes.
+import formunculous.models as funcmodels
+
 def modify_fields(request, slug):
 
     """
@@ -339,7 +344,19 @@ def modify_fields(request, slug):
     # to provide a tiny preview.
     field_types = []
     for type in FieldDefinition.field_types:
-        field_types.append({'type': type[0], 'name': type[1],})
+
+        # Get the icon url from media root from the field
+        # class if the class exists and has an icon defined.
+        field_icon = None
+        if hasattr(funcmodels, type[0]):
+            field_class = getattr(funcmodels, type[0])
+            if hasattr(field_class, 'icon'):
+                field_icon = field_class.icon
+
+        field_types.append({'type': type[0], 
+                            'name': type[1],
+                            'icon': field_icon,
+                            })
 
     if request.method == 'POST':
         formset = FieldDefinitionFormSet(request.POST, 

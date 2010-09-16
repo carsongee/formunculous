@@ -1,6 +1,6 @@
 {% extends "formunculous/base.html" %}
 
-{% load i18n  widget_type %}
+{% load i18n  widget_type formunculous_tags %}
 {% block css %}
 {{ block.super }}
 {{ form.media }}
@@ -31,10 +31,12 @@
 {% endif %}
 
 {% if history %}
+{% if not ad.email_only %}
 <script type="text/javascript" src="{{ MEDIA_URL }}formunculous/js/history.js"></script>
 <script type="text/javascript">
   var historyURL = '{% url formunculous-apply-history %}'
 </script>
+{% endif %}
 {% endif %}
 
 
@@ -46,6 +48,7 @@
 {% block content %}
 
 {% if history %}
+{% if not ad.email_only %}
 <div class="formunculous_tab_bar">
   <ul>
 	<li class="here" id="formunculous-current">
@@ -74,6 +77,7 @@
   </div>
 </div>
 {% endif %}
+{% endif %}
 
 <div class="formunculous_container">
   {% if message %}
@@ -94,7 +98,7 @@
 	  {{ field.field }}
 	  {% else %}
 
-	  {{ field.pre_text }}
+	  {% render_as_template field.pre_text %}
 
 	  {% ifchanged field.group %}
 	  {% if field.group %}
@@ -133,7 +137,7 @@
 	  {% if forloop.last and field.group %}
 </div>
 {% endif %}
-{{ field.post_text }}
+{% render_as_template field.post_text %}
 {% endif %}
 {% endfor %}
 </fieldset>
@@ -166,7 +170,7 @@
 	    {{ field.field }}
 		{% else %}
 
-	    {{ field.pre_text }}
+	    {% render_as_template field.pre_text %}
 
 	    {% ifchanged field.group %}
 	    {% if field.group %}
@@ -205,7 +209,7 @@
 	    {% if forloop.last and field.group %}
     </div>
     {% endif %}
-	{{ field.post_text }}
+	{% render_as_template field.post_text %}
 	{% endif %}
 	{% endfor %}
   </div>

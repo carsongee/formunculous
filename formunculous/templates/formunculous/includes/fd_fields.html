@@ -85,7 +85,11 @@
 			{% if form.require.errors %}
 			<span class="formunculous_errors">{{ form.require.errors }}</span>
 			{% endif %}
-			{{ form.require }} {{ form.require.label }}
+			{{ form.require }}
+			<label for="{{form.require.auto_id }}"
+				   class="formunculous_builder_cb }}">
+			  {{ form.require.label }}
+			</label>
   			{% if form.require.help_text %}
 			<div class="formunculous_info_box">{{ form.require.help_text }}</div>
 			{% endif %}
@@ -95,7 +99,11 @@
 			{% if form.group.errors %}
 			<span class="formunculous_errors">{{ form.group.errors }}</span>
 			{% endif %}
-			{{ form.group }} {{ form.group.label }}
+			{{ form.group }}
+			<label for="{{form.group.auto_id }}"
+				   class="formunculous_builder_cb }}">
+			  {{ form.group.label }}
+			</label>
 			{% if form.group.help_text %}
 			<div class="formunculous_info_box">{{ form.group.help_text }}</div>
 			{% endif %}
@@ -106,7 +114,11 @@
 			{% if form.reviewer_only.errors %}
 			<span class="formunculous_errors">{{ form.reviewer_only.errors }}</span>
 			{% endif %}
-			{{ form.reviewer_only }} {{ form.reviewer_only.label }}
+			{{ form.reviewer_only }} 
+			<label for="{{form.reviewer_only.auto_id }}"
+				   class="formunculous_builder_cb }}">
+			  {{ form.reviewer_only.label }}
+			</label>
 			{% if form.reviewer_only.help_text %}
 			<div class="formunculous_info_box">{{ form.reviewer_only.help_text }}</div>
 			{% endif %}
@@ -115,7 +127,11 @@
 			{% if form.header.errors %}
 			<span class="formunculous_errors">{{ form.header.errors }}</span>
 			{% endif %}
-			{{ form.header }} {{ form.header.label }}
+			{{ form.header }}
+			<label for="{{form.header.auto_id }}"
+				   class="formunculous_builder_cb }}">
+			  {{ form.header.label }}
+			</label>
 			{% if form.header.help_text %}
 			<div class="formunculous_info_box">{{ form.header.help_text }}</div>
 			{% endif %}

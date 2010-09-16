@@ -13,8 +13,6 @@
 {% endblock %}
 </head>
 <body>
-
-
 {% if formset.errors %}
 <div class="formunculous_errors">{% trans "There are errors in your form, please correct them" %}</div>
 {% endif %}
@@ -63,7 +61,18 @@
   </table>
   <div style="text-align: right;">
 	<input type="submit" name="edit" value="Save" />
-  </div>  
+  </div>
+  <div class="formunculous_info_box" style="margin-top: 1.6em;">
+	<p>
+	  {% blocktrans %}
+	  Add your drop down values here.  They are sorted by
+	  the <em>Value</em> column.  This column is not visible to the end
+	  user, and can be used to provide a custom sort order by adding
+	  numbers to the beginning of the value. e.g. 0Zebra, 1Apple.
+	  {% endblocktrans %}
+	</p>
+  </div>
+
 </form>
 </div>
 </body>

@@ -1,11 +1,14 @@
 {% extends "formunculous/builder_base.html" %}
 
-{% load i18n widget_type %}
+{% load i18n widget_type adminmedia %}
+
 
 {% block extrastyle %}{{ block.super }}
 {{ form.media }}
+{{ media }}
 <link href="{{ MEDIA_URL }}formunculous/css/formunculous.css" rel="stylesheet" type="text/css" />
 <link href="{{ MEDIA_URL }}formunculous/css/apply.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="{% admin_media_prefix %}css/widgets.css" />
 {% endblock %}
 
 {% block extrahead %}{{ block.super }}

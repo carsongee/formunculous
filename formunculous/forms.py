@@ -18,15 +18,22 @@ from django import forms
 from django.db import models
 from django.utils.safestring import mark_safe
 from django.forms.util import ErrorList
+from django.contrib.auth.models import User
+
 from formunculous.models import *
 from formunculous.fields import HoneypotField, MultipleChoiceToStringField
+
 from django.utils.translation import ugettext as _
 from django.forms import ModelForm
 from django.forms.widgets import RadioSelect, Select, SelectMultiple, CheckboxSelectMultiple, HiddenInput
+from django.contrib.admin.widgets import FilteredSelectMultiple
 
 from django.forms.formsets import BaseFormSet, TOTAL_FORM_COUNT, INITIAL_FORM_COUNT, ORDERING_FIELD_NAME, DELETION_FIELD_NAME, ManagementForm
 
 
+# Used to introspect model namespace
+import formunculous.models as funcmodels
+        
 class ApplicationForm(forms.Form):
 
     def __init__(self, app_def, app=None, reviewer=False, *args, **kwargs):
@@ -48,12 +55,13 @@ class ApplicationForm(forms.Form):
         # and create form fields for them.
         for field_def in field_set:
             
-            # eval the model defined in type to get it's django field
-            # add that and the label specified in the FieldDefinition
+            # Introspect the model class defined in type to get it's 
+            # django field add that and the label specified in the
+            # FieldDefinition.
 
             # Intentionally not catching the potential exceptions here, let
             # them bubble up
-            field_model = eval(field_def.type)
+            field_model = getattr(funcmodels, field_def.type)
             data = None
             
             try:
@@ -133,7 +141,7 @@ class ApplicationForm(forms.Form):
             reviewer_only=self.reviewer)
 
         for field_def in field_set:
-            field_model = eval(field_def.type)
+            field_model = getattr(funcmodels, field_def.type)
             try:
                 field_model = field_model.objects.get(field_def = field_def,
                                                       app = self.app)
@@ -189,6 +197,10 @@ class ApplicationDefinitionForm(ModelForm):
 
     start_date = forms.DateTimeField(widget=DateWidget)
     stop_date = forms.DateTimeField(widget=DateWidget)
+    reviewers = forms.ModelMultipleChoiceField(
+        queryset=User.objects.all().order_by("username"),
+        widget=FilteredSelectMultiple("Reviewers", False)
+        )
 
     class Meta:
         model = ApplicationDefinition

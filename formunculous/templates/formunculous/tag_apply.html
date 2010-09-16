@@ -1,0 +1,63 @@
+{% load i18n  widget_type formunculous_tags %}
+<div class="formunculous_tag_container">
+  <form method="post" id="{{ ad.slug }}" action="{% url formunculous-apply ad.slug %}"{% if form.is_multipart %} enctype="multipart/form-data"{% endif %}>{% csrf_token %}
+	{# Errors here will be handled by the primary template for this form #}
+
+	<fieldset class="apply_fieldset">
+	  {% for field in fields %}
+  	     {% if field.field.is_hidden %}
+  	        {{ field.field }}
+ 	     {% else %}
+
+ 	        {% render_as_template field.pre_text %}
+
+ 	        {% ifchanged field.group %}
+	          {% if field.group %}
+	             <div class="apply_form_group">
+		      {% else %}
+		         {% if not forloop.first %}
+	                </div>
+	             {% endif %}
+	          {% endif %}
+	        {% endifchanged %}
+
+	        {% widget_type field.field.field.widget as widget %}
+
+	        <div class="apply_field_row{% cycle ' odd' '' %}{% if field.field.errors %} apply_row_errors{% endif%}">
+		       <div class="apply_field_errors">{{ field.field.errors }}</div>
+		          <div class="apply_field{% if field.required %} apply_required{% endif %}">
+		             {% ifequal widget "CheckboxInput" %}
+		                {{ field.field }}
+		                {% if field.field.label %}
+		                   <label for="{{ field.field.auto_id}}" class="apply_cb_label">
+			                  {{field.field.label}}
+		                   </label>
+		                {% endif %}
+		             {% else %}
+  		                {% if field.field.label %}
+ 		                   {{ field.field.label_tag }}
+		                {% endif %}
+		                {{ field.field }}
+		             {% endifequal %}
+		          </div>
+		          <div style="clear:both;"></div>
+		          {% if field.field.help_text %}
+		             <div class="apply-info-box">
+		                {{ field.field.help_text }}
+		             </div>
+		          {% endif %}
+	           </div>
+	           {% if forloop.last and field.group %}
+                  </div>
+               {% endif %}
+                 
+               {% render_as_template field.post_text %}
+            {% endif %}
+         {% endfor %}
+       </fieldset>
+	
+       <div class="apply_submit{% if subforms %} apply_sub_form_submit{% endif %}">
+          {% if ad.authentication %}<input type="submit" name="save" value="Save" />{% endif %}<input type="submit" name="submit" value="Submit" />
+       </div>
+    </form>
+ </div>

@@ -14,7 +14,7 @@
 #     along with formunculous.  If not, see <http://www.gnu.org/licenses/>.
 #     Copyright 2009,2010 Carson Gee
 
-VERSION = (2, 1, 1, 'final', 0 )
+VERSION = (2, 2, 0, 'final', 0 )
 
 def get_version():
     

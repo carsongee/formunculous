@@ -138,7 +138,15 @@ function deleteApp(id) {
 	  {% if col.url %}
 	  <a href="{{ col.url }}">
 	  {% endif %}
-	  {{ col.value }}
+	  
+	  {% ifequal col.type "BooleanField" %}
+			  <span class="
+				{{ col.value|yesno:"formunculous_yes\">Yes, formunculous_no\">No"|safe }}
+			  </span>        
+	  {% else %}
+	    {{ col.value }}
+	  {% endifequal %}
+
 	  {% if col.url %}
 	  </a>
 	  {% endif %}

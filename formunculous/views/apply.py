@@ -42,6 +42,8 @@ import mimetypes
 import os
 import stat
 
+# Introspect model namespace
+import formunculous.models as funcmodels
 
 def index(request):
 
@@ -99,10 +101,10 @@ def apply(request, slug):
 
     ad = get_object_or_404(ApplicationDefinition, slug=slug)
     if ad.parent:
-        raise http.Http404, _("This application doesn't exist")
+        raise http.Http404, _("This form doesn't exist")
 
     if datetime.datetime.now() < ad.start_date or datetime.datetime.now() > ad.stop_date:
-        raise http.Http404, _('This application is not active')
+        raise http.Http404, _('This form is not active')
 
     # Require auth and redirect
     if ad.authentication:
@@ -148,6 +150,7 @@ def apply(request, slug):
                         apps_history = Application.objects.filter(
                             user__username__exact=request.user.username,
                             app_definition=ad).order_by('id').reverse()[1:]
+                        print(apps_history)
                         if apps_history.count() > 0:
                             history = apps_history
                     except:
@@ -350,14 +353,9 @@ def confirm(request, slug, app):
 def submit(request, slug, app):
     """
        This adds a datestamp to the application and prevents it from being
-       viewed again.  If the application is a non-authenticated app, then
-       there is no storage, and the application is presented again.
-
-       If the application is authenticated, then the user is redirected
-       to a new view of their completed application, which displays a message
-       to the user that no further changes can be made, and displays their
-       responses.
+       viewed again. Used in for all authenticated forms.
     """
+
     app = get_object_or_404(Application, id=app)
     ad = get_object_or_404(ApplicationDefinition, slug=slug)
     
@@ -369,9 +367,10 @@ def submit(request, slug, app):
     # If this is an email_only AD, then delete everything in the application
     # except for the application stub (so they can't multi-submit).
     if ad.email_only:
+
         field_set = ad.fielddefinition_set.all()
         for field_def in field_set:
-            field_model = eval(field_def.type)
+            field_model = getattr(funcmodels, field_def.type)
             try:
                 field_val = field_model.objects.get( app = app, field_def = field_def)
                 field_val.delete()
@@ -534,10 +533,11 @@ def file_view(request, ad_slug, app, field_slug, file):
     """
     ad = get_object_or_404(ApplicationDefinition, slug=ad_slug)
     app = get_object_or_404(Application, id=app)
-    field_def = get_object_or_404(FieldDefinition, slug=field_slug)
+    field_def = get_object_or_404(FieldDefinition, slug=field_slug, 
+                                  application=ad)
 
     if ad.authentication and not request.user.is_authenticated():
-        return HttpResponseRedirect('/accounts/login/?next=%s' % request.path)
+        return HttpResponseRedirect('%s?next=%s' % (reverse("formunculous-login"), request.path))
 
     # If the application is not anonymous and the user isn't either a reviewer
     # or the applicant, deny access.

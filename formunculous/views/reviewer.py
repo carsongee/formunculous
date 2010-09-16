@@ -43,6 +43,9 @@ from django.core.servers.basehttp import FileWrapper
 from formunculous.utils.ofc2.OpenFlashChart import *
 import time
 
+# Introspect model namespace
+import formunculous.models as funcmodels
+
 
 def index(request, slug):
     """
@@ -231,13 +234,15 @@ def index(request, slug):
             value_row.append({'value': app.get_field_value(field.slug),
                               'url': reverse('reviewer-application', 
                                              kwargs={'slug': slug,
-                                                     'app': app.id,})},)
+                                                     'app': app.id,}),
+                              'type': field.type},)
         # Add the submission date to the end of the row
         value_row.append({'value': app.submission_date, 
                           'url': reverse('reviewer-application', 
                                          kwargs={'slug': slug,
                                                  'app': app.id,}),
-                          'id': app.id,})
+                          'id': app.id,
+                          'type': 'DateField' })
         value_table.append(value_row)
 
     # Are there partially completed applications?
@@ -250,7 +255,7 @@ def index(request, slug):
     if request.session.has_key('status'):
         if int(request.session['status']) == 1:
             status = _('There are currently no files associated with \
-                              this application')
+                              this form definition.')
         del request.session['status']
 
 
@@ -445,7 +450,7 @@ def field_pie(request, slug, field):
     for option in options:
         values[ option.value ] = 0
 
-    field_model = eval(field.type)
+    field_model = getattr(funcmodels, field.type)
     responses = [a.value for a in field_model.objects.filter(field_def = field)]
     total_count = 0
     for response in responses:
