@@ -12,15 +12,10 @@
 #
 #     You should have received a copy of the GNU General Public License
 #     along with formunculous.  If not, see <http://www.gnu.org/licenses/>.
-#     Copyright 2009,2010 Carson Gee
+#     Copyright 2009-2011 Carson Gee
 
 from django.core.files.storage import FileSystemStorage
 from django.conf import settings
-
-# Still need to deal with access control to these files using this
-# storage system.  Likely move this class out to another file
-# that handles viewing these files and the permissions they recieve
-
 
 class ApplicationStorage(FileSystemStorage):
     """

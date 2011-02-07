@@ -12,7 +12,7 @@
 #
 #     You should have received a copy of the GNU General Public License
 #     along with formunculous.  If not, see <http://www.gnu.org/licenses/>.
-#     Copyright 2009,2010 Carson Gee
+#     Copyright 2009-2011 Carson Gee
 
 from formunculous.models import *
 from formunculous.forms import *
@@ -29,6 +29,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import permission_required
 from django.core.paginator import InvalidPage, EmptyPage
 from django.contrib.sites.models import Site
+from django.utils.encoding import smart_str, smart_unicode
 
 from formunculous.utils.digg_paginator import DiggPaginator
 from django.db.models import Q
@@ -575,10 +576,11 @@ def export_csv(request, slug):
     for field in field_definitions:
         headers.append(field.label)
     
-    # Add user name and submission_date
+    # Add user name, submission_date, and application ID
+    headers.append(_('Application ID'))
     headers.append(_('Username'))
     headers.append(_('Submission Date'))
-    base_form_field_count += 2
+    base_form_field_count += 3
 
     sub_form_field_counts = []
     sub_ads = ad.applicationdefinition_set.all().order_by("slug")
@@ -597,11 +599,17 @@ def export_csv(request, slug):
     data_table = []
     for app in apps:
         data_row = [a['data'] for a in app.get_field_values(all_fields=True)]
+
+        # Append AppID
+        data_row.append(app.id)
+        
+        # Append Username
         if app.user:
             data_row.append(app.user.username)
         else:
             data_row.append('')
 
+        # Append Submission Date
         data_row.append(app.submission_date.strftime("%a %e %b %Y %r"))
 
         data_table.append(data_row)
@@ -642,7 +650,7 @@ def export_csv(request, slug):
                     output+= '"http://' + Site.objects.get_current().domain \
                         + item.url + '",'
                 except:
-                    output+= '"' + str(item) + '",'
+                    output+= '"' + smart_str(item) + '",'
             else:
                 output+= '"",'
         output+= "\n"

@@ -8,7 +8,6 @@
 	<style type="text/css">
 	  html {
       font-family: Arial, Helvetica, sans-serif;
-	  font-size: .8em;
 	  }
 	  a {
 	    color: #3333ff;
@@ -27,33 +26,31 @@
 	  {% if perms.formunculous.change_form %}
 	  <li>
 		<a href="{% url builder-index %}">Builder</a></li>
-	  </li>
       {% endif %}
     </ul>
-   </div>
+  </div>
   {% if user.is_authenticated %}
   <div id="formunculous_auth"><a href="{% url formunculous-logout %}?next={% url formunculous-index %}">Logout</a></div>
   {% else %}
   <div id="formunculous_auth"><a href="{% url formunculous-login %}?next={{ request.path }}">Login</a></div>
   {% endif %}
-  <div id="body">
-    {% block body %}
-	{% block crumbs %}
-	{% if breadcrumbs %}
-	  <ul id="breadcrumb_list">
-	  {% for crumb in breadcrumbs %}
-	    <li><a href="{{ crumb.url }}">{{ crumb.name }}</a></li>
-	  {% endfor %}
-	  </ul>
-	{% endif %}
-	{% endblock %}
-      <div><h1>{% block content_title %}{% endblock %}</h1></div>
 
-      <div class="content">
-        {% block content %}{% endblock %}
-      </div>
-    {% endblock %}
+  {% block body %}
+  {% block crumbs %}
+  {% if breadcrumbs %}
+  <ul id="breadcrumb_list">
+	{% for crumb in breadcrumbs %}
+	  <li><a href="{{ crumb.url }}">{{ crumb.name }}</a></li>
+	{% endfor %}
+  </ul>
+  {% endif %}
+  {% endblock %}
+  <h1>{% block content_title %}{% endblock %}</h1>
+
+  <div class="content">
+    {% block content %}{% endblock %}
   </div>
+  {% endblock %}
 </body>
 </html>
 

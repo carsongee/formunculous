@@ -1,5 +1,5 @@
 {% extends "formunculous/base.html" %}
-{% load i18n widget_type %}
+{% load i18n widget_type formunculous_tags %}
 {% block css %}{{ block.super }}
 {{ review_form.media }}
 <link href="{{ MEDIA_URL }}formunculous/css/formunculous.css" rel="stylesheet" type="text/css" />
@@ -69,7 +69,7 @@ jQuery('.formunculous_deletelink').click(function() { jQuery('#del_dialog').dial
 
 <h1>{% trans "Responses" %}</h1>
 <div class="formunculous_container">
-  <div class="fr" style="margin-right: 2em;">
+  <div class="formunculous_print" style="margin-right: 2em;">
 	<a href="javascript:window.print()" class="formunculous_printlink">{% trans "Print" %}</a>
   </div>
 
@@ -83,9 +83,9 @@ jQuery('.formunculous_deletelink').click(function() { jQuery('#del_dialog').dial
 		
 	{% endif %}
 	{% for field in app_fields %}
-	   <li>
+	   <li class="{{ field_type.lower }}" id="{{ field.slug }}">
 	      <span class="formunculous_field_label">{{ field.label }}:</span>
-		  <span class="formunculous_field_data">
+		  <{% ifequal field.type "TextArea" %}p{% else %}span{% endifequal %} class="formunculous_field_data">
 			{% ifequal field.type "BooleanField" %}
 			  <span class="
 				{{ field.data|yesno:"formunculous_yes\">Yes, formunculous_no\">No"|safe }}
@@ -95,17 +95,21 @@ jQuery('.formunculous_deletelink').click(function() { jQuery('#del_dialog').dial
 			  {% if field.data %}
 
 			    {% if field.data.url %}
-			      <a target="_blank" href="{{ field.data.url }}">
+			      <a target="_blank" href="{{ field.data.url|urlencode }}">
 			    {% endif %}
 
-			   {{ field.data }}
+				{% if field.multiselect %}
+                    {% for split_data in field.data|split_as_list:'|' %}<img class="selected" src="{{ MEDIA_URL }}/formunculous/img/icon-yes.gif" alt="v" />{% if not forloop.last %}{% endif %}{% trans split_data %}{% if not forloop.last %}<br />{% endif %}{% endfor %}
+                {% else %}
+				  {{field.data }}
+                {% endif %}
 
 			   {% if field.data.url %}
 			     </a>
 			   {% endif %}
 			 {% endif %}
 		    {% endifequal %}
-		  </span>
+		  </{% ifequal field.type "TextArea" %}p{% else %}span{% endifequal %}>
 	   </li>
     {% endfor %}
 	   <li>

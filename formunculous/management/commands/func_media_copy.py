@@ -30,7 +30,6 @@ files in the directory.
         copy_tree(media_from, media_to)
 
         
-        
-        print(_("Copied %s to %s creating any needed directories" % (media_to, media_from) ))
+        print(_("Copied %(first)s to %(second)s creating any needed directories" % {'first': media_to, 'second': media_from} ))
         
         

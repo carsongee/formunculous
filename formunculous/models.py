@@ -12,7 +12,7 @@
 #
 #     You should have received a copy of the GNU General Public License
 #     along with formunculous.  If not, see <http://www.gnu.org/licenses/>.
-#     Copyright 2009,2010 Carson Gee
+#     Copyright 2009-2011 Carson Gee
 
 from django.db import models
 from django.contrib.auth.models import User, Group
@@ -258,7 +258,9 @@ class Application(models.Model):
                                                      field_def = field_def)
                 field_dict = {'label': field_def.label,
                               'data': field_val.value,
-                              'type': field_def.type },
+                              'type': field_def.type,
+                              'slug': field_def.slug,
+                              'multiselect': field_def.multi_select },
             except:
                 field_dict = {'label': field_def.label, 'data': None,
                               'type': field_def.type },
@@ -522,7 +524,7 @@ class FileField(BaseField):
 
     value = models.FileField(upload_to=upload_to_path, 
                              storage=ApplicationStorage(),
-                             blank=True, null=True)
+                             blank=True, null=True,max_length=100)
     widget = FileWidget
     allow_dropdown = False
 
@@ -538,7 +540,7 @@ class ImageField(BaseField):
 
     value = models.ImageField(upload_to=upload_to_path, 
                              storage=ApplicationStorage(),
-                             blank=True, null=True)
+                             blank=True, null=True, max_length=100)
     widget = FileWidget
     allow_dropdown = False
 
@@ -554,6 +556,6 @@ class DocumentField(BaseField):
 
     value = fields.DocumentField(upload_to=upload_to_path, 
                              storage=ApplicationStorage(),
-                             blank=True, null=True)
+                             blank=True, null=True, max_length=100)
     widget = FileWidget
     allow_dropdown = False
