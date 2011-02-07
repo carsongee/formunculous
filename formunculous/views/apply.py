@@ -12,7 +12,7 @@
 #
 #     You should have received a copy of the GNU General Public License
 #     along with formunculous.  If not, see <http://www.gnu.org/licenses/>.
-#     Copyright 2009,2010 Carson Gee
+#     Copyright 2009-2011 Carson Gee
 
 # Create your views here.
 from formunculous.models import *
@@ -150,7 +150,6 @@ def apply(request, slug):
                         apps_history = Application.objects.filter(
                             user__username__exact=request.user.username,
                             app_definition=ad).order_by('id').reverse()[1:]
-                        print(apps_history)
                         if apps_history.count() > 0:
                             history = apps_history
                     except:

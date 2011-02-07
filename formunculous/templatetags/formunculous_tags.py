@@ -12,7 +12,7 @@
 #
 #     You should have received a copy of the GNU General Public License
 #     along with formunculous.  If not, see <http://www.gnu.org/licenses/>.
-#     Copyright 2009,2010 Carson Gee
+#     Copyright 2009-2011 Carson Gee
 
 from formunculous.models import *
 from formunculous.forms import ApplicationForm
@@ -20,6 +20,8 @@ from formunculous.utils import build_template_structure, get_formsets
 
 from django import template
 from django.template import TemplateSyntaxError, Variable, Template
+from django.template.defaultfilters import stringfilter
+
 from django.template.loader import render_to_string
 from django.utils.translation import ugettext as _
 
@@ -144,3 +146,12 @@ def func_form(parser, token):
     return FuncForm(bits[1], var_name)
 
 func_form = register.tag(func_form)
+
+#
+# Adapted from http://djangosnippets.org/snippets/1461/
+#
+
+@register.filter
+@stringfilter
+def split_as_list(value, splitter='|', autoescape=None):
+    return value.split(splitter)

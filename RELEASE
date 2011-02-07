@@ -1,3 +1,40 @@
+Formunculous 2.2.4 Release Notes:
+
+    This is a minor bug fix release with two minor
+	additional features.  
+	A big thank you to Leho Kraav ( http://kraav.com/ )
+	for his help with getting translations working properly
+	and the split multi value field display code.
+
+New Features:
+	* CSV Export now includes the application ID as a field
+
+	* Added template code to properly display multi-select field responses on
+	  the thank you and review pages (Courtesy of Leho Kraav)
+
+Bug Fixes:
+	* Fixed unicode handling in CSV export
+
+	* Added URLEncode filter for attached file links in thank you and review
+
+	* Fixed several spacing issues and missing trans/ugettext strings
+	  (Courtesy of Leho Kraav)
+
+	* For additional language support, I setup the apply.html base template to 
+	  try and include a language specific date picker from
+	   http://jquery-ui.googlecode.com/svn/trunk/ui/i18n/ if a language other 
+	   than en or en-us is selected:
+	  {{ MEDIA_URL }}formunculous/js/jquery.ui.datepicker-{{ LANGUAGE_CODE }}.js
+	  (You must add the specific js to that folder for it to work)
+	  (Courtesy Leho Kraav)
+
+	* File type fields now properly check that the file name is less than the max
+	  length allowed in the model.  There is still an edge case where the path plus
+	  the file name is too long.  I have submitted a patch upstream to Django to
+	  fix this.
+
+	
+
 Formunculous 2.2.0 Release Notes:
 
 New Features:

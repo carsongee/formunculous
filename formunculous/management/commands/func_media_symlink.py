@@ -43,7 +43,7 @@ supported on this operating system.
 Unable to link media, please check your permissions and ensure that
 your operating system supports symbolic links.
 """)
-        
-        print( _("Created symlink from %s to %s." % (media_from, media_to) ))
+
+        print( _("Created symlink from %(first)s to %(second)s." % {'first': media_from, 'second': media_to} ))
         
         

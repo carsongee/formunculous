@@ -1,12 +1,13 @@
 {% extends "formunculous/base.html" %}
 
-{% load i18n %}
+{% load i18n formunculous_tags %}
 {% block css %}
+{{ block.super }}
 <link href="{{ MEDIA_URL }}formunculous/css/formunculous.css" rel="stylesheet" type="text/css" />
 {% endblock %}
 
-{% block title %}{{ ad.name}} {% trans "Submission Confirmation" %}{% endblock %}
-{% block content_title %}{{ ad.name}} {% trans "Submission Confirmation" %}{% endblock %}
+{% block title %}{% trans "Submission Confirmation" %} - {% trans ad.name %}{% endblock %}
+{% block content_title %}{% trans "Submission Confirmation" %} - {% trans ad.name %}{% endblock %}
 {% block content %}
 
 <p>
@@ -22,14 +23,14 @@
    {% endblocktrans %}
 </p>
 <div class="formunculous_container">
-  <div class="fl" style="margin-top: 1em;">
+  <div class="formunculous_print" style="margin-top: 1em;">
 	<a href="javascript:window.print()" class="formunculous_printlink">{% trans "Print" %}</a>
   </div>
   <ul class="formunculous_form_info">
 	{% for field in fields %}
-	   <li>
-	      <span class="formunculous_field_label">{{ field.label }}:</span>
-		  <span class="formunculous_field_data">
+	   <li class="{{ field_type.lower }}" id="{{ field.slug }}">
+	      <span class="formunculous_field_label">{% trans field.label %}:</span>
+		  <{% ifequal field.type "TextArea" %}p{% else %}span{% endifequal %} class="formunculous_field_data">
 			{% ifequal field.type "BooleanField" %}
 			  <span class="
 				{{ field.data|yesno:"formunculous_yes\">Yes, formunculous_no\">No"|safe }}
@@ -40,11 +41,14 @@
 
 			    {% if field.data.url %}
 			      {% if not ad.email_only %}
-			        <a target="_blank" href="{{ field.data.url }}">
+			        <a target="_blank" href="{{ field.data.url|urlencode }}">
 			      {% endif %}
 			    {% endif %}
-
-			    {{ field.data }}
+				  {% if field.multiselect %}
+                    {% for split_data in field.data|split_as_list:'|' %}<img class="selected" src="{{ MEDIA_URL }}/formunculous/img/icon-yes.gif" alt="v" />{% if not forloop.last %}{% endif %}{% trans split_data %}{% if not forloop.last %}<br />{% endif %}{% endfor %}
+                  {% else %}
+				    {{field.data }}
+                  {% endif %}
 
 			    {% if field.data.url %}
 			      {% if not ad.email_only %}
@@ -55,7 +59,7 @@
 			  {% endif %}
 
           {% endifequal %}
-		  </span>
+		  </{% ifequal field.type "TextArea" %}p{% else %}span{% endifequal %}>
 	   </li>
     {% endfor %}
   </ul>

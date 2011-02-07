@@ -12,7 +12,7 @@
 #
 #     You should have received a copy of the GNU General Public License
 #     along with formunculous.  If not, see <http://www.gnu.org/licenses/>.
-#     Copyright 2009,2010 Carson Gee
+#     Copyright 2009-2011 Carson Gee
 
 from django import forms
 from django.db import models
@@ -80,7 +80,7 @@ class ApplicationForm(forms.Form):
             if field_def_choices and field_model.allow_dropdown:
                 choices = (())
                 for choice in field_def_choices:
-                    choices += (choice.value, choice.text,),
+                    choices += (choice.value, _(choice.text),),
 
                 # Users are allowed to specify that a choiced
                 widget = Select

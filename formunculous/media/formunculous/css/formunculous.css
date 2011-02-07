@@ -574,6 +574,10 @@ table.formunculous_review_table tr.odd:hover
 
 /* End history styles */
 
+.formunculous_print {
+	float: left;
+}
+
 .formunculous_form_info {
 	list-style-type: none;
 	padding-top: 1em;
