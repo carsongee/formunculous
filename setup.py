@@ -9,6 +9,12 @@ except ImportError:
 from setuptools import setup
 import os
 
+# Correct data_dir problem with pip
+from distutils.command.install import INSTALL_SCHEMES 
+
+for scheme in INSTALL_SCHEMES.values(): 
+    scheme['data'] = scheme['purelib']
+
 def fullsplit(path, result=None):
     """
     Split a pathname into components (the opposite of os.path.join) in a
