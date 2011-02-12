@@ -17,7 +17,7 @@
 #     This file is part of formunculous.
 #     Copyright 2009-2011 Carson Gee
 
-VERSION = (2, 2, 4, 'final', 0 )
+VERSION = (2, 2, 5, 'final', 0 )
 
 def get_version():
     

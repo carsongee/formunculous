@@ -33,6 +33,7 @@
 
 {% if history %}
 {% if not ad.email_only %}
+<script type="text/javascript" src="{{ MEDIA_URL }}formunculous/js/csrf.js"></script>
 <script type="text/javascript" src="{{ MEDIA_URL }}formunculous/js/history.js"></script>
 <script type="text/javascript">
   var historyURL = '{% url formunculous-apply-history %}'

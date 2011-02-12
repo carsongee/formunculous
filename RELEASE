@@ -1,8 +1,21 @@
+Formunculous 2.2.5 Release Notes:
+
+	This is a release in order to correct backwards incompatibilities introduced
+	between version 1.2.4 and 1.2.5 of Django.  Because it includes new media,
+	if you are using setuptools/easy_install you will need to relink your media
+	or at least add the csrf.js file to { MEDIA_ROOT }/formunculous/js/ in order
+	to correctly handle Django 1.2.5 with the CSRF middleware
+
+Bug Fixes:
+	* Added csrf.js to the media and included it in all templates that make POST
+	  AJAX calls in order to add a CSRF token HTTP header to the request.
+
+
 Formunculous 2.2.4 Release Notes:
 
     This is a minor bug fix release with two minor
 	additional features.  
-	A big thank you to Leho Kraav ( http://kraav.com/ )
+	A big thank you to @lkraav ( http://leho.kraav.com )
 	for his help with getting translations working properly
 	and the split multi value field display code.
 
@@ -10,7 +23,7 @@ New Features:
 	* CSV Export now includes the application ID as a field
 
 	* Added template code to properly display multi-select field responses on
-	  the thank you and review pages (Courtesy of Leho Kraav)
+	  the thank you and review pages (Courtesy of @lkraav)
 
 Bug Fixes:
 	* Fixed unicode handling in CSV export
@@ -18,7 +31,7 @@ Bug Fixes:
 	* Added URLEncode filter for attached file links in thank you and review
 
 	* Fixed several spacing issues and missing trans/ugettext strings
-	  (Courtesy of Leho Kraav)
+	  (Courtesy of @lkraav)
 
 	* For additional language support, I setup the apply.html base template to 
 	  try and include a language specific date picker from
@@ -26,7 +39,7 @@ Bug Fixes:
 	   than en or en-us is selected:
 	  {{ MEDIA_URL }}formunculous/js/jquery.ui.datepicker-{{ LANGUAGE_CODE }}.js
 	  (You must add the specific js to that folder for it to work)
-	  (Courtesy Leho Kraav)
+	  (Courtesy @lkraav)
 
 	* File type fields now properly check that the file name is less than the max
 	  length allowed in the model.  There is still an edge case where the path plus
