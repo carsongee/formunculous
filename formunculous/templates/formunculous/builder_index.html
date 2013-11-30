@@ -1,16 +1,16 @@
 {% extends "formunculous/builder_base.html" %}
-{% load i18n %}
+{% load i18n static %}
 
 {% block extrastyle %}{{ block.super }}
-<link href="{{ MEDIA_URL }}formunculous/css/smoothness/jquery-ui-1.7.2.custom.css" rel="stylesheet" type="text/css">
-<link href="{{ MEDIA_URL }}formunculous/css/formunculous.css" rel="stylesheet" type="text/css" />
-<link href="{{ MEDIA_URL }}formunculous/css/apply.css" rel="stylesheet" type="text/css" />
+<link href="{% static 'formunculous/css/smoothness/jquery-ui-1.7.2.custom.css' %}" rel="stylesheet" type="text/css">
+<link href="{% static 'formunculous/css/formunculous.css' %}" rel="stylesheet" type="text/css" />
+<link href="{% static 'formunculous/css/apply.css' %}" rel="stylesheet" type="text/css" />
 {% endblock %}
 
 {% block extrahead %}{{ block.super }}
-<script type="text/javascript" src="{{ MEDIA_URL }}formunculous/js/jquery-1.3.2.min.js"></script>
-<script type="text/javascript" src="{{ MEDIA_URL }}formunculous/js/jquery-ui-1.7.2.custom.min.js"></script>
-<script type="text/javascript" src="{{ MEDIA_URL }}formunculous/js/csrf.js"></script>
+<script type="text/javascript" src="{% static 'formunculous/js/jquery' %}-1.3.2.min.js"></script>
+<script type="text/javascript" src="{% static 'formunculous/js/jquery' %}-ui-1.7.2.custom.min.js"></script>
+<script type="text/javascript" src="{% static 'formunculous/js/csrf.js' %}"></script>
 <script type="text/javascript">
 var current_app_id = 0;
 var current_app_slug = '';
@@ -144,7 +144,7 @@ $('#prev_dialog').dialog({
   }
 
 </script>
-<script type="text/javascript" src="{{ MEDIA_URL }}formunculous/js/urlify.js"></script>
+<script type="text/javascript" src="{% static 'formunculous/js/urlify.js' %}"></script>
 {% endblock %}
 
 {% block title %}

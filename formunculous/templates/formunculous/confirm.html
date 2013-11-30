@@ -1,8 +1,8 @@
 {% extends "formunculous/base.html" %}
 
-{% load i18n %}
+{% load i18n static %}
 {% block css %}{{ block.super }}
-<link href="{{ MEDIA_URL }}formunculous/css/formunculous.css" rel="stylesheet" type="text/css" />
+<link href="{% static 'formunculous/css/formunculous.css' %}" rel="stylesheet" type="text/css" />
 {% endblock %}
 
 {% block title %}{{ ad.name}} {% trans "Submission Confirmation" %}{% endblock %}

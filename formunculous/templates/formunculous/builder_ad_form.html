@@ -1,20 +1,20 @@
 {% extends "formunculous/builder_base.html" %}
 
-{% load i18n widget_type adminmedia %}
+{% load i18n widget_type adminmedia static %}
 
 
 {% block extrastyle %}{{ block.super }}
 {{ form.media }}
 {{ media }}
-<link href="{{ MEDIA_URL }}formunculous/css/formunculous.css" rel="stylesheet" type="text/css" />
-<link href="{{ MEDIA_URL }}formunculous/css/apply.css" rel="stylesheet" type="text/css" />
+<link href="{% static 'formunculous/css/formunculous.css' %}" rel="stylesheet" type="text/css" />
+<link href="{% static 'formunculous/css/apply.css' %}" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" type="text/css" href="{% admin_media_prefix %}css/widgets.css" />
 {% endblock %}
 
 {% block extrahead %}{{ block.super }}
-  <script type="text/javascript" src="{{ MEDIA_URL }}formunculous/js/urlify.js"></script>
-   <script type="text/javascript" src="{{ MEDIA_URL }}formunculous/js/ckeditor/ckeditor.js"></script>
-  <script type="text/javascript" src="{{ MEDIA_URL }}formunculous/js/toggle_ck.js"></script>
+  <script type="text/javascript" src="{% static 'formunculous/js/urlify.js' %}"></script>
+   <script type="text/javascript" src="{% static 'formunculous/js/ckeditor/ckeditor.js' %}"></script>
+  <script type="text/javascript" src="{% static 'formunculous/js/toggle' %}_ck.js"></script>
 {% endblock %}
 {% block title %}{% if add %}{% trans "New Form Definition" %}{% else %}{% trans "Modifying" %}{{ ad.name }}{% endif %}{% endblock %}
 

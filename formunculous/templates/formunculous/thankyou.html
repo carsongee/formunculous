@@ -1,9 +1,9 @@
 {% extends "formunculous/base.html" %}
 
-{% load i18n formunculous_tags %}
+{% load i18n static formunculous_tags %}
 {% block css %}
 {{ block.super }}
-<link href="{{ MEDIA_URL }}formunculous/css/formunculous.css" rel="stylesheet" type="text/css" />
+<link href="{% static 'formunculous/css/formunculous.css' %}" rel="stylesheet" type="text/css" />
 {% endblock %}
 
 {% block title %}{% trans "Submission Confirmation" %} - {% trans ad.name %}{% endblock %}
@@ -45,7 +45,7 @@
 			      {% endif %}
 			    {% endif %}
 				  {% if field.multiselect %}
-                    {% for split_data in field.data|split_as_list:'|' %}<img class="selected" src="{{ MEDIA_URL }}/formunculous/img/icon-yes.gif" alt="v" />{% if not forloop.last %}{% endif %}{% trans split_data %}{% if not forloop.last %}<br />{% endif %}{% endfor %}
+                    {% for split_data in field.data|split_as_list:'|' %}<img class="selected" src="{% static '/formunculous/img/icon' %}-yes.gif" alt="v" />{% if not forloop.last %}{% endif %}{% trans split_data %}{% if not forloop.last %}<br />{% endif %}{% endfor %}
                   {% else %}
 				    {{field.data }}
                   {% endif %}

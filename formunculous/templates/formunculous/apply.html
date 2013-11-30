@@ -1,17 +1,17 @@
 {% extends "formunculous/base.html" %}
 
-{% load i18n  widget_type formunculous_tags %}
+{% load i18n  widget_type formunculous_tags static %}
 {% get_current_language as LANGUAGE_CODE %}
 {% block css %}
 {{ block.super }}
-<script type="text/javascript" src="{{ MEDIA_URL }}formunculous/js/jquery-1.3.2.min.js"></script>
+<script type="text/javascript" src="{% static 'formunculous/js/jquery' %}-1.3.2.min.js"></script>
 {{ form.media }}
-<link href="{{ MEDIA_URL }}formunculous/css/formunculous.css" rel="stylesheet" type="text/css" />
-<link href="{{ MEDIA_URL }}formunculous/css/apply.css" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="{{ MEDIA_URL }}formunculous/js/jquery.formset.js"></script>
-{% ifnotequal LANGUAGE_CODE "en" %}{% ifnotequal LANGUAGE_CODE "en-us" %}<script type="text/javascript" src="{{ MEDIA_URL }}formunculous/js/jquery.ui.datepicker-{{ LANGUAGE_CODE }}.js"></script>{% endifnotequal %}{% endifnotequal %}
+<link href="{% static 'formunculous/css/formunculous.css' %}" rel="stylesheet" type="text/css" />
+<link href="{% static 'formunculous/css/apply.css' %}" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="{% static 'formunculous/js/jquery.formset.js' %}"></script>
+{% ifnotequal LANGUAGE_CODE "en" %}{% ifnotequal LANGUAGE_CODE "en-us" %}<script type="text/javascript" src="{% static 'formunculous/js/jquery.ui.datepicker' %}-{{ LANGUAGE_CODE }}.js"></script>{% endifnotequal %}{% endifnotequal %}
 {% if subforms %}
-<script type="text/javascript" src="{{ MEDIA_URL }}formunculous/js/apply_sub_form.js"></script>
+<script type="text/javascript" src="{% static 'formunculous/js/apply' %}_sub_form.js"></script>
 
 <script type="text/javascript">
   jQuery(function($) {
@@ -33,8 +33,8 @@
 
 {% if history %}
 {% if not ad.email_only %}
-<script type="text/javascript" src="{{ MEDIA_URL }}formunculous/js/csrf.js"></script>
-<script type="text/javascript" src="{{ MEDIA_URL }}formunculous/js/history.js"></script>
+<script type="text/javascript" src="{% static 'formunculous/js/csrf.js' %}"></script>
+<script type="text/javascript" src="{% static 'formunculous/js/history.js' %}"></script>
 <script type="text/javascript">
   var historyURL = '{% url 'formunculous-apply-history' %}'
 </script>
