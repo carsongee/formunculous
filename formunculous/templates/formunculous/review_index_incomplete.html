@@ -9,7 +9,7 @@
 <script type="text/javascript" src="{{ MEDIA_URL }}formunculous/js/jquery-1.3.2.min.js"></script>
 <script type="text/javascript" src="{{ MEDIA_URL }}formunculous/js/jquery-ui-1.7.2.custom.min.js"></script>
 <script type="text/javascript">
-var delete_url = "{% url reviewer-delete ad.slug %}";
+var delete_url = "{% url 'reviewer-delete' ad.slug %}";
 var app_id = 0
 
 jQuery(document).ready(function($)
@@ -76,10 +76,10 @@ function deleteApp(id) {
 <div class="formunculous_tab_bar">
   <ul>
 	<li>
-	  <a href="{% url reviewer-index ad.slug %}" class="formunculous_completelink">{% trans "Completed" %}</a>
+	  <a href="{% url 'reviewer-index' ad.slug %}" class="formunculous_completelink">{% trans "Completed" %}</a>
 	</li>
 	<li class="here">
-	  <a href="{% url reviewer-index-incomplete ad.slug %}" class="formunculous_incompletelink">{% trans "In Progress" %}</a>
+	  <a href="{% url 'reviewer-index-incomplete' ad.slug %}" class="formunculous_incompletelink">{% trans "In Progress" %}</a>
 	</li>
   </ul>
 </div>

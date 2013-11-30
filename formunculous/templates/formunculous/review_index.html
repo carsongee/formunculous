@@ -10,7 +10,7 @@
 <script type="text/javascript" src="{{ MEDIA_URL }}formunculous/js/jquery-ui-1.7.2.custom.min.js"></script>
 <script type="text/javascript" src="{{ MEDIA_URL }}formunculous/js/csrf.js"></script>
 <script type="text/javascript">
-var delete_url = "{% url reviewer-delete ad.slug %}";
+var delete_url = "{% url 'reviewer-delete' ad.slug %}";
 var app_id = 0
 
 jQuery(document).ready(function($)
@@ -78,10 +78,10 @@ function deleteApp(id) {
 <div class="formunculous_tab_bar">
   <ul>
 	<li class="here">
-	  <a href="{% url reviewer-index ad.slug %}" class="formunculous_completelink">{% trans "Completed" %}</a>
+	  <a href="{% url 'reviewer-index' ad.slug %}" class="formunculous_completelink">{% trans "Completed" %}</a>
 	</li>
 	<li>
-	  <a href="{% url reviewer-index-incomplete ad.slug %}" class="formunculous_incompletelink">{% trans "In Progress" %}</a>
+	  <a href="{% url 'reviewer-index-incomplete' ad.slug %}" class="formunculous_incompletelink">{% trans "In Progress" %}</a>
 	</li>
   </ul>
 </div>
@@ -102,13 +102,13 @@ function deleteApp(id) {
   </form>
 </div>
 <div class="fr" style="margin: 5px 2em 0 0;">
-  <a href="{% url reviewer-export ad.slug %}" class="formunculous_csvlink">
+  <a href="{% url 'reviewer-export' ad.slug %}" class="formunculous_csvlink">
 	{% trans "Spreadsheet" %}
   </a>
-  <a href="{% url reviewer-export-zip ad.slug %}" class="formunculous_downloadlink">
+  <a href="{% url 'reviewer-export-zip' ad.slug %}" class="formunculous_downloadlink">
 	{% trans "Download Files" %}
   </a>
-  <a href="{% url reviewer-statistics ad.slug %}" class="formunculous_statslink">
+  <a href="{% url 'reviewer-statistics' ad.slug %}" class="formunculous_statslink">
 	{% trans "Statistics" %}
   </a>
 

@@ -66,10 +66,10 @@
 <div class="formunculous_confirmation_bar">
   <ul>
 	<li>
-	  <span class="formunculous_continue_link"><a href="{% url formunculous-submit ad.slug, app.id %}">{% trans "Continue" %}</a></span>
+	  <span class="formunculous_continue_link"><a href="{% url 'formunculous-submit' ad.slug, app.id %}">{% trans "Continue" %}</a></span>
 	</li>
 	<li>
-	  <span class="formunculous_cancel_link"><a href="{% url formunculous-apply ad.slug %}">{% trans "Cancel" %}</a></span>
+	  <span class="formunculous_cancel_link"><a href="{% url 'formunculous-apply' ad.slug %}">{% trans "Cancel" %}</a></span>
 	</li>
   </ul>
 </div>

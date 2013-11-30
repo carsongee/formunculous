@@ -7,7 +7,7 @@
 <script type="text/javascript" src="{{ MEDIA_URL }}formunculous/js/csrf.js"></script>
 <script type="text/javascript" src="{{ MEDIA_URL }}formunculous/js/history.js"></script>
 <script type="text/javascript">
-  var historyURL = '{% url formunculous-apply-history %}'
+  var historyURL = '{% url 'formunculous-apply-history' %}'
 </script>
 {% endif %}
 {% endblock %}
@@ -43,7 +43,7 @@
   {# Offer link to start an additional form #}
     <div style="float:right;margin-top: 3em;">
 	  <p>
-		<a href="{% url formunculous-apply ad.slug %}?new=1" class="formunculous_newapplink">
+		<a href="{% url 'formunculous-apply' ad.slug %}?new=1" class="formunculous_newapplink">
 		  {% trans "Start an additional form" %}
 		</a>
 	  </p>

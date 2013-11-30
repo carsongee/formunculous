@@ -36,7 +36,7 @@
 <script type="text/javascript" src="{{ MEDIA_URL }}formunculous/js/csrf.js"></script>
 <script type="text/javascript" src="{{ MEDIA_URL }}formunculous/js/history.js"></script>
 <script type="text/javascript">
-  var historyURL = '{% url formunculous-apply-history %}'
+  var historyURL = '{% url 'formunculous-apply-history' %}'
 </script>
 {% endif %}
 {% endif %}
@@ -86,7 +86,7 @@
   <div class="apply_messages">{{ message }}</div>
   {% endif %}
 
-  <form method="post" action="{% url formunculous-apply ad.slug %}"{% if form.is_multipart %} enctype="multipart/form-data"{% endif %}>{% csrf_token %}
+  <form method="post" action="{% url 'formunculous-apply' ad.slug %}"{% if form.is_multipart %} enctype="multipart/form-data"{% endif %}>{% csrf_token %}
 
 
 	{% if form.errors %}

@@ -21,10 +21,10 @@
 	<param name="allowScriptAccess" value="sameDomain"/>
 
 	<param name="movie" value="{{ MEDIA_URL }}formunculous/flash/OFC.swf"/>
-	<param name="FlashVars" value="data-file={% url reviewer-stats-response-vs-time ad.slug %}"/>
+	<param name="FlashVars" value="data-file={% url 'reviewer-stats-response-vs-time' ad.slug %}"/>
 	<param name="quality" value="high"/>
 	<param name="bgcolor" value="#FFFFFF"/>
-	<embed src="{{ MEDIA_URL }}formunculous/flash/OFC.swf" FlashVars="data-file={% url reviewer-stats-response-vs-time ad.slug %}" quality="high" bgcolor="#FFFFFF"
+	<embed src="{{ MEDIA_URL }}formunculous/flash/OFC.swf" FlashVars="data-file={% url 'reviewer-stats-response-vs-time' ad.slug %}" quality="high" bgcolor="#FFFFFF"
 		   width=100% height=300 name="chart_ajax" align="middle" allowScriptAccess="sameDomain"
 		   type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer"/>
 </object>
@@ -39,10 +39,10 @@
 	 <param name="allowScriptAccess" value="sameDomain"/>
 	 
 	 <param name="movie" value="{{ MEDIA_URL }}formunculous/flash/OFC.swf"/>
-	 <param name="FlashVars" value="data-file={% url reviewer-stats-field-pie ad.slug field.id %}"/>
+	 <param name="FlashVars" value="data-file={% url 'reviewer-stats-field-pie' ad.slug field.id %}"/>
 	 <param name="quality" value="high"/>
 	 <param name="bgcolor" value="#FFFFFF"/>
-	 <embed src="{{ MEDIA_URL }}formunculous/flash/OFC.swf" FlashVars="data-file={% url reviewer-stats-field-pie ad.slug field.id %}" quality="high" bgcolor="#FFFFFF"
+	 <embed src="{{ MEDIA_URL }}formunculous/flash/OFC.swf" FlashVars="data-file={% url 'reviewer-stats-field-pie' ad.slug field.id %}" quality="high" bgcolor="#FFFFFF"
 			width=100% height=300 name="chart_ajax" align="middle" allowScriptAccess="sameDomain"
 			type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer"/>
    </object>

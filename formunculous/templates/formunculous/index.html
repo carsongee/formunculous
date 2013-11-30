@@ -35,7 +35,7 @@
 {% for app in app_coll %}
 
   <h2>
-	<a href="{% url formunculous-apply app.app_def.slug %}">
+	<a href="{% url 'formunculous-apply' app.app_def.slug %}">
 	  {{ app.app_def.name }}
 	</a>
   </h2>
@@ -66,7 +66,7 @@
   <h2>{% trans "Forms for Review" %}</h2>
   <ul class="formunculous_list">
 	{% for app in review_apps %}
-	  <li><a href="{% url reviewer-index app.slug %}">{{ app.name }}</a>{% if not app.is_active %} <span class="formunculous_inactive">( {% trans "Inactive" %} )</span>{% endif %} - {{ app.application_set.all.count }} {% trans "forms" %}</li>
+	  <li><a href="{% url 'reviewer-index' app.slug %}">{{ app.name }}</a>{% if not app.is_active %} <span class="formunculous_inactive">( {% trans "Inactive" %} )</span>{% endif %} - {{ app.application_set.all.count }} {% trans "forms" %}</li>
 	{% endfor %}
   </ul>
 </div>

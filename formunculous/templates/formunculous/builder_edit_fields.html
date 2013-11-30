@@ -53,7 +53,7 @@
   function show_preview_dialog(id)
   {
   current_app_id = id;
-  jQuery("#prev_dialog").html('<iframe height="98%" frameborder="0" width="100%" style="border: 0;" src="{% url builder-preview-ad %}?ad=' + current_app_id + '">Your browser does not support iframes</iframe>');
+  jQuery("#prev_dialog").html('<iframe height="98%" frameborder="0" width="100%" style="border: 0;" src="{% url 'builder-preview-ad' %}?ad=' + current_app_id + '">Your browser does not support iframes</iframe>');
 
   jQuery("#prev_dialog").dialog('open');
   }
@@ -61,12 +61,12 @@
 
   // These are rendered with the template for use in the field_edit.js 
   // and add_subform.js scripts
-  var new_form_url = "{% url builder-add-field ad.slug %}";
-  var drop_down_url = "{% url builder-add-dropdown %}";
-  var new_subapp_url = "{% url builder-add-subapp %}";
-  var delete_subapp_url = "{% url builder-delete-ad %}";
-  var change_subapp_url = "{% url builder-change-subapp %}";
-  var builder_index_url = "{% url builder-index %}";
+  var new_form_url = "{% url 'builder-add-field' ad.slug %}";
+  var drop_down_url = "{% url 'builder-add-dropdown' %}";
+  var new_subapp_url = "{% url 'builder-add-subapp' %}";
+  var delete_subapp_url = "{% url 'builder-delete-ad' %}";
+  var change_subapp_url = "{% url 'builder-change-subapp' %}";
+  var builder_index_url = "{% url 'builder-index' %}";
 
 </script>
 
@@ -115,11 +115,11 @@
 	<div id="ajax_results"></div>
 	<div id="formunculous-previewdiv">
 	  {% if not is_parent %}
-	  <a href="{% url builder-edit-fields ad.parent.slug %}" class="formunculous_uplink">
+	  <a href="{% url 'builder-edit-fields' ad.parent.slug %}" class="formunculous_uplink">
 		{% trans "Edit Parent Form" %}
 	  </a>
 	  {% endif %}
-	  <a href="{% if is_parent %}{% url builder-edit-ad ad.slug %}{% else %}{% url builder-edit-ad ad.parent.slug %}{% endif %}" class="formunculous_changelink">
+	  <a href="{% if is_parent %}{% url 'builder-edit-ad' ad.slug %}{% else %}{% url 'builder-edit-ad' ad.parent.slug %}{% endif %}" class="formunculous_changelink">
 		{% trans "Edit Form Definition" %}
 	  </a>
 	  <a href="#" class="formunculous_previewlink" onclick="javascript:show_preview_dialog({% if is_parent %}{{ ad.id }}{% else %}{{ ad.parent.id }}{% endif %});">

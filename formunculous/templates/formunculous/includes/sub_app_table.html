@@ -32,7 +32,7 @@
 		  {{ subapp.subapplicationdefinition_set.get.extras }}
 		</td>
 		<td><a href="#" class="formunculous_changelink" onclick="javascript:show_change_dialog({{subapp.id}});">Change</a></td>
-		<td><a href="{% url builder-edit-fields subapp.slug %}" class="formunculous_changelink">Edit Form</a></td>
+		<td><a href="{% url 'builder-edit-fields' subapp.slug %}" class="formunculous_changelink">Edit Form</a></td>
 		<td>
 		  <a href="#" class="formunculous_deletelink"
 			 onclick="javascript:show_delete_dialog({{subapp.id}});">

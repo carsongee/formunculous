@@ -24,7 +24,7 @@ $('#del_dialog').dialog({
        width: 300,
        buttons: {
              "OK": function() {
-                 $('#ajax_results').load( '{% url builder-delete-ad %}',
+                 $('#ajax_results').load( '{% url 'builder-delete-ad' %}',
                                           { ad: current_app_id},
                                            function() {
                            $('#' + current_app_id).fadeOut(1000,
@@ -52,14 +52,14 @@ $('#copy_dialog').dialog({
              // Copy and redirect to ad edit form
              "Copy and Edit": function() {
                  $.ajax({
-                          url: '{% url builder-copy-ad %}',
+                          url: '{% url 'builder-copy-ad' %}',
                           type: "POST",
                           data: { ad: current_app_id,
                                   slug: $('#id_copy_slug').attr('value'),
                                   name: $('#id_copy_name').attr('value')},
                           datatype: "html",
                           success: function() {
-                                   window.location = '{% url builder-index %}/edit/' + $('#id_copy_slug').attr('value');
+                                   window.location = '{% url 'builder-index' %}/edit/' + $('#id_copy_slug').attr('value');
                                    },
                           error: function() {
                                    $('#copy_dialog').dialog('close');
@@ -71,7 +71,7 @@ $('#copy_dialog').dialog({
              // Copy and add to AD table
              "Copy and Close": function() {
                  $.ajax({
-                          url: '{% url builder-copy-ad %}',
+                          url: '{% url 'builder-copy-ad' %}',
                           type: "POST",
                           data: { ad: current_app_id,
                                   slug: $('#id_copy_slug').attr('value'),
@@ -138,7 +138,7 @@ $('#prev_dialog').dialog({
   function show_preview_dialog(id)
   {
     current_app_id = id;
-    jQuery("#prev_dialog").html('<iframe height="98%" width="100%" frameborder="0" style="border: 0;" src="{% url builder-preview-ad %}?ad=' + current_app_id + '">Your browser does not support iframes</iframe>');
+    jQuery("#prev_dialog").html('<iframe height="98%" width="100%" frameborder="0" style="border: 0;" src="{% url 'builder-preview-ad' %}?ad=' + current_app_id + '">Your browser does not support iframes</iframe>');
 
     jQuery("#prev_dialog").dialog('open');
   }
@@ -169,7 +169,7 @@ $('#prev_dialog').dialog({
 
 
 <div id="copy_dialog" title="{% trans "Copy Form Definition" %}">
-  <form method="post" action="{% url builder-copy-ad %}">{% csrf_token %}
+  <form method="post" action="{% url 'builder-copy-ad' %}">{% csrf_token %}
 	<fieldset class="apply_fieldset">
 	<p>
 	  <label for="id_copy_name">New Name: </label><input type="text" id="id_copy_name" name="name" />
@@ -185,8 +185,8 @@ $('#prev_dialog').dialog({
 <div id="ajax_results">
 </div>
 <div class="fr">
-  <a class="formunculous_addlink" href="{% url builder-add-ad %}">{% trans "Create Form Definition" %}</a>
-  <a class="formunculous_offsitelink" style="margin-left: 10px;" href="{% url formunculous-index %}">{% trans "Form Index" %}</a>
+  <a class="formunculous_addlink" href="{% url 'builder-add-ad' %}">{% trans "Create Form Definition" %}</a>
+  <a class="formunculous_offsitelink" style="margin-left: 10px;" href="{% url 'formunculous-index' %}">{% trans "Form Index" %}</a>
 </div>
 <div style="clear:right"></div>
 
@@ -227,8 +227,8 @@ $('#prev_dialog').dialog({
 	<td>
 	  {{ ad.stop_date|date:"D d M Y" }}
 	</td>
-	<td><a href="{% url builder-edit-ad ad.slug %}" class="formunculous_changelink">Change</a></td>
-	<td><a href="{% url builder-edit-fields ad.slug %}" class="formunculous_changelink">Edit Form</a></td>
+	<td><a href="{% url 'builder-edit-ad' ad.slug %}" class="formunculous_changelink">Change</a></td>
+	<td><a href="{% url 'builder-edit-fields' ad.slug %}" class="formunculous_changelink">Edit Form</a></td>
 	<td><a href="#" class="formunculous_copylink" onclick="javascript:show_copy_dialog({{ad.id}}, '{{ad.slug}}');">Copy</a></td>
 	<td><a href="#" class="formunculous_previewlink" onclick="javascript:show_preview_dialog({{ad.id}});">Preview</a></td>
 	<td><a href="#" class="formunculous_deletelink" onclick="javascript:show_delete_dialog({{ad.id}});">Delete</a></td>

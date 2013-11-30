@@ -22,7 +22,7 @@
 {% block content %}
 <h1>{% if add %}{% trans "New Form Definition" %}{% else %}{% trans "Modifying" %} &mdash; {{ ad.name }}{% endif %}</h1>
 
-<form method="post" action="{% if add %}{% url builder-add-ad %}{% else %}{% url builder-edit-ad form.instance.slug %}{% endif %}">{% csrf_token %}
+<form method="post" action="{% if add %}{% url 'builder-add-ad' %}{% else %}{% url 'builder-edit-ad' form.instance.slug %}{% endif %}">{% csrf_token %}
   {% if form.errors %}
 	<div class="apply_field_errors">{% trans "There are errors in your form, please correct them" %}</div>
   {% endif %}

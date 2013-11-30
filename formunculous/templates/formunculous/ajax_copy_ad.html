@@ -11,8 +11,8 @@
 	{{ ad.stop_date|date:"D d M Y" }}
 	{{ ad.stop_date|time:"g:i A" }}
   </td>
-  <td><a href="{% url builder-edit-ad ad.slug %}" class="formunculous_changelink">Change</a></td>
-  <td><a href="{% url builder-edit-fields ad.slug %}" class="formunculous_changelink">Edit Form</a></td>
+  <td><a href="{% url 'builder-edit-ad' ad.slug %}" class="formunculous_changelink">Change</a></td>
+  <td><a href="{% url 'builder-edit-fields' ad.slug %}" class="formunculous_changelink">Edit Form</a></td>
   <td><a href="#" class="formunculous_copylink" onclick="javascript:show_copy_dialog({{ad.id}},'{{ad.slug}}');">Copy</a></td>
   <td><a href="#" class="formunculous_previewlink" onclick="javascript:show_preview_dialog({{ad.id}});">Preview</a></td>
   <td><a href="#" class="formunculous_deletelink" onclick="javascript:show_delete_dialog({{ad.id}});">Delete</a></td>
