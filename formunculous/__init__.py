@@ -17,7 +17,7 @@
 #     This file is part of formunculous.
 #     Copyright 2009-2013 Carson Gee
 
-VERSION = (2, 2, 5, 'final', 0 )
+VERSION = (2, 2, 6, 'alpha', 1 )
 
 def get_version():
     
@@ -30,13 +30,3 @@ def get_version():
 
 from django.template import add_to_builtins
 import django
-
-def django_version_handling():
-
-    # Load up our own internal csrf_token in case they are using 1.1 pre 1.1.2
-    if django.VERSION[0] == 1 and django.VERSION[1] < 2:
-        # We are in the 1.x series less than 1.2
-        if django.VERSION[1]==1 and django.VERSION[2]< 2:
-            add_to_builtins('formunculous.templatetags.csrf_backport')
-
-django_version_handling()
