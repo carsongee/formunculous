@@ -99,7 +99,7 @@
 	  <li class="ui-state-default formunculous-new-field">
 		<span class="ui-icon ui-icon-arrow-4 fl"{% if type.icon %}style="margin-top:8px"{% endif %}></span>
 		{% if type.icon %}
-		  <img src="{{ MEDIA_URL }}{{ type.icon }}"/>
+		  <img src="{% static type.icon %}"/>
 		{% endif %}
 		{{type.name}}
 		<span style="display:none" class="field_type_selection">{{ type.type }}</span>

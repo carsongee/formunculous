@@ -37,6 +37,8 @@ from formunculous.forms import *
 from formunculous.mixins import ChangeFormMixin, AddFormMixin, DeleteFormMixin
 from formunculous.models import *
 from formunculous.utils import build_template_structure
+# Used for getting classes as attributes for field classes.
+import formunculous.models as funcmodels
 
 
 class Index(ChangeFormMixin, TemplateView):
@@ -45,6 +47,7 @@ class Index(ChangeFormMixin, TemplateView):
        application definitions.
     """
 
+    http_method_names = ['get', ]
     template_name = 'formunculous/builder_index.html'
 
     def get_context_data(self, **kwargs):
@@ -70,10 +73,11 @@ class AddAppDef(AddFormMixin, TemplateView):
        Creates an application definition with the required fields.
     """
 
+    http_method_names = ['get', 'post', ]
     template_name = 'formunculous/builder_ad_form.html'
     form = None
 
-    def post(self, request):
+    def post(self, request, *args, **kwargs):
         """Handle post to add a new application definition."""
 
         if (request.POST.has_key('finish')
@@ -92,21 +96,21 @@ class AddAppDef(AddFormMixin, TemplateView):
                     return redirect('builder-edit-ad', slug=form.instance.slug)
                 elif request.POST.has_key('form'):
                     return redirect('builder-edit-fields',
-                                    slug = form.instance.slug)
-        return super(self.__class__, self).post(request)
+                                    slug=form.instance.slug)
+        return self.get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
+        """Provide context data to handle new form, or show form errors"""
         context = super(self.__class__, self).get_context_data(**kwargs)
 
         breadcrumbs = [{'name': _('Builder Index'), 
                         'url': reverse('builder-index')},]
-
         if not self.form:
             self.form = ApplicationDefinitionForm()
 
         context['form'] = self.form
         context['breadcrumbs'] = breadcrumbs
-
+        context['add'] = True
         return context
 
 
@@ -115,27 +119,28 @@ class ModifyAppDef(ChangeFormMixin, TemplateView):
        Modifies an existing application defintion
     """
 
+    http_method_names = ['get', 'post', ]
     template_name = 'formunculous/builder_ad_form.html'
     form = None
 
-    def __init__(self, **kwargs):
+    def set_ad(self, slug):
         """
         Check that we have a valid application
         definition and dump out if not
         """
-        super(self.__class__, self).__init__(**kwargs)
-        self.ad = get_object_or_404(ApplicationDefinition, slug=kwargs['slug'])
+        self.ad = get_object_or_404(ApplicationDefinition, slug=slug)
         if self.ad.parent:
             raise http.Http404, _('You cannot edit a sub-form definition directly')
 
-    def post(self, request):
+    def post(self, request, *args, **kwargs):
         """Handle application definition modification request"""
    
+        self.set_ad(kwargs['slug'])
         if (request.POST.has_key('finish') or
             request.POST.has_key('edit') or
             request.POST.has_key('form')):
          
-            self.form = ApplicationDefinitionForm(request.POST, instance = self.ad)
+            self.form = ApplicationDefinitionForm(request.POST, instance=self.ad)
             if self.form.is_valid():
                 self.form.save()
                 if request.POST.has_key('finish'):
@@ -145,21 +150,22 @@ class ModifyAppDef(ChangeFormMixin, TemplateView):
                                     slug=self.form.instance.slug)
                 elif request.POST.has_key('edit'):
                     return redirect('builder-edit-ad', slug=self.form.instance.slug)
-            return super(self.__class__, self).post(request)
+
+        return self.get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(self.__class__, self).get_context_data(**kwargs)
-        
+        self.set_ad(kwargs['slug'])
+
         breadcrumbs = [{'name': _('Builder Index'), 
                     'url': reverse('builder-index')},]
-
-    
         if not self.form:
-            self.form = ApplicationDefinitionForm(instance = ad)
+            self.form = ApplicationDefinitionForm(instance=self.ad)
 
         context['breadcrumbs'] = breadcrumbs
         context['form'] = self.form
         context['ad'] = self.ad
+        context['add'] = False
         return context
 
 
@@ -175,7 +181,7 @@ class CopyAppDef(ChangeFormMixin, TemplateView):
     template_name = 'formunculous/ajax_copy_ad.html'
     ad = None
 
-    def post(self, request):
+    def post(self, request, *args, **kwargs):
 
         if request.POST.has_key('ad'):
             ad = get_object_or_404(ApplicationDefinition,
@@ -205,7 +211,7 @@ class CopyAppDef(ChangeFormMixin, TemplateView):
             # Loop through the fields and dupe them to point to the new AD
             for fd in field_definitions:
                 # Find any dropdown definitions for later copying
-                dropdowns = DropDownChoices.objects.filter(field_definition = fd)
+                dropdowns = DropDownChoices.objects.filter(field_definition=fd)
 
                 fd.id = None
                 fd.application = ad
@@ -218,24 +224,24 @@ class CopyAppDef(ChangeFormMixin, TemplateView):
 
             # Do it all again for sub_apps, should do tail recursion, but it is
             # only one level deep.
-            sub_ads = ApplicationDefinition.objects.filter(parent__id = ad_id)
+            sub_ads = ApplicationDefinition.objects.filter(parent__id=ad_id)
             for sub_ad in sub_ads:
                 new_sub_slug = "%s_%s" % (new_slug, sub_ad.slug)
                 field_definitions = sub_ad.fielddefinition_set.all()
-                sub_app_def = SubApplicationDefinition.objects.get(app_definition=sub_ad)
-                
+                sub_app_def = SubApplicationDefinition.objects.get(
+                    app_definition=sub_ad
+                )
                 sub_ad.slug = new_sub_slug
                 sub_ad.id = None
                 sub_ad.parent = ad
-
                 sub_ad.save()
-
                 sub_app_def.id = None
                 sub_app_def.app_definition = sub_ad
                 sub_app_def.save()
 
                 for fd in field_definitions:
-                    dropdowns = DropDownChoices.objects.filter(field_definition = fd)
+                    dropdowns = DropDownChoices.objects.filter(
+                        field_definition=fd)
 
                     fd.id = None
                     fd.application = sub_ad
@@ -246,7 +252,7 @@ class CopyAppDef(ChangeFormMixin, TemplateView):
                         dd.field_definition = fd
                         dd.save()
             self.ad = ad
-            return super(self.__class__, self).post(request)
+            return self.get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         """Return context, but only if it exists, raise 404 otherwise"""
@@ -267,7 +273,7 @@ class DeleteAppDef(DeleteFormMixin, TemplateView):
     http_method_names = ['post', ]
     template_name = 'formunculous/ajax_delete_ad.html'
 
-    def post(self, request):
+    def post(self, request, *args, **kwargs):
 
         if request.POST.has_key('ad'):
             ad = get_object_or_404(ApplicationDefinition,
@@ -276,6 +282,7 @@ class DeleteAppDef(DeleteFormMixin, TemplateView):
             ad.delete()
         else:
             raise http.Http404, _('Form Definition does not exist')
+        return self.get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(self.__class__, self).get_context_data(**kwargs)
@@ -292,23 +299,9 @@ class PreviewAppDef(ChangeFormMixin, TemplateView):
 
     http_method_names = ['get', ]
 
-    def __init__(self, **kwargs):
-        """
-        Initialize class and attempt to load application
-        definition specific template.
-        """
-        super(self.__class__, self).__init__(**kwargs)
-        # Try a customized template.
-        # if it is there use it, else use the default template.
-        try:
-            self.template_name = template.loader.get_template(
-                'formunculous/{0}/apply.html'.format(ad.slug))
-            self.template_name = 'formunculous/{0}/apply.html'(ad.slug)
-        except:
-            self.template_name = 'formunculous/apply.html'
-
     def get_context_data(self, **kwargs):
         context = super(self.__class__, self).get_context_data(**kwargs)
+
         if self.request.GET.has_key('ad'):
             ad = get_object_or_404(ApplicationDefinition,
                                    id=int(self.request.GET['ad']))
@@ -335,7 +328,7 @@ class PreviewAppDef(ChangeFormMixin, TemplateView):
                 sub_app_formset = formunculous_subformset_factory(ApplicationForm,
                                                   formset=FormunculousBaseFormSet,
                                                   extra=sub_ad.extras,
-                                                  max_num = sub_ad.max_entries)
+                                                  max_num=sub_ad.max_entries)
                 formset = sub_app_formset(app_def=sub_app,
                                                 prefix=sub_app.slug)
                 forms = []
@@ -347,6 +340,14 @@ class PreviewAppDef(ChangeFormMixin, TemplateView):
                 subforms.append({ "sub_ad": sub_app, "forms": forms,
                                   "formset": formset})
         
+        # Try a customized template.
+        # if it is there use it, else use the default template.
+        try:
+            self.template_name = template.loader.get_template(
+                'formunculous/{0}/apply.html'.format(ad.slug))
+        except:
+            self.template_name = 'formunculous/apply.html'
+
         context['form'] = form
         context['ad'] = ad
         context['fields'] = fields
@@ -354,10 +355,6 @@ class PreviewAppDef(ChangeFormMixin, TemplateView):
         context['preview'] = True
 
         return context
-
-
-# Used for getting classes as attributes for field classes.
-import formunculous.models as funcmodels
 
 
 class ModifyFields(ChangeFormMixin, TemplateView):
@@ -370,11 +367,11 @@ class ModifyFields(ChangeFormMixin, TemplateView):
 
     http_method_names = ['get', 'post', ]
     template_name = 'formunculous/builder_edit_fields.html'
+    formset = None
 
-    def __init__(self, **kwargs):
-        """Setup app def and related attributes"""
-        
-        self.ad = get_object_or_404(ApplicationDefinition, slug=kwargs['slug'])
+    def set_models(self, slug):
+
+        self.ad = get_object_or_404(ApplicationDefinition, slug=slug)
 
         # Figure out whether this is a parent and can have subforms or not
         # Formunculous only allows one level of subapps.
@@ -389,19 +386,35 @@ class ModifyFields(ChangeFormMixin, TemplateView):
             extra=0,
             form=FieldDefinitionForm
         )
+        
+    def post(self, request, *args, **kwargs): 
+
+        self.set_models(kwargs['slug'])
+        self.formset = self.FieldDefinitionFormSet(
+            self.request.POST,
+            instance=self.ad
+        )
+        if self.formset.is_valid():
+            instances = self.formset.save()
+            if self.request.POST.has_key('finish'):
+                return redirect('builder-index')
+            elif self.request.POST.has_key('edit'):
+                return redirect('builder-edit-fields', slug=kwargs['slug'])
+
+        return self.get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(self.__class__, self).get_context_data(**kwargs)
+        self.set_models(kwargs['slug'])
 
         breadcrumbs = [{'name': _('Builder Index'), 
                         'url': reverse('builder-index')},]
         if not self.is_parent:
-            breadcrumbs.append({'name': '%s' % ad.parent.name, 
-                                 'url': reverse(
-                                     'builder-edit-fields', 
-                                     kwargs={'slug': ad.parent.slug}
-                                 )
-            })
+            breadcrumbs.append(
+                {'name': '%s' % ad.parent.name, 
+                 'url': reverse('builder-edit-fields', 
+                                kwargs={'slug': ad.parent.slug})
+             })
 
         # Should probably pass in a widget with sample label in with this
         # to provide a tiny preview.
@@ -420,21 +433,11 @@ class ModifyFields(ChangeFormMixin, TemplateView):
                                 'name': type[1],
                                 'icon': field_icon,
                                 })
-        if self.request.method == 'POST':
-            formset = self.FieldDefinitionFormSet(self.request.POST,
-                                                  instance=self.ad)
-            if formset.is_valid():
-                instances = formset.save()
-
-                if request.POST.has_key('finish'):
-                    return redirect('builder-index')
-                elif request.POST.has_key('edit'):
-                    return redirect('builder-edit-fields', slug = slug)
-        else:
-            formset = self.FieldDefinitionFormSet(instance=ad)
+        if not self.formset:
+            self.formset = self.FieldDefinitionFormSet(instance=self.ad)
 
         context['ad'] = self.ad
-        context['formset'] = formset
+        context['formset'] = self.formset
         context['is_parent'] = self.is_parent
         context['field_types'] = field_types
         return context
@@ -446,22 +449,21 @@ class AddFieldForm(ChangeFormMixin, TemplateView):
        pages formset.  It builds a formset with 1 extra form and renders
        that form to html for an AJAX grab.  The JS on the
     """
-    def __init__(self, **kwargs):
-        """Build formset factory and get app def based on slug."""
 
-        super(self.__class__, self).__init__(**kwargs)
-        self.ad = get_object_or_404(ApplicationDefinition, slug=kwargs['slug'])
+    http_method_names = ['get', ]
+    template_name = 'formunculous/includes/fd_fields.html'
 
-        self.FieldDefinitionFormSet = inlineformset_factory(
+    def get_context_data(self, **kwargs):
+        context = super(self.__class__, self).get_context_data(**kwargs)
+        ad = get_object_or_404(ApplicationDefinition, slug=kwargs['slug'])
+
+        FieldDefinitionFormSet = inlineformset_factory(
             ApplicationDefinition,
             FieldDefinition, 
             extra=4,
             form=FieldDefinitionForm
         )
-
-    def get_context_data(self, **kwargs):
-        context = super(self.__class__, self).get_context_data(**kwargs)
-        formset = self.FieldDefinitionFormSet(instance=self.ad)
+        formset = FieldDefinitionFormSet(instance=ad)
 
         extra_form = formset.forms[-1]
 
@@ -476,6 +478,8 @@ class AddModifyDropDown(ChangeFormMixin, TemplateView):
     http_method_names = ['get', 'post', ]
     template_name = 'formunculous/builder_dropdown.html'
 
+    def post(self, request, *args, **kwargs):
+        return self.get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(self.__class__, self).get_context_data(**kwargs)
@@ -493,9 +497,9 @@ class AddModifyDropDown(ChangeFormMixin, TemplateView):
             extra=3
         )
 
-        if request.method == 'POST':
-            formset = DropDownFormSet(request.POST, 
-                                             instance=fd)
+        if self.request.method == 'POST':
+            formset = DropDownFormSet(self.request.POST, 
+                                      instance=fd)
             if formset.is_valid():
                 instances = formset.save()
                 formset = DropDownFormSet(instance=fd)
@@ -514,10 +518,12 @@ class AddSubAppDef(ChangeFormMixin, TemplateView):
        its parent pointed at the parent AppDef, and then creates
        a sub_app_def to hold the sub form specific information.
     """
+
     http_method_names = ['post', ]
     template_name = 'formunculous/ajax_add_subform.html'
 
-    def post(self, request):
+    def post(self, request, *args, **kwargs):
+
         if request.POST.has_key('ad'):
             ad = get_object_or_404(ApplicationDefinition, 
                                    id=int(request.POST['ad']))
@@ -535,24 +541,25 @@ class AddSubAppDef(ChangeFormMixin, TemplateView):
             # Create new application definition pointed
             # at the one defined in AD
             child_ad = ApplicationDefinition(
-                parent = ad, owner = ad.owner,
-                notify_owner = False, slug = slug,
-                description = '', name = name,
-                start_date = datetime.datetime(1970, 1, 1, 0, 0),
-                stop_date = datetime.datetime(datetime.MAXYEAR, 1, 1, 0, 0),
-                authentication = False, authentication_multi_submit = False,
-                notify_reviewers = False, email_only = False
+                parent=ad, owner=ad.owner,
+                notify_owner=False, slug=slug,
+                description='', name=name,
+                start_date=datetime.datetime(1970, 1, 1, 0, 0),
+                stop_date=datetime.datetime(datetime.MAXYEAR, 1, 1, 0, 0),
+                authentication=False, authentication_multi_submit=False,
+                notify_reviewers=False, email_only=False
             )
             child_ad.save()
             self.sub_ad = SubApplicationDefinition(
-                app_definition = child_ad,
-                min_entries = min_entries,
-                max_entries = max_entries,
-                extras = extras
+                app_definition=child_ad,
+                min_entries=min_entries,
+                max_entries=max_entries,
+                extras=extras
             )
             self.sub_ad.save()
 
-        return super(self.__class__, self).post(request)
+        return self.get(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
         context = super(self.__class__, self).get_context_data(**kwargs)
         if self.sub_ad:
@@ -572,7 +579,7 @@ class ChangeSubAppDef(ChangeFormMixin, TemplateView):
     http_method_names = ['post', ]
     template_name = 'formunculous/ajax_add_subform.html'
 
-    def post(self, request):
+    def post(self, request, *args, **kwargs):
     
         if request.POST.has_key('sad'):
             child_ad = get_object_or_404(ApplicationDefinition, 
@@ -603,7 +610,7 @@ class ChangeSubAppDef(ChangeFormMixin, TemplateView):
             child_ad.slug = slug
             child_ad.save()
 
-        return super(self.__class__, self).post(request)
+        return self.get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(self.__class__, self).get_context_data(**kwargs)
