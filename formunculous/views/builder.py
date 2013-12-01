@@ -93,10 +93,10 @@ class AddAppDef(AddFormMixin, TemplateView):
                 elif request.POST.has_key('add_another'):
                     return redirect('builder-add-ad')
                 elif request.POST.has_key('edit'):
-                    return redirect('builder-edit-ad', slug=form.instance.slug)
+                    return redirect('builder-edit-ad', slug=self.form.instance.slug)
                 elif request.POST.has_key('form'):
                     return redirect('builder-edit-fields',
-                                    slug=form.instance.slug)
+                                    slug=self.form.instance.slug)
         return self.get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
