@@ -12,15 +12,15 @@
 #
 #     You should have received a copy of the GNU General Public License
 #     along with formunculous.  If not, see <http://www.gnu.org/licenses/>.
-#     Copyright 2009-2011 Carson Gee
+#     Copyright 2009-2013 Carson Gee
 
+from django.conf.urls import patterns, url
 from django.contrib import admin
-from django.conf.urls.defaults import *
-from formunculous.models import Form
-from django.utils.functional import lazy
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse_lazy
+from django.views.generic import RedirectView
 
-reverse_lazy = lazy(reverse, unicode)
+from formunculous.models import Form
+
 
 class FormAdmin(admin.ModelAdmin):
     """
@@ -29,15 +29,15 @@ class FormAdmin(admin.ModelAdmin):
     """
 
     def get_urls(self):
-        urls = patterns('django.views.generic.simple',
-                        url(r'^$', 'redirect_to', 
-                            {'url': reverse_lazy('builder-index')},
-                            name="formunculous_applicationdefinition_changelist"),
-                        
-                        url(r'^add/$', 'redirect_to', 
-                            {'url': reverse_lazy('builder-add-ad')},
-                            name="formunculous_applicationdefinition_add"),
+        urls = patterns('',
+                        url(r'^$',
+                            RedirectView.as_view(url=reverse_lazy('builder-index')),
+                            name="formunculous_form_changelist",
+                        ),
+                        url(r'^add/$',
+                            RedirectView.as_view(url=reverse_lazy('builder-add-ad')),
+                            name="formunculous_form_add",
                         )
+                    )
         return urls
-                        
 admin.site.register(Form, FormAdmin)

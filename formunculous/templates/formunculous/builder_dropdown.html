@@ -1,10 +1,10 @@
-{% load i18n %}
+{% load i18n static %}
 <html>
 <head>
 {% block extrastyle %}{{ block.super }}
 {{ form.media }}
-<link href="{{ MEDIA_URL }}formunculous/css/formunculous.css" rel="stylesheet" type="text/css" />
-<link href="{{ MEDIA_URL }}formunculous/css/apply.css" rel="stylesheet" type="text/css" />
+<link href="{% static 'formunculous/css/formunculous.css' %}" rel="stylesheet" type="text/css" />
+<link href="{% static 'formunculous/css/apply.css' %}" rel="stylesheet" type="text/css" />
 <style type="text/css">
   html {
     font-family: Arial, Helvetica, sans-serif;

@@ -1,6 +1,6 @@
 {% load i18n  widget_type formunculous_tags %}
 <div class="formunculous_tag_container">
-  <form method="post" id="{{ ad.slug }}" action="{% url formunculous-apply ad.slug %}"{% if form.is_multipart %} enctype="multipart/form-data"{% endif %}>{% csrf_token %}
+  <form method="post" id="{{ ad.slug }}" action="{% url 'formunculous-apply' ad.slug %}"{% if form.is_multipart %} enctype="multipart/form-data"{% endif %}>{% csrf_token %}
 	{# Errors here will be handled by the primary template for this form #}
 
 	<fieldset class="apply_fieldset">

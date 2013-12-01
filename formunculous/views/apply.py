@@ -12,36 +12,34 @@
 #
 #     You should have received a copy of the GNU General Public License
 #     along with formunculous.  If not, see <http://www.gnu.org/licenses/>.
-#     Copyright 2009-2011 Carson Gee
+#     Copyright 2009-2013 Carson Gee
 
-# Create your views here.
-from formunculous.models import *
-from formunculous.forms import *
-from formunculous.utils import build_template_structure, get_formsets, validate_formsets, save_formsets, fully_validate_formsets, get_sub_app_fields
-from django import http
-from django.utils.http import http_date
-from django.db import models
-from django.conf import settings
-from django import template
-from django.shortcuts import get_object_or_404, render_to_response, redirect
-from django.template.loader import render_to_string
-from django.http import HttpResponseRedirect, HttpResponse
-from django.utils.safestring import mark_safe
-from django.utils.translation import ugettext as _
-from django.core.mail import send_mail, EmailMessage
-from django.contrib.sites.models import Site
-from django.core.urlresolvers import reverse
-from django.core.servers.basehttp import FileWrapper
-
-from django.contrib.auth import logout
-
-from django.forms.formsets import formset_factory
-
-import datetime
 import mimetypes
 import os
 import stat
 
+from django import http, template
+from django.conf import settings
+from django.contrib.auth import logout
+from django.contrib.sites.models import Site
+from django.core.mail import send_mail, EmailMessage
+from django.core.servers.basehttp import FileWrapper
+from django.core.urlresolvers import reverse
+from django.db import models
+from django.forms.formsets import formset_factory
+from django.http import HttpResponseRedirect, HttpResponse
+from django.shortcuts import get_object_or_404, render_to_response, redirect
+from django.template.loader import render_to_string
+from django.utils.http import http_date
+from django.utils.safestring import mark_safe
+from django.utils import timezone
+from django.utils.translation import ugettext as _
+
+from formunculous.models import *
+from formunculous.forms import *
+from formunculous.utils import (build_template_structure, get_formsets,
+                                validate_formsets, save_formsets,
+                                fully_validate_formsets, get_sub_app_fields)
 # Introspect model namespace
 import formunculous.models as funcmodels
 
@@ -103,7 +101,7 @@ def apply(request, slug):
     if ad.parent:
         raise http.Http404, _("This form doesn't exist")
 
-    if datetime.datetime.now() < ad.start_date or datetime.datetime.now() > ad.stop_date:
+    if timezone.now() < ad.start_date or timezone.now() > ad.stop_date:
         raise http.Http404, _('This form is not active')
 
     # Require auth and redirect
@@ -358,7 +356,7 @@ def submit(request, slug, app):
     app = get_object_or_404(Application, id=app)
     ad = get_object_or_404(ApplicationDefinition, slug=slug)
     
-    app.submission_date = datetime.datetime.now()
+    app.submission_date = timezone.now()
     app.save()
 
     notify_reviewers(request, ad, app)
@@ -392,7 +390,7 @@ def thankyou(request, slug, app):
 
     
     
-    app.submission_date = datetime.datetime.now()
+    app.submission_date = timezone.now()
     app.save()
 
     # Build the template context before deleting the form.
@@ -569,7 +567,7 @@ def file_view(request, ad_slug, app, field_slug, file):
     mimetype = mimetypes.guess_type(file_field.path)[0] or 'application/octet-stream'
     contents = open(file_field.path, 'rb')
     wrapper = FileWrapper(contents)
-    response = http.HttpResponse(wrapper, mimetype=mimetype)
+    response = http.HttpResponse(wrapper, content_type=mimetype)
     response["Last-Modified"] = http_date(statobj[stat.ST_MTIME])
     response["Content-Length"] = os.path.getsize(file_field.path)
 

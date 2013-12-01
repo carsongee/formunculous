@@ -12,15 +12,15 @@
 #
 #     You should have received a copy of the GNU General Public License
 #     along with formunculous.  If not, see <http://www.gnu.org/licenses/>.
-#     Copyright 2009-2011 Carson Gee
+#     Copyright 2009-2013 Carson Gee
 
 from django.db import models
 from django.contrib.auth.models import User, Group
 from django.contrib.sites.models import Site
 from django.contrib.contenttypes.models import ContentType
 
-from django.contrib.localflavor.us.forms import USStateSelect
-from django.contrib.localflavor.us.models import PhoneNumberField
+from localflavor.us.forms import USStateSelect
+from localflavor.us.models import PhoneNumberField
 
 from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import smart_unicode

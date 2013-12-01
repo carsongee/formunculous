@@ -1,16 +1,16 @@
 {% load i18n %}{% blocktrans with ad.name as appname %}
 Someone has completed {{ appname }}. You can view the completed form by going to:
 {% endblocktrans %}
-http://{{ site.domain }}{% url reviewer-application ad.slug app.id %}
+http://{{ site.domain }}{% url 'reviewer-application' ad.slug app.id %}
 {% blocktrans %}
 or you can view all currently completed forms by going to:
 {% endblocktrans %}
-http://{{ site.domain }}{% url reviewer-index ad.slug %}
+http://{{ site.domain }}{% url 'reviewer-index' ad.slug %}
 
 {% blocktrans %}
 If you are a reviewer for multiple forms you may view a list of all the forms you can review by going to:
 {% endblocktrans %}
-http://{{ site.domain }}{% url formunculous-index %}
+http://{{ site.domain }}{% url 'formunculous-index' %}
 {% blocktrans %}logging in, and the clicking the "Review Forms" Tab.{% endblocktrans %}
 
 

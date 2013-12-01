@@ -12,40 +12,35 @@
 #
 #     You should have received a copy of the GNU General Public License
 #     along with formunculous.  If not, see <http://www.gnu.org/licenses/>.
-#     Copyright 2009-2011 Carson Gee
+#     Copyright 2009-2013 Carson Gee
 
-from formunculous.models import *
-from formunculous.forms import *
-from formunculous.utils import build_template_structure, get_sub_app_fields
-
-from django.conf import settings
-from django import template
-from django.shortcuts import get_object_or_404, render_to_response, get_list_or_404, redirect
-from django.template.loader import render_to_string
-from django.http import HttpResponseRedirect, HttpResponse, Http404
-from django.utils.safestring import mark_safe
-from django.utils.translation import ugettext as _
-from django.core.urlresolvers import reverse
-from django.contrib.auth.decorators import permission_required
-from django.core.paginator import InvalidPage, EmptyPage
-from django.contrib.sites.models import Site
-from django.utils.encoding import smart_str, smart_unicode
-
-from formunculous.utils.digg_paginator import DiggPaginator
-from django.db.models import Q
-
-# Zip file serving imports
 import zipfile
 import os
 import tempfile
-from django.core.servers.basehttp import FileWrapper
-
-#Flash Charting
-from formunculous.utils.ofc2.OpenFlashChart import *
 import time
 
-# Introspect model namespace
+from django import template
+from django.conf import settings
+from django.contrib.auth.decorators import permission_required
+from django.contrib.sites.models import Site
+from django.core.paginator import InvalidPage, EmptyPage
+from django.core.servers.basehttp import FileWrapper
+from django.core.urlresolvers import reverse
+from django.db.models import Q
+from django.http import HttpResponseRedirect, HttpResponse, Http404
+from django.shortcuts import (get_object_or_404, render_to_response,
+                              get_list_or_404, redirect)
+from django.template.loader import render_to_string
+from django.utils.safestring import mark_safe
+from django.utils.translation import ugettext as _
+from django.utils.encoding import smart_str, smart_unicode
+
+from formunculous.forms import *
+from formunculous.models import *
 import formunculous.models as funcmodels
+from formunculous.utils import build_template_structure, get_sub_app_fields
+from formunculous.utils.digg_paginator import DiggPaginator
+from formunculous.utils.ofc2.OpenFlashChart import *
 
 
 def index(request, slug):

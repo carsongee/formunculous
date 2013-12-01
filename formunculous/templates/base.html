@@ -22,17 +22,17 @@
 <body id="{% block body_id %}{% endblock %}">
   <div id="formunculous_navigation">
 	<ul>
-	  <li><a href="{% url formunculous-index %}">Forms</a></li>
+	  <li><a href="{% url 'formunculous-index' %}">Forms</a></li>
 	  {% if perms.formunculous.change_form %}
 	  <li>
-		<a href="{% url builder-index %}">Builder</a></li>
+		<a href="{% url 'builder-index' %}">Builder</a></li>
       {% endif %}
     </ul>
   </div>
   {% if user.is_authenticated %}
-  <div id="formunculous_auth"><a href="{% url formunculous-logout %}?next={% url formunculous-index %}">Logout</a></div>
+  <div id="formunculous_auth"><a href="{% url 'formunculous-logout' %}?next={% url 'formunculous-index' %}">Logout</a></div>
   {% else %}
-  <div id="formunculous_auth"><a href="{% url formunculous-login %}?next={{ request.path }}">Login</a></div>
+  <div id="formunculous_auth"><a href="{% url 'formunculous-login' %}?next={{ request.path }}">Login</a></div>
   {% endif %}
 
   {% block body %}

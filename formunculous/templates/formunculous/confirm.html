@@ -1,8 +1,8 @@
 {% extends "formunculous/base.html" %}
 
-{% load i18n %}
+{% load i18n static %}
 {% block css %}{{ block.super }}
-<link href="{{ MEDIA_URL }}formunculous/css/formunculous.css" rel="stylesheet" type="text/css" />
+<link href="{% static 'formunculous/css/formunculous.css' %}" rel="stylesheet" type="text/css" />
 {% endblock %}
 
 {% block title %}{{ ad.name}} {% trans "Submission Confirmation" %}{% endblock %}
@@ -66,10 +66,10 @@
 <div class="formunculous_confirmation_bar">
   <ul>
 	<li>
-	  <span class="formunculous_continue_link"><a href="{% url formunculous-submit ad.slug, app.id %}">{% trans "Continue" %}</a></span>
+	  <span class="formunculous_continue_link"><a href="{% url 'formunculous-submit' ad.slug, app.id %}">{% trans "Continue" %}</a></span>
 	</li>
 	<li>
-	  <span class="formunculous_cancel_link"><a href="{% url formunculous-apply ad.slug %}">{% trans "Cancel" %}</a></span>
+	  <span class="formunculous_cancel_link"><a href="{% url 'formunculous-apply' ad.slug %}">{% trans "Cancel" %}</a></span>
 	</li>
   </ul>
 </div>
