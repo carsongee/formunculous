@@ -16,13 +16,11 @@
 
 from django.conf.urls import patterns, url
 from django.contrib import admin
-from django.core.urlresolvers import reverse
-from django.utils.functional import lazy
+from django.core.urlresolvers import reverse_lazy
 from django.views.generic import RedirectView
 
 from formunculous.models import Form
 
-reverse_lazy = lazy(reverse, unicode)
 
 class FormAdmin(admin.ModelAdmin):
     """
