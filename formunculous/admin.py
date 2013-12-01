@@ -34,14 +34,12 @@ class FormAdmin(admin.ModelAdmin):
         urls = patterns('',
                         url(r'^$',
                             RedirectView.as_view(url=reverse_lazy('builder-index')),
-                            name="formunculous_applicationdefinition_changelist",
+                            name="formunculous_form_changelist",
                         ),
-                        
                         url(r'^add/$',
                             RedirectView.as_view(url=reverse_lazy('builder-add-ad')),
-                            name="formunculous_applicationdefinition_add",
+                            name="formunculous_form_add",
                         )
                     )
         return urls
-                        
 admin.site.register(Form, FormAdmin)

@@ -436,6 +436,7 @@ class ModifyFields(ChangeFormMixin, TemplateView):
         if not self.formset:
             self.formset = self.FieldDefinitionFormSet(instance=self.ad)
 
+        context['breadcrumbs'] = breadcrumbs
         context['ad'] = self.ad
         context['formset'] = self.formset
         context['is_parent'] = self.is_parent
