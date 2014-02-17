@@ -83,7 +83,7 @@ with the application.
     packages = packages, 
     data_files = data_files,
     scripts = [],
-    requires = ('django (>=1.1)','pil','simplejson',),
-#    install_requires = ['django>=1.1','pil','simplejson',],
+    requires = ('django (>=1.5)','pil','simplejson', ),
+    install_requires = ['django>=1.5','pil','simplejson', 'django-localflavor', ],
     zip_safe = False,
 )
