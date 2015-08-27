@@ -1,0 +1,1364 @@
+[
+    {
+        "pk": 12, 
+        "model": "formunculous.applicationdefinition", 
+        "fields": {
+            "authentication_multi_submit": true, 
+            "description": "<p>\r\nMulti submission authenticated form test that is e-mail only.\r\n</p>", 
+            "parent": null, 
+            "email_only": true, 
+            "reviewers": [
+                1
+            ], 
+            "stop_date": "2020-08-01 00:00:00", 
+            "sites": [
+                1
+            ], 
+            "notify_reviewers": false, 
+            "start_date": "2010-08-01 00:00:00", 
+            "authentication": true, 
+            "notify_owner": false, 
+            "owner": "x@carsongee.com", 
+            "slug": "e-mail-only-multi-authenticated-form", 
+            "name": "E-mail Only Multi Authenticated Form"
+        }
+    }, 
+    {
+        "pk": 13, 
+        "model": "formunculous.applicationdefinition", 
+        "fields": {
+            "authentication_multi_submit": false, 
+            "description": "<p>Single submission authenticated form.</p>", 
+            "parent": null, 
+            "email_only": true, 
+            "reviewers": [
+                1
+            ], 
+            "stop_date": "2020-08-01 00:00:00", 
+            "sites": [
+                1
+            ], 
+            "notify_reviewers": false, 
+            "start_date": "2010-08-01 00:00:00", 
+            "authentication": true, 
+            "notify_owner": true, 
+            "owner": "x@carsongee.com", 
+            "slug": "e-mail-only-authenticated-form", 
+            "name": "E-mail Only Authenticated Form"
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "formunculous.applicationdefinition", 
+        "fields": {
+            "authentication_multi_submit": false, 
+            "description": "This form contains two of each field type.  One required and one optional for each.", 
+            "parent": null, 
+            "email_only": false, 
+            "reviewers": [
+                1
+            ], 
+            "stop_date": "2200-08-01 00:00:00", 
+            "sites": [
+                1
+            ], 
+            "notify_reviewers": false, 
+            "start_date": "2010-08-01 00:00:00", 
+            "authentication": false, 
+            "notify_owner": false, 
+            "owner": "x@carsongee.com", 
+            "slug": "field-test-form", 
+            "name": "Field Test Form"
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "formunculous.applicationdefinition", 
+        "fields": {
+            "authentication_multi_submit": false, 
+            "description": "This tests a variety of sub form definitions", 
+            "parent": null, 
+            "email_only": false, 
+            "reviewers": [
+                1
+            ], 
+            "stop_date": "2200-08-01 00:00:00", 
+            "sites": [
+                1
+            ], 
+            "notify_reviewers": false, 
+            "start_date": "2010-08-01 00:00:00", 
+            "authentication": false, 
+            "notify_owner": false, 
+            "owner": "x@carsongee.com", 
+            "slug": "sub-form-test", 
+            "name": "Sub Form Test"
+        }
+    }, 
+    {
+        "pk": 5, 
+        "model": "formunculous.applicationdefinition", 
+        "fields": {
+            "authentication_multi_submit": false, 
+            "description": "A quick and dirty form for testing post form processing (e.g. thankyou.html, confirm.html, etc)", 
+            "parent": null, 
+            "email_only": false, 
+            "reviewers": [
+                1
+            ], 
+            "stop_date": "2200-08-01 00:00:00", 
+            "sites": [
+                1
+            ], 
+            "notify_reviewers": false, 
+            "start_date": "2010-08-01 00:00:00", 
+            "authentication": false, 
+            "notify_owner": false, 
+            "owner": "x@carsongee.com", 
+            "slug": "simple-test-form", 
+            "name": "Simple Test Form"
+        }
+    }, 
+    {
+        "pk": 6, 
+        "model": "formunculous.applicationdefinition", 
+        "fields": {
+            "authentication_multi_submit": false, 
+            "description": "<p>\r\n\tThis is used for ensuring the template tags and filters work inside pre and post HTML fields.</p>\r\n", 
+            "parent": null, 
+            "email_only": false, 
+            "reviewers": [
+                1
+            ], 
+            "stop_date": "2200-08-01 00:00:00", 
+            "sites": [
+                1
+            ], 
+            "notify_reviewers": false, 
+            "start_date": "2010-08-01 00:00:00", 
+            "authentication": false, 
+            "notify_owner": false, 
+            "owner": "x@carsongee.com", 
+            "slug": "pre-and-post-template-test", 
+            "name": "Pre and Post Template Test"
+        }
+    }, 
+    {
+        "pk": 7, 
+        "model": "formunculous.applicationdefinition", 
+        "fields": {
+            "authentication_multi_submit": false, 
+            "description": "<p>\r\n\tTesting a form that requires authentication and no resubmissions.</p>\r\n", 
+            "parent": null, 
+            "email_only": false, 
+            "reviewers": [
+                1
+            ], 
+            "stop_date": "2200-08-01 00:00:00", 
+            "sites": [
+                1
+            ], 
+            "notify_reviewers": false, 
+            "start_date": "2010-08-01 00:00:00", 
+            "authentication": true, 
+            "notify_owner": false, 
+            "owner": "x@carsongee.com", 
+            "slug": "single-authenticated-form", 
+            "name": "Single Authenticated Form"
+        }
+    }, 
+    {
+        "pk": 8, 
+        "model": "formunculous.applicationdefinition", 
+        "fields": {
+            "authentication_multi_submit": true, 
+            "description": "<p>This is a multiple submission authenticated form test</p>", 
+            "parent": null, 
+            "email_only": false, 
+            "reviewers": [
+                1
+            ], 
+            "stop_date": "2200-08-01 00:00:00", 
+            "sites": [
+                1
+            ], 
+            "notify_reviewers": false, 
+            "start_date": "2010-08-01 00:00:00", 
+            "authentication": true, 
+            "notify_owner": false, 
+            "owner": "x@carsongee.com", 
+            "slug": "multi-authenticated-form", 
+            "name": "Multi Authenticated Form"
+        }
+    }, 
+    {
+        "pk": 9, 
+        "model": "formunculous.applicationdefinition", 
+        "fields": {
+            "authentication_multi_submit": false, 
+            "description": "<p>\r\nSimple form to test e-mail notifications to the owner of the form\r\n</p>", 
+            "parent": null, 
+            "email_only": false, 
+            "reviewers": [
+                1
+            ], 
+            "stop_date": "2200-08-01 00:00:00", 
+            "sites": [
+                1
+            ], 
+            "notify_reviewers": false, 
+            "start_date": "2010-08-01 00:00:00", 
+            "authentication": false, 
+            "notify_owner": true, 
+            "owner": "x@carsongee.com", 
+            "slug": "owner-form-notification", 
+            "name": "Owner Form Notification"
+        }
+    }, 
+    {
+        "pk": 10, 
+        "model": "formunculous.applicationdefinition", 
+        "fields": {
+            "authentication_multi_submit": false, 
+            "description": "<p>\r\nThis form notifies reviewers of submissions\r\n</p>", 
+            "parent": null, 
+            "email_only": false, 
+            "reviewers": [
+                1
+            ], 
+            "stop_date": "2200-08-01 00:00:00", 
+            "sites": [
+                1
+            ], 
+            "notify_reviewers": true, 
+            "start_date": "2010-08-01 00:00:00", 
+            "authentication": false, 
+            "notify_owner": false, 
+            "owner": "x@carsongee.com", 
+            "slug": "reviewer-notification-test", 
+            "name": "Reviewer Notification Test"
+        }
+    }, 
+    {
+        "pk": 11, 
+        "model": "formunculous.applicationdefinition", 
+        "fields": {
+            "authentication_multi_submit": false, 
+            "description": "<p>This form doesn't store submissions in the database, it just e-mails the responses.</p>", 
+            "parent": null, 
+            "email_only": true, 
+            "reviewers": [
+                1
+            ], 
+            "stop_date": "2200-08-01 00:00:00", 
+            "sites": [
+                1
+            ], 
+            "notify_reviewers": false, 
+            "start_date": "2010-08-01 00:00:00", 
+            "authentication": false, 
+            "notify_owner": true, 
+            "owner": "x@carsongee.com", 
+            "slug": "e-mail-only-form", 
+            "name": "E-mail Only Form"
+        }
+    }, 
+    {
+        "pk": 14, 
+        "model": "formunculous.applicationdefinition", 
+        "fields": {
+            "authentication_multi_submit": false, 
+            "description": "<p>This form includes another form to make sure the form inclusion tag works.</p>\r\n<p>This isn't a complete test because the inclusion form, and this form, will not work.</p>", 
+            "parent": null, 
+            "email_only": false, 
+            "reviewers": [
+                1
+            ], 
+            "stop_date": "2200-08-01 00:00:00", 
+            "sites": [
+                1
+            ], 
+            "notify_reviewers": false, 
+            "start_date": "2010-08-01 00:00:00", 
+            "authentication": false, 
+            "notify_owner": false, 
+            "owner": "x@carsongee.com", 
+            "slug": "include-form-template-tag-test", 
+            "name": "Include Form Template Tag Test"
+        }
+    }, 
+    {
+        "pk": 3, 
+        "model": "formunculous.applicationdefinition", 
+        "fields": {
+            "authentication_multi_submit": false, 
+            "description": "", 
+            "parent": 2, 
+            "email_only": false, 
+            "reviewers": [], 
+            "stop_date": "9999-01-01 00:00:00", 
+            "sites": [], 
+            "notify_reviewers": false, 
+            "start_date": "2010-01-01 00:00:00", 
+            "authentication": false, 
+            "notify_owner": false, 
+            "owner": "x@carsongee.com", 
+            "slug": "infinite-entries", 
+            "name": "Infinite Entries"
+        }
+    }, 
+    {
+        "pk": 4, 
+        "model": "formunculous.applicationdefinition", 
+        "fields": {
+            "authentication_multi_submit": false, 
+            "description": "", 
+            "parent": 2, 
+            "email_only": false, 
+            "reviewers": [], 
+            "stop_date": "9999-01-01 00:00:00", 
+            "sites": [], 
+            "notify_reviewers": false, 
+            "start_date": "2010-01-01 00:00:00", 
+            "authentication": false, 
+            "notify_owner": false, 
+            "owner": "x@carsongee.com", 
+            "slug": "only-one", 
+            "name": "Only One"
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "formunculous.subapplicationdefinition", 
+        "fields": {
+            "max_entries": 0, 
+            "app_definition": 3, 
+            "extras": 3, 
+            "min_entries": 0
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "formunculous.subapplicationdefinition", 
+        "fields": {
+            "max_entries": 1, 
+            "app_definition": 4, 
+            "extras": 1, 
+            "min_entries": 1
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "formunculous.fielddefinition", 
+        "fields": {
+            "slug": "text-input-required", 
+            "group": false, 
+            "post_text": "", 
+            "use_radio": false, 
+            "require": true, 
+            "header": false, 
+            "label": "Text Input Required", 
+            "multi_select": false, 
+            "page": 1, 
+            "application": 1, 
+            "reviewer_only": false, 
+            "help_text": "", 
+            "pre_text": "", 
+            "type": "TextField", 
+            "order": 0
+        }
+    }, 
+    {
+        "pk": 33, 
+        "model": "formunculous.fielddefinition", 
+        "fields": {
+            "slug": "base-form-text-input", 
+            "group": false, 
+            "post_text": "", 
+            "use_radio": false, 
+            "require": true, 
+            "header": true, 
+            "label": "Base Form Text Input", 
+            "multi_select": false, 
+            "page": 1, 
+            "application": 2, 
+            "reviewer_only": false, 
+            "help_text": "", 
+            "pre_text": "", 
+            "type": "TextField", 
+            "order": 0
+        }
+    }, 
+    {
+        "pk": 34, 
+        "model": "formunculous.fielddefinition", 
+        "fields": {
+            "slug": "contact-name", 
+            "group": false, 
+            "post_text": "", 
+            "use_radio": false, 
+            "require": true, 
+            "header": true, 
+            "label": "Contact Name", 
+            "multi_select": false, 
+            "page": 1, 
+            "application": 3, 
+            "reviewer_only": false, 
+            "help_text": "", 
+            "pre_text": "", 
+            "type": "TextField", 
+            "order": 0
+        }
+    }, 
+    {
+        "pk": 35, 
+        "model": "formunculous.fielddefinition", 
+        "fields": {
+            "slug": "yes-or-no", 
+            "group": false, 
+            "post_text": "", 
+            "use_radio": false, 
+            "require": true, 
+            "header": true, 
+            "label": "Yes or No?", 
+            "multi_select": false, 
+            "page": 1, 
+            "application": 4, 
+            "reviewer_only": false, 
+            "help_text": "", 
+            "pre_text": "", 
+            "type": "BooleanField", 
+            "order": 0
+        }
+    }, 
+    {
+        "pk": 36, 
+        "model": "formunculous.fielddefinition", 
+        "fields": {
+            "slug": "what-your-favorite-color", 
+            "group": false, 
+            "post_text": "", 
+            "use_radio": true, 
+            "require": true, 
+            "header": true, 
+            "label": "What is Your Favorite Color?", 
+            "multi_select": false, 
+            "page": 1, 
+            "application": 5, 
+            "reviewer_only": false, 
+            "help_text": "", 
+            "pre_text": "", 
+            "type": "TextField", 
+            "order": 0
+        }
+    }, 
+    {
+        "pk": 37, 
+        "model": "formunculous.fielddefinition", 
+        "fields": {
+            "slug": "template-tagging", 
+            "group": false, 
+            "post_text": "{{ \"this is a filter test\"|title }} <br />\r\n{# I'm not here #}\r\nDebug: <br />\r\n{% debug %}", 
+            "use_radio": false, 
+            "require": true, 
+            "header": true, 
+            "label": "Template Tagging", 
+            "multi_select": false, 
+            "page": 1, 
+            "application": 6, 
+            "reviewer_only": false, 
+            "help_text": "", 
+            "pre_text": "{{ \"this is a filter test\"|title }} <br />\r\n{# I'm not here #}\r\nDebug: <br />\r\n{% debug %}", 
+            "type": "TextField", 
+            "order": 0
+        }
+    }, 
+    {
+        "pk": 38, 
+        "model": "formunculous.fielddefinition", 
+        "fields": {
+            "slug": "we-are-done", 
+            "group": false, 
+            "post_text": "", 
+            "use_radio": false, 
+            "require": true, 
+            "header": true, 
+            "label": "We Are Done", 
+            "multi_select": false, 
+            "page": 1, 
+            "application": 7, 
+            "reviewer_only": false, 
+            "help_text": "", 
+            "pre_text": "", 
+            "type": "BooleanField", 
+            "order": 0
+        }
+    }, 
+    {
+        "pk": 39, 
+        "model": "formunculous.fielddefinition", 
+        "fields": {
+            "slug": "you-will-get", 
+            "group": false, 
+            "post_text": "", 
+            "use_radio": false, 
+            "require": true, 
+            "header": true, 
+            "label": "You will get this", 
+            "multi_select": false, 
+            "page": 1, 
+            "application": 9, 
+            "reviewer_only": false, 
+            "help_text": "", 
+            "pre_text": "", 
+            "type": "BooleanField", 
+            "order": 0
+        }
+    }, 
+    {
+        "pk": 40, 
+        "model": "formunculous.fielddefinition", 
+        "fields": {
+            "slug": "reviewer-sees", 
+            "group": false, 
+            "post_text": "", 
+            "use_radio": false, 
+            "require": true, 
+            "header": true, 
+            "label": "Reviewer Sees This", 
+            "multi_select": false, 
+            "page": 1, 
+            "application": 10, 
+            "reviewer_only": false, 
+            "help_text": "", 
+            "pre_text": "", 
+            "type": "BooleanField", 
+            "order": 0
+        }
+    }, 
+    {
+        "pk": 41, 
+        "model": "formunculous.fielddefinition", 
+        "fields": {
+            "slug": "some-text", 
+            "group": false, 
+            "post_text": "", 
+            "use_radio": false, 
+            "require": true, 
+            "header": true, 
+            "label": "Some text", 
+            "multi_select": false, 
+            "page": 1, 
+            "application": 11, 
+            "reviewer_only": false, 
+            "help_text": "", 
+            "pre_text": "", 
+            "type": "TextField", 
+            "order": 0
+        }
+    }, 
+    {
+        "pk": 43, 
+        "model": "formunculous.fielddefinition", 
+        "fields": {
+            "slug": "some-text", 
+            "group": false, 
+            "post_text": "", 
+            "use_radio": false, 
+            "require": true, 
+            "header": true, 
+            "label": "Some Text", 
+            "multi_select": false, 
+            "page": 1, 
+            "application": 12, 
+            "reviewer_only": false, 
+            "help_text": "", 
+            "pre_text": "", 
+            "type": "TextField", 
+            "order": 0
+        }
+    }, 
+    {
+        "pk": 45, 
+        "model": "formunculous.fielddefinition", 
+        "fields": {
+            "slug": "some-text", 
+            "group": false, 
+            "post_text": "", 
+            "use_radio": false, 
+            "require": true, 
+            "header": true, 
+            "label": "Some Text", 
+            "multi_select": false, 
+            "page": 1, 
+            "application": 13, 
+            "reviewer_only": false, 
+            "help_text": "", 
+            "pre_text": "", 
+            "type": "TextField", 
+            "order": 0
+        }
+    }, 
+    {
+        "pk": 47, 
+        "model": "formunculous.fielddefinition", 
+        "fields": {
+            "slug": "yowzas", 
+            "group": false, 
+            "post_text": "", 
+            "use_radio": false, 
+            "require": true, 
+            "header": true, 
+            "label": "Yowzas", 
+            "multi_select": false, 
+            "page": 1, 
+            "application": 14, 
+            "reviewer_only": false, 
+            "help_text": "", 
+            "pre_text": "{% load formunculous_tags %}\r\n{% func_form simple-test-form as test %}\r\n{{ test }}\r\n", 
+            "type": "BooleanField", 
+            "order": 0
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "formunculous.fielddefinition", 
+        "fields": {
+            "slug": "text-input-optional", 
+            "group": false, 
+            "post_text": "", 
+            "use_radio": false, 
+            "require": false, 
+            "header": false, 
+            "label": "Text Input Optional", 
+            "multi_select": false, 
+            "page": 1, 
+            "application": 1, 
+            "reviewer_only": false, 
+            "help_text": "", 
+            "pre_text": "", 
+            "type": "TextField", 
+            "order": 3
+        }
+    }, 
+    {
+        "pk": 42, 
+        "model": "formunculous.fielddefinition", 
+        "fields": {
+            "slug": "file-attachment", 
+            "group": false, 
+            "post_text": "", 
+            "use_radio": false, 
+            "require": true, 
+            "header": true, 
+            "label": "A file attachment", 
+            "multi_select": false, 
+            "page": 1, 
+            "application": 11, 
+            "reviewer_only": false, 
+            "help_text": "", 
+            "pre_text": "", 
+            "type": "FileField", 
+            "order": 3
+        }
+    }, 
+    {
+        "pk": 44, 
+        "model": "formunculous.fielddefinition", 
+        "fields": {
+            "slug": "file", 
+            "group": false, 
+            "post_text": "", 
+            "use_radio": false, 
+            "require": true, 
+            "header": true, 
+            "label": "A File", 
+            "multi_select": false, 
+            "page": 1, 
+            "application": 12, 
+            "reviewer_only": false, 
+            "help_text": "", 
+            "pre_text": "", 
+            "type": "FileField", 
+            "order": 3
+        }
+    }, 
+    {
+        "pk": 46, 
+        "model": "formunculous.fielddefinition", 
+        "fields": {
+            "slug": "file", 
+            "group": false, 
+            "post_text": "", 
+            "use_radio": false, 
+            "require": true, 
+            "header": true, 
+            "label": "A File", 
+            "multi_select": false, 
+            "page": 1, 
+            "application": 13, 
+            "reviewer_only": false, 
+            "help_text": "", 
+            "pre_text": "", 
+            "type": "FileField", 
+            "order": 3
+        }
+    }, 
+    {
+        "pk": 3, 
+        "model": "formunculous.fielddefinition", 
+        "fields": {
+            "slug": "text-area-required", 
+            "group": false, 
+            "post_text": "", 
+            "use_radio": false, 
+            "require": true, 
+            "header": false, 
+            "label": "Text Area Required", 
+            "multi_select": false, 
+            "page": 1, 
+            "application": 1, 
+            "reviewer_only": false, 
+            "help_text": "", 
+            "pre_text": "", 
+            "type": "TextArea", 
+            "order": 6
+        }
+    }, 
+    {
+        "pk": 4, 
+        "model": "formunculous.fielddefinition", 
+        "fields": {
+            "slug": "text-area-optional", 
+            "group": false, 
+            "post_text": "", 
+            "use_radio": false, 
+            "require": false, 
+            "header": true, 
+            "label": "Text Area Optional", 
+            "multi_select": false, 
+            "page": 1, 
+            "application": 1, 
+            "reviewer_only": false, 
+            "help_text": "", 
+            "pre_text": "", 
+            "type": "TextArea", 
+            "order": 9
+        }
+    }, 
+    {
+        "pk": 5, 
+        "model": "formunculous.fielddefinition", 
+        "fields": {
+            "slug": "boolean-required", 
+            "group": false, 
+            "post_text": "", 
+            "use_radio": false, 
+            "require": true, 
+            "header": true, 
+            "label": "Boolean Required", 
+            "multi_select": false, 
+            "page": 1, 
+            "application": 1, 
+            "reviewer_only": false, 
+            "help_text": "", 
+            "pre_text": "", 
+            "type": "BooleanField", 
+            "order": 12
+        }
+    }, 
+    {
+        "pk": 6, 
+        "model": "formunculous.fielddefinition", 
+        "fields": {
+            "slug": "boolean-optional", 
+            "group": false, 
+            "post_text": "", 
+            "use_radio": false, 
+            "require": false, 
+            "header": true, 
+            "label": "Boolean Optional", 
+            "multi_select": false, 
+            "page": 1, 
+            "application": 1, 
+            "reviewer_only": false, 
+            "help_text": "", 
+            "pre_text": "", 
+            "type": "BooleanField", 
+            "order": 15
+        }
+    }, 
+    {
+        "pk": 7, 
+        "model": "formunculous.fielddefinition", 
+        "fields": {
+            "slug": "date-required", 
+            "group": false, 
+            "post_text": "", 
+            "use_radio": false, 
+            "require": true, 
+            "header": false, 
+            "label": "Date Required", 
+            "multi_select": false, 
+            "page": 1, 
+            "application": 1, 
+            "reviewer_only": false, 
+            "help_text": "", 
+            "pre_text": "", 
+            "type": "DateField", 
+            "order": 18
+        }
+    }, 
+    {
+        "pk": 8, 
+        "model": "formunculous.fielddefinition", 
+        "fields": {
+            "slug": "date-optional", 
+            "group": false, 
+            "post_text": "", 
+            "use_radio": false, 
+            "require": false, 
+            "header": false, 
+            "label": "Date Optional", 
+            "multi_select": false, 
+            "page": 1, 
+            "application": 1, 
+            "reviewer_only": false, 
+            "help_text": "", 
+            "pre_text": "", 
+            "type": "DateField", 
+            "order": 21
+        }
+    }, 
+    {
+        "pk": 9, 
+        "model": "formunculous.fielddefinition", 
+        "fields": {
+            "slug": "email-required", 
+            "group": false, 
+            "post_text": "", 
+            "use_radio": false, 
+            "require": true, 
+            "header": false, 
+            "label": "Email Required", 
+            "multi_select": false, 
+            "page": 1, 
+            "application": 1, 
+            "reviewer_only": false, 
+            "help_text": "", 
+            "pre_text": "", 
+            "type": "EmailField", 
+            "order": 24
+        }
+    }, 
+    {
+        "pk": 10, 
+        "model": "formunculous.fielddefinition", 
+        "fields": {
+            "slug": "email-optional", 
+            "group": false, 
+            "post_text": "", 
+            "use_radio": false, 
+            "require": false, 
+            "header": false, 
+            "label": "Email Optional", 
+            "multi_select": false, 
+            "page": 1, 
+            "application": 1, 
+            "reviewer_only": false, 
+            "help_text": "", 
+            "pre_text": "", 
+            "type": "EmailField", 
+            "order": 27
+        }
+    }, 
+    {
+        "pk": 11, 
+        "model": "formunculous.fielddefinition", 
+        "fields": {
+            "slug": "decimal-required", 
+            "group": false, 
+            "post_text": "", 
+            "use_radio": false, 
+            "require": true, 
+            "header": false, 
+            "label": "Decimal Required", 
+            "multi_select": false, 
+            "page": 1, 
+            "application": 1, 
+            "reviewer_only": false, 
+            "help_text": "", 
+            "pre_text": "", 
+            "type": "FloatField", 
+            "order": 30
+        }
+    }, 
+    {
+        "pk": 12, 
+        "model": "formunculous.fielddefinition", 
+        "fields": {
+            "slug": "decimal-optional", 
+            "group": false, 
+            "post_text": "", 
+            "use_radio": false, 
+            "require": false, 
+            "header": false, 
+            "label": "Decimal Optional", 
+            "multi_select": false, 
+            "page": 1, 
+            "application": 1, 
+            "reviewer_only": false, 
+            "help_text": "", 
+            "pre_text": "", 
+            "type": "TextField", 
+            "order": 33
+        }
+    }, 
+    {
+        "pk": 13, 
+        "model": "formunculous.fielddefinition", 
+        "fields": {
+            "slug": "integer-required", 
+            "group": false, 
+            "post_text": "", 
+            "use_radio": false, 
+            "require": true, 
+            "header": false, 
+            "label": "Integer Required", 
+            "multi_select": false, 
+            "page": 1, 
+            "application": 1, 
+            "reviewer_only": false, 
+            "help_text": "", 
+            "pre_text": "", 
+            "type": "IntegerField", 
+            "order": 36
+        }
+    }, 
+    {
+        "pk": 14, 
+        "model": "formunculous.fielddefinition", 
+        "fields": {
+            "slug": "integer-optional", 
+            "group": false, 
+            "post_text": "", 
+            "use_radio": false, 
+            "require": false, 
+            "header": false, 
+            "label": "Integer Optional", 
+            "multi_select": false, 
+            "page": 1, 
+            "application": 1, 
+            "reviewer_only": false, 
+            "help_text": "", 
+            "pre_text": "", 
+            "type": "IntegerField", 
+            "order": 39
+        }
+    }, 
+    {
+        "pk": 15, 
+        "model": "formunculous.fielddefinition", 
+        "fields": {
+            "slug": "state-required", 
+            "group": false, 
+            "post_text": "", 
+            "use_radio": false, 
+            "require": true, 
+            "header": false, 
+            "label": "State Required", 
+            "multi_select": false, 
+            "page": 1, 
+            "application": 1, 
+            "reviewer_only": false, 
+            "help_text": "", 
+            "pre_text": "", 
+            "type": "USStateField", 
+            "order": 42
+        }
+    }, 
+    {
+        "pk": 16, 
+        "model": "formunculous.fielddefinition", 
+        "fields": {
+            "slug": "state-optional", 
+            "group": false, 
+            "post_text": "", 
+            "use_radio": false, 
+            "require": false, 
+            "header": false, 
+            "label": "State Optional", 
+            "multi_select": false, 
+            "page": 1, 
+            "application": 1, 
+            "reviewer_only": false, 
+            "help_text": "", 
+            "pre_text": "", 
+            "type": "USStateField", 
+            "order": 45
+        }
+    }, 
+    {
+        "pk": 17, 
+        "model": "formunculous.fielddefinition", 
+        "fields": {
+            "slug": "zipcode-required", 
+            "group": false, 
+            "post_text": "", 
+            "use_radio": false, 
+            "require": true, 
+            "header": false, 
+            "label": "Zipcode Required", 
+            "multi_select": false, 
+            "page": 1, 
+            "application": 1, 
+            "reviewer_only": false, 
+            "help_text": "", 
+            "pre_text": "", 
+            "type": "USZipCodeField", 
+            "order": 48
+        }
+    }, 
+    {
+        "pk": 18, 
+        "model": "formunculous.fielddefinition", 
+        "fields": {
+            "slug": "zipcode-optional", 
+            "group": false, 
+            "post_text": "", 
+            "use_radio": false, 
+            "require": false, 
+            "header": false, 
+            "label": "Zipcode Optional", 
+            "multi_select": false, 
+            "page": 1, 
+            "application": 1, 
+            "reviewer_only": false, 
+            "help_text": "", 
+            "pre_text": "", 
+            "type": "USZipCodeField", 
+            "order": 51
+        }
+    }, 
+    {
+        "pk": 19, 
+        "model": "formunculous.fielddefinition", 
+        "fields": {
+            "slug": "phone-required", 
+            "group": false, 
+            "post_text": "", 
+            "use_radio": false, 
+            "require": true, 
+            "header": false, 
+            "label": "Phone Required", 
+            "multi_select": false, 
+            "page": 1, 
+            "application": 1, 
+            "reviewer_only": false, 
+            "help_text": "", 
+            "pre_text": "", 
+            "type": "USPhoneNumber", 
+            "order": 54
+        }
+    }, 
+    {
+        "pk": 20, 
+        "model": "formunculous.fielddefinition", 
+        "fields": {
+            "slug": "phone-optional", 
+            "group": false, 
+            "post_text": "", 
+            "use_radio": false, 
+            "require": false, 
+            "header": false, 
+            "label": "Phone Optional", 
+            "multi_select": false, 
+            "page": 1, 
+            "application": 1, 
+            "reviewer_only": false, 
+            "help_text": "", 
+            "pre_text": "", 
+            "type": "USPhoneNumber", 
+            "order": 57
+        }
+    }, 
+    {
+        "pk": 21, 
+        "model": "formunculous.fielddefinition", 
+        "fields": {
+            "slug": "ip-address-required", 
+            "group": false, 
+            "post_text": "", 
+            "use_radio": false, 
+            "require": true, 
+            "header": false, 
+            "label": "IP Address Required", 
+            "multi_select": false, 
+            "page": 1, 
+            "application": 1, 
+            "reviewer_only": false, 
+            "help_text": "", 
+            "pre_text": "", 
+            "type": "IPAddressField", 
+            "order": 60
+        }
+    }, 
+    {
+        "pk": 22, 
+        "model": "formunculous.fielddefinition", 
+        "fields": {
+            "slug": "ip-address-optional", 
+            "group": false, 
+            "post_text": "", 
+            "use_radio": false, 
+            "require": false, 
+            "header": false, 
+            "label": "IP Address Optional", 
+            "multi_select": false, 
+            "page": 1, 
+            "application": 1, 
+            "reviewer_only": false, 
+            "help_text": "", 
+            "pre_text": "", 
+            "type": "IPAddressField", 
+            "order": 63
+        }
+    }, 
+    {
+        "pk": 23, 
+        "model": "formunculous.fielddefinition", 
+        "fields": {
+            "slug": "positive-integer-required", 
+            "group": false, 
+            "post_text": "", 
+            "use_radio": false, 
+            "require": true, 
+            "header": false, 
+            "label": "Positive Integer Required", 
+            "multi_select": false, 
+            "page": 1, 
+            "application": 1, 
+            "reviewer_only": false, 
+            "help_text": "", 
+            "pre_text": "", 
+            "type": "PositiveIntegerField", 
+            "order": 66
+        }
+    }, 
+    {
+        "pk": 24, 
+        "model": "formunculous.fielddefinition", 
+        "fields": {
+            "slug": "positive-integer-optional", 
+            "group": false, 
+            "post_text": "", 
+            "use_radio": false, 
+            "require": false, 
+            "header": false, 
+            "label": "Positive Integer Optional", 
+            "multi_select": false, 
+            "page": 1, 
+            "application": 1, 
+            "reviewer_only": false, 
+            "help_text": "", 
+            "pre_text": "", 
+            "type": "PositiveIntegerField", 
+            "order": 69
+        }
+    }, 
+    {
+        "pk": 25, 
+        "model": "formunculous.fielddefinition", 
+        "fields": {
+            "slug": "url-required", 
+            "group": false, 
+            "post_text": "", 
+            "use_radio": false, 
+            "require": true, 
+            "header": false, 
+            "label": "URL Required", 
+            "multi_select": false, 
+            "page": 1, 
+            "application": 1, 
+            "reviewer_only": false, 
+            "help_text": "", 
+            "pre_text": "", 
+            "type": "URLField", 
+            "order": 72
+        }
+    }, 
+    {
+        "pk": 26, 
+        "model": "formunculous.fielddefinition", 
+        "fields": {
+            "slug": "url-optional", 
+            "group": false, 
+            "post_text": "", 
+            "use_radio": false, 
+            "require": false, 
+            "header": false, 
+            "label": "URL Optional", 
+            "multi_select": false, 
+            "page": 1, 
+            "application": 1, 
+            "reviewer_only": false, 
+            "help_text": "", 
+            "pre_text": "", 
+            "type": "URLField", 
+            "order": 75
+        }
+    }, 
+    {
+        "pk": 27, 
+        "model": "formunculous.fielddefinition", 
+        "fields": {
+            "slug": "file-required", 
+            "group": false, 
+            "post_text": "", 
+            "use_radio": false, 
+            "require": true, 
+            "header": false, 
+            "label": "File Required", 
+            "multi_select": false, 
+            "page": 1, 
+            "application": 1, 
+            "reviewer_only": false, 
+            "help_text": "", 
+            "pre_text": "", 
+            "type": "FileField", 
+            "order": 78
+        }
+    }, 
+    {
+        "pk": 28, 
+        "model": "formunculous.fielddefinition", 
+        "fields": {
+            "slug": "file-optional", 
+            "group": false, 
+            "post_text": "", 
+            "use_radio": false, 
+            "require": false, 
+            "header": false, 
+            "label": "File Optional", 
+            "multi_select": false, 
+            "page": 1, 
+            "application": 1, 
+            "reviewer_only": false, 
+            "help_text": "", 
+            "pre_text": "", 
+            "type": "FileField", 
+            "order": 81
+        }
+    }, 
+    {
+        "pk": 29, 
+        "model": "formunculous.fielddefinition", 
+        "fields": {
+            "slug": "picture-required", 
+            "group": false, 
+            "post_text": "", 
+            "use_radio": false, 
+            "require": true, 
+            "header": false, 
+            "label": "Picture Required", 
+            "multi_select": false, 
+            "page": 1, 
+            "application": 1, 
+            "reviewer_only": false, 
+            "help_text": "", 
+            "pre_text": "", 
+            "type": "ImageField", 
+            "order": 84
+        }
+    }, 
+    {
+        "pk": 30, 
+        "model": "formunculous.fielddefinition", 
+        "fields": {
+            "slug": "picture-optional", 
+            "group": false, 
+            "post_text": "", 
+            "use_radio": false, 
+            "require": false, 
+            "header": false, 
+            "label": "Picture Optional", 
+            "multi_select": false, 
+            "page": 1, 
+            "application": 1, 
+            "reviewer_only": false, 
+            "help_text": "", 
+            "pre_text": "", 
+            "type": "ImageField", 
+            "order": 87
+        }
+    }, 
+    {
+        "pk": 31, 
+        "model": "formunculous.fielddefinition", 
+        "fields": {
+            "slug": "document-required", 
+            "group": false, 
+            "post_text": "", 
+            "use_radio": false, 
+            "require": true, 
+            "header": false, 
+            "label": "Document Required", 
+            "multi_select": false, 
+            "page": 1, 
+            "application": 1, 
+            "reviewer_only": false, 
+            "help_text": "", 
+            "pre_text": "", 
+            "type": "DocumentField", 
+            "order": 90
+        }
+    }, 
+    {
+        "pk": 32, 
+        "model": "formunculous.fielddefinition", 
+        "fields": {
+            "slug": "document-optional", 
+            "group": false, 
+            "post_text": "", 
+            "use_radio": false, 
+            "require": false, 
+            "header": true, 
+            "label": "Document Optional", 
+            "multi_select": false, 
+            "page": 1, 
+            "application": 1, 
+            "reviewer_only": false, 
+            "help_text": "", 
+            "pre_text": "", 
+            "type": "DocumentField", 
+            "order": 93
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "formunculous.dropdownchoices", 
+        "fields": {
+            "text": "Red", 
+            "field_definition": 36, 
+            "value": "0 - Red"
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "formunculous.dropdownchoices", 
+        "fields": {
+            "text": "Green", 
+            "field_definition": 36, 
+            "value": "1 - Green"
+        }
+    }, 
+    {
+        "pk": 3, 
+        "model": "formunculous.dropdownchoices", 
+        "fields": {
+            "text": "Blue", 
+            "field_definition": 36, 
+            "value": "2 - Blue"
+        }
+    }
+]

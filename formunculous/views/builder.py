@@ -448,7 +448,7 @@ class AddFieldForm(ChangeFormMixin, TemplateView):
     """
        Returns a new fielddef form instance for inclusion in the main
        pages formset.  It builds a formset with 1 extra form and renders
-       that form to html for an AJAX grab.  The JS on the
+       that form to html for an AJAX grab.
     """
 
     http_method_names = ['get', ]

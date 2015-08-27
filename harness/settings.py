@@ -25,6 +25,14 @@ ALLOWED_HOSTS = []
 APP_STORAGE_ROOT = '/tmp'
 APP_STORAGE_URL = '/apply/'
 
+# Nose settings
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+NOSE_ARGS = [
+    '--with-coverage',
+    '--cover-package=formunculous',
+]
+
+LOGIN_URL = 'formunculous-login'
 
 SITE_ID = 1
 # Application definition
